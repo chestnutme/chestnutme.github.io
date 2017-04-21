@@ -1,0 +1,735 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="os,xv6," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hw1-boot-xv6">
+<meta property="og:url" content="http://yoursite.com/2017/04/09/hw1/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta property="og:image" content="http://yoursite.com/2017/04/09/hw1/_start.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/09/hw1/br_start.png">
+<meta property="og:updated_time" content="2017-04-21T12:31:15.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hw1-boot-xv6">
+<meta name="twitter:description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta name="twitter:image" content="http://yoursite.com/2017/04/09/hw1/_start.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/09/hw1/"/>
+
+
+
+
+
+  <title> hw1-boot-xv6 | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/09/hw1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hw1-boot-xv6
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-09T00:00:00+08:00">
+                2017-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="hw1-boot-xv6"><a href="#hw1-boot-xv6" class="headerlink" title="hw1: boot xv6"></a>hw1: boot xv6</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
+<p>  6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.<br>xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.</p>
+</blockquote>
+<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>
+<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> xv6</div><div class="line">make</div></pre></td></tr></table></figure>
+<p>生成xv6.img镜像文件, 在qemu上模拟运行.</p>
+<a id="more"></a>
+<h4 id="3-定位-start"><a href="#3-定位-start" class="headerlink" title="3. 定位_start"></a>3. 定位_start</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nm kernel | grep _start</div></pre></td></tr></table></figure>
+<p><img src="./_start.png" alt="_start.png"><br>定位_start的address为0x10000c<br>接着运行xv6, 在_start打断点,确定xv6启动时的系统信息<br>双开终端, 在一个终端<code>make qemu-gdb</code>, 另一个<code>gdb</code>,gdb成功连接上qemu的远程调试后,调试xv6<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">br * 0x10000c</div><div class="line">0x10000c:	mov    %cr4,%eax</div></pre></td></tr></table></figure></p>
+<p><img src="./br_start.png" alt="br_start"></p>
+<h4 id="4-启动时堆栈上有什么"><a href="#4-启动时堆栈上有什么" class="headerlink" title="4. 启动时堆栈上有什么?"></a>4. 启动时堆栈上有什么?</h4><p>根据boot.S、boot.c和boot.asm中的代码，并结合四个问题</p>
+<blockquote>
+<p>1.在0x7c00设置断点，单步指令调试，查看堆栈指针$esp在哪里被初始化。<br>2.单步调试，直到调用bootmain函数，观察堆栈内容。<br>3.在bootmain函数中第1条汇编指令做了什么。<br>4.在boot.asm中查找使eip变为0x10000c的指令，观察堆栈的变化。</p>
+</blockquote>
+<p>1.在调用bootmain函数前，esp被初始化为0x7c00，即boot.s的入口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm  mov    $start,  $esp</div><div class="line">0x7c40:   mov    $0x7c00, $esp</div></pre></td></tr></table></figure></p>
+<p>２.在调用bootmain函数时，调用者保存调用地址，即下一条指令，并使$esp-4。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7c45:  call bootmain</div><div class="line">spin:</div><div class="line">0x7c4a:  jmp spin</div></pre></td></tr></table></figure></p>
+<p>3.在bootmain函数中，第1条汇编指令<code>为push     $ebp</code>，将$ebp压入堆栈，即保存调用者的栈帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7d0c:  push $ebp</div></pre></td></tr></table></figure></p>
+<p>４.当eip变为0x10000c时，bootmain函数将调用地址压入堆栈。 </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/os/" rel="tag"># os</a>
+          
+            <a href="/tags/xv6/" rel="tag"># xv6</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/10/lab1/" rel="next" title="lab1-boot-pc">
+                <i class="fa fa-chevron-left"></i> lab1-boot-pc
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/08/lab0/" rel="prev" title="lab0-build-env">
+                lab0-build-env <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#hw1-boot-xv6"><span class="nav-number">1.</span> <span class="nav-text">hw1: boot xv6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要"><span class="nav-number">1.0.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#answer"><span class="nav-number">1.0.2.</span> <span class="nav-text">answer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-xv6源码"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">1. xv6源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-编译"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">2. 编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-定位-start"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">3. 定位_start</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-启动时堆栈上有什么"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">4. 启动时堆栈上有什么?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>

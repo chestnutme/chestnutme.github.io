@@ -1,0 +1,843 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="algorithm,data_structure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="＜Introduction to algorithms＞笔记摘要　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结. Part1 基础算法定">
+<meta name="keywords" content="algorithm,data_structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="introduction to algorithms note1">
+<meta property="og:url" content="http://yoursite.com/2017/04/11/CLRS-notes/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="＜Introduction to algorithms＞笔记摘要　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结. Part1 基础算法定">
+<meta property="og:updated_time" content="2017-04-21T14:19:16.504Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="introduction to algorithms note1">
+<meta name="twitter:description" content="＜Introduction to algorithms＞笔记摘要　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结. Part1 基础算法定">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/11/CLRS-notes/"/>
+
+
+
+
+
+  <title> introduction to algorithms note1 | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/CLRS-notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                introduction to algorithms note1
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-11T00:00:00+08:00">
+                2017-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结.</p>
+<h3 id="Part1-基础"><a href="#Part1-基础" class="headerlink" title="Part1 基础"></a>Part1 基础</h3><p>算法定义/基本的算法设计/递归的复杂度/概率与随机算法</p>
+<h4 id="Chapter1-什么是算法"><a href="#Chapter1-什么是算法" class="headerlink" title="Chapter1 什么是算法?"></a>Chapter1 什么是算法?</h4><blockquote>
+<p>  算法:<br>    $\require{AMScd}$<br>    \begin{CD}<br>    input @&gt;\text{computing procedure}&gt;&gt; ouput<br>    \end{CD}</p>
+<ul>
+<li>解决一类问题的计算过程, 一个具体问题-实例</li>
+<li>算法最重要的特性: 效率</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+<h4 id="Chapter2-如何证明一个算法的正确性"><a href="#Chapter2-如何证明一个算法的正确性" class="headerlink" title="Chapter2 如何证明一个算法的正确性?"></a>Chapter2 如何证明一个算法的正确性?</h4><blockquote>
+<p>1.循环不变式:<br>　　算法中大量的过程是对同类数据的重复处理,即循环是算法的基本结构.通过循环不变式可以证明经过大量复杂的步骤后,得到要求解的结果.它的结构如下:</p>
+<blockquote>
+<p>a. 初始化: 迭代之前是循环不变式是正确的(base case)<br>b. 保持: 第n次迭代之前正确, 第n次之后保持正确(recursive formula)<br>c. 终止: 最终算法正确</p>
+</blockquote>
+<p>以插入排序为例：<br>\begin{align}<br>A[1]有序 \\<br>A[1] \ldots A[i]有序, 插入后A[1] \ldots A[i+1]有序 \\<br>\mapsto A[1] \ldots A[n] 有序<br>\end{align}<br>2.算法分析</p>
+<blockquote>
+<p>a. 输入规模 n<br>b. 运行时间: 基本操作数(与n相关)<br>c. 最坏情况(上界), 平均情况(基于概率分析技术)<br>d. 运行增长率(rate of growth)</p>
+</blockquote>
+<p>3.基本的算法设计方法</p>
+<blockquote>
+<p>a. 增量(increment), 从零构造要求求解的结果(bottom up)<br>b. 分治(divide and conquer), 分解子问题递归解决合并(top down)<br>    divide -&gt; conquer -&gt; combine<br>以merge sort为例来说明分治策略:<br>\begin{align}<br>{A[1] \ldots A[n]}= {A[1] \ldots A[n/2]} + {A[n/2+1] \ldots A[n]} \\<br>recusively \, merge {A[1] \ldots A[n/2]} or {A[n/2+1] \ldots A[n]} \\<br>merge {A[1] \ldots A[n/2]} with {A[n/2+1] \ldots A[n]}<br>\end{align}</p>
+</blockquote>
+<p>4.分治法的分析<br>　　分治法的基本理论是递归的解决子问题, 合并为最终解,即如下公式:<br>$$<br>T(n) =<br>\begin{cases}<br>\Theta(1), &amp; \text {if n &lt;= c} \\<br>aT(n/b) + D(n) + C(n), &amp; else \\<br>\end{cases}<br>$$<br>　　以merge sort为例<br>$$<br>T(n) =<br>\begin{cases}<br>c, &amp; \text {if n = 1} \\<br>2T(n/2) + cn, &amp; \text {if n &gt; 1} \\<br>\end{cases}<br>$$<br>如何求解递归式?<br>　　考虑到问题的分解, 类似从大的树根分叉出小的树枝, 构造递归树(等价形式),树节点表示时间代价,所有节点之和即为总的运行时间.这也是直观形象理解 <em>*$log_m n$</em>在复杂度中出现的理由: </p>
+<blockquote>
+<p>m表示问题被分解为m个子问题(m叉树), n表示问题规模, $log_m n$表示递归层数(m叉树的高度)</p>
+</blockquote>
+</blockquote>
+<h4 id="Chapter3-如何比较算法的优劣-运行时间的阶数"><a href="#Chapter3-如何比较算法的优劣-运行时间的阶数" class="headerlink" title="Chapter3 如何比较算法的优劣?(运行时间的阶数)"></a>Chapter3 如何比较算法的优劣?(运行时间的阶数)</h4><blockquote>
+<p>1.运行时间与数据规模之间的关系的表达:</p>
+<blockquote>
+<p>渐进:<br>$\Theta(g(n)) = \{f(n): \exists c_1, c_2, n_0, \forall n \geq n_0, 0 \leq c_1g(n) \leq f(n) \leq c_2g(n) \}$<br>上界:<br>$O(g(n)) = \{f(n): \exists c, n_0, \forall n \geq n_0, 0 \leq f(n) \leq cg(n)\}$<br>下界:<br>$\Omega(g(n)) = \{f(n): \exists c, n_0, \forall n \geq n_0, 0 \leq cg(n) \leq f(n)\}$</p>
+</blockquote>
+<p>2.把握阶数,忽略低阶项和系数:</p>
+<blockquote>
+<p>$ 2n^2 + 3n + 1 = 2n^2 + \Theta(n) = \Theta(n^2)$</p>
+</blockquote>
+<p>3.常用阶数:</p>
+<blockquote>
+<p>$1 &lt; \log n &lt; n &lt; n\log n &lt; n^2 &lt; n^3 &lt; a^n &lt; n!$</p>
+</blockquote>
+</blockquote>
+<h4 id="Chapter4-如何求解递归式-recurrence"><a href="#Chapter4-如何求解递归式-recurrence" class="headerlink" title="Chapter4 如何求解递归式(recurrence)?"></a>Chapter4 如何求解递归式(recurrence)?</h4><blockquote>
+<p>1.定义:<br>　　递归式是一组等式或不等式,它所描述的函数是用在更小的输入下该函数的值来定义的.</p>
+<p>2.把握大方向，忽略技术细节:</p>
+<blockquote>
+<p>a. 假设自变量为整数: 如实际merge sort的递归式为:<br>$$<br>T(n) =<br>\begin{cases}<br>\Theta(1), &amp; \text {if n = 1} \\<br>T(\lceil n/2 \rceil) + + T(\lfloor n/2 \rfloor) + \Theta(n), &amp; \text {if n &gt; 1} \\<br>\end{cases}<br>$$<br>b.向上向下取整, 简化边界条件</p>
+</blockquote>
+<p>3.解递归式的三个方法: 代还法, 递归树, 主方法</p>
+<p>3.1 代换法(Substitution method)</p>
+<blockquote>
+<p>定义:先猜测某个界的存在,再用数学归纳法去证明该猜测的正确性。<br>缺点:只能用于解的形式很容易猜的情形。<br>总结:这种方法需要经验的积累,可以通过转换为先前见过的类似递归式来求解。<br>例子1: 猜测对较大的n, $T(n)=2T(\lfloor n/2\rfloor + 17) + n$ 中与 $T(\lfloor n/2 \rfloor + 17)$ 与 $T(\lfloor n/2\rfloor)$接近<br>例子2:<br>\begin{align}<br>对T(n)=2T(\lfloor n/2\rfloor) + \log n, 做代换m=\log n \\<br>有T(2^m)=2T(2^{m/2}) + m, 设S(m) = T(2^m) \\<br>得 S(m) = 2S(m/2)+m \\<br>得该递归式的界是S(m) = O(m\log m) 代回得: \\<br>T(n) = T(2^m) = S(m) = O(m\log m) = O(\log n\log \log n)<br>\end{align}</p>
+</blockquote>
+<p>3.2 递归树方法(Recursion-tree method)</p>
+<blockquote>
+<p>起因:代换法有时很难得到一个正确的好的猜测值。<br>用途:画出一个递归树是一种得到好猜测的直接方法。<br>分析(重点):在递归树中,每一个结点都代表递归函数调用集合中一个子问题的代价。将递归树中每一层内的代价相加得到一个每层代价的集合,再将每层的代价相加得到递归式所有层次的总代价。<br>总结:递归树最适合用来产生好的猜测,然后用代换法加以验证。递归树的方法非常直观,总的代价就是把所有层次的代价相加起来得到。但是分析这个总代价的规模却不是件很容易的事情,有时需要用到很多数学的知识,如数列求和, 不等式放缩等.</p>
+</blockquote>
+<p>3.3 主方法(Master method)</p>
+<blockquote>
+<p>主方法是最好用的recipe 方法,可以很快估计出递归算法的时间复杂度,主方法总结了常见的情况并给出了一个公式.实际上主方法一直在比较 f(n)与 $N^{\log_b^a}$ 的规模,然后选取规模大的作为最后的递归式的规模<br>定义:<br>　　设 a≥1 和 b≥1 是常数f(n)是定义在非负整数上的一个确定的非负函数。又设T(n)也是定义在非负整数上的一个非负函数,且满足递归方程$T(n)=aT(n/b)+f(n)$ 。方程 $T(n)=aT(n/b)+f(n)$ 中的 $n/b$ 可以是$\lceil n/b\rceil$,也可以是 $\lfloor n/b \rfloor$。那么,在$f(n)$的三类情况下,我们有 T(n)的渐近估计式:<br>优点:针对形如 T(n)=aT(n/b)+f(n)的递归式:<br>\begin{align}<br>1) 对\epsilon &gt; 0, f(n)=O(n^{\log_b^a-\epsilon}) \to T(n)=\Theta(n^{\log_b^a}) \\<br>2) f(n) = \Theta(n^{\log_b^a}) \to T(n)=\Theta(n^{\log_b^a}\log n) \\<br>3) 对\epsilon &gt; 0,f(n)=O(n^{\log_b^a-\epsilon}) 且c &lt; 1和 n &gt; N, af(n/b) \leq cf(n) \to T(n)=\Theta(f(n))<br>\end{align}<br>缺点:并不能解所有形如上式的递归式的解。因为主方法在第 1 种情况与第2种情况之间、第2种情况与第3种情况之间都存在着一条沟,所以会存在着不能适用的情况。</p>
+</blockquote>
+</blockquote>
+<h4 id="Chapter5-如何将概率引入算法分析中"><a href="#Chapter5-如何将概率引入算法分析中" class="headerlink" title="Chapter5 如何将概率引入算法分析中?"></a>Chapter5 如何将概率引入算法分析中?</h4><blockquote>
+<p>1.概率分析: 确定input的分布或假设, 计算期望的运行时间 - 实际上是一个随机变量函数的求解过程<br>2.在不了解input分布的条件下,通过随机算法引入概率:<br>如果一个算法的行为不只是由输入决定,同时也由随机数生成器所产生的数值决定,则称这个算法是随机的。<br>3.指示器随机变量– 概率与期望的转换<br>$$<br>事件A 对应的指示器随机变量的期望期等于事件 A 发生的概率。\\<br>I\{A\} =<br>\begin{cases}<br>    1, if \, A \, happens \\<br>    0, else<br>\end{cases}<br>$$<br>期望的线性性质:<br>\begin{align}<br>X = \sum_{i=1}^n X_i \\<br>E[x] = E[\sum_{i=1}^n X_i] = \sum_{i=1}^n E[X_i]<br>\end{align}</p>
+<p>4.如何生成随机数组?<br>a. 随机优先级法:为数组的每个元素赋一个随机的优先级,再根据这个优先级对数组中的元素进行排序。可证这样得到的数字满足随机的性质。<br>b. 原地交换法:依次把A[i]与 A[Random(i+1, Length(A))]进行 swap,得到的新数组也满足随机性。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for i ← 1 to n</div><div class="line">    do swap A[i] ↔ A</div></pre></td></tr></table></figure>
+</blockquote>
+<p>考虑到在真正的环境中的输入可能并不是随机的,所以我们可以采用先将输入进行随机打乱的方法来保证输入数据的随机性(方法b),这点在很多算法中得以体现,比如快排有其随机选取种子数来向输入中加入随机化的成分。</p>
+</blockquote>
+<h3 id="Part2-排序与顺序统计"><a href="#Part2-排序与顺序统计" class="headerlink" title="Part2 排序与顺序统计"></a>Part2 排序与顺序统计</h3><p>基本排序算法与对比/求解中集合第i小的数</p>
+<blockquote>
+<p>1.排序问题<br>输入:n个数的序列$[a_1,a_2, \ldots, a_n]$ \<br>输出:输入序列的一个重排$[a_1’,a_2’,\ldots a_n’],使 a_1’ \leq a_2’ \leq \ldots \leq a_n’$<br>2.原地排序算法:只有线性个数的元素会被移动到集合之外的排序算法。<br>3.第6章介绍堆排序,及其实现的优先级队列<br>4.第7章介绍快速排序没,及其对应的分割思想<br>5.第8章介绍了基于“比较”排序的算法的下界为$\Theta(n\log n)$。并介绍了几种不基于比较的排序方法,它们能突破$\Omega(n\log n)$的下界: 计数排序、基数排序、桶排序。<br>6.第9章介绍了顺序统计的概念:第i个顺序统计是集合中第i小的数。并介绍了两个算法:<br>a.最坏情况为$O(n^2)$但平均情况下为线性$O(n)$的算法<br>b.最坏情况下为线性$O(n)$的算法</p>
+</blockquote>
+<h4 id="Chapter6-如何结合数据结构和排序算法"><a href="#Chapter6-如何结合数据结构和排序算法" class="headerlink" title="Chapter6 如何结合数据结构和排序算法?"></a>Chapter6 如何结合数据结构和排序算法?</h4><blockquote>
+<p>1.heapsort:$O(n\log n)$, 原地排序(in place)<br>    利用heap的性质(堆顶为max或min)来进行排序<br>2.heap:</p>
+<blockquote>
+<p>a.逻辑结构为完全二叉树, 高度为$\log_2(n)$<br>b.物理结构为数组(非链表, 因为要求随机访问)<br>c.性质(以大顶堆为例):$A[Parent(i)] \geq A[i]$<br>d.方法:</p>
+<ul>
+<li>max-heapify(A, i): 递归向下调整以i为根的子树, 保持性质c, $O(\log n)$</li>
+<li>build-max-heap(A): 调用max-heapify建堆A, $O(n)$</li>
+<li>heapsort: 原地堆排序, $O(n\log n)$</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">max-heapify(A, i)</div><div class="line">l &lt;- Left(i)</div><div class="line">r &lt;- Right(i)</div><div class="line">if l &lt;= heap-size[A] and A[l] &gt; A[i]</div><div class="line">    then largest &lt;- l</div><div class="line">    else largest &lt;- i</div><div class="line">if r &lt;= heap-size[A] and A[r] &gt; A[largest]</div><div class="line">    then largest &lt;- r</div><div class="line">if largest not = i</div><div class="line">    then exchange A[i] &lt;-&gt; A[largest]</div><div class="line">    max-heapify(A, largest)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">bulid-max-heap(A)</div><div class="line">heap-size[A] &lt;- length[A]</div><div class="line">for i &lt;- length[A] / 2 downto 1</div><div class="line">    do max-heapity(A, i)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">heapsort(A)</div><div class="line">build-max-heap(A)</div><div class="line">for i &lt;- length[A] downto 2</div><div class="line">    do exchange A[i] &lt;-&gt; A[i]</div><div class="line">    heap-size[A] &lt;- heap-size[A] - 1</div><div class="line">    max-heapify(A, 1)</div></pre></td></tr></table></figure>
+</blockquote>
+<p>3.优先级队列(用堆实现)</p>
+<blockquote>
+<p>a. 方法:</p>
+<pre><code>* maximum(S):返回最大key的元素 -&gt; 大顶堆堆顶元素
+* insert(S, x): 插入x -&gt; 插入堆尾并max-heapify(A, n + 1)
+* extract-max: 在maximum基础上删除max -&gt; swap(A[1], A[n]), max-heaptify(A, 1)
+</code></pre><p>b. 应用: 操作系统中优先级调度算法, 事件模拟</p>
+</blockquote>
+</blockquote>
+<h4 id="Chapter7-如何实现快速排序"><a href="#Chapter7-如何实现快速排序" class="headerlink" title="Chapter7 如何实现快速排序?"></a>Chapter7 如何实现快速排序?</h4><blockquote>
+<p>1.快排: 基于递归思想, 最坏$\Theta(n^2)$, 平均$O(n\log n)$, 且由于 $O(n\log n)$中隐含的常数因子很小,所以快排通常是用于排序的最佳的实用选择(因为其平均性能非常好).<br>特性:平均性能非常好、原地排序不需要额外的空间、代码实现机器简洁清晰</p>
+<p>2.分割partition: 将A[p..r]分割为均小于等于A[q]的A[p..q-1] 和 均大于A[q]的 A[q+1..r]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">partition(A, p, r)</div><div class="line">x &lt;- A[r]</div><div class="line">i &lt;- p-1</div><div class="line">for j &lt;- p to r-1</div><div class="line">    do if A[j] &lt;= x</div><div class="line">        then i &lt;- i+1</div><div class="line">            exchange A[i]&lt;-&gt; A[j]</div><div class="line">exchange A[i+1] &lt;-&gt; A[r]</div><div class="line">return i+1</div></pre></td></tr></table></figure></p>
+<p>3.快排, 递归实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">quicksort(A, p, r)</div><div class="line">if p &lt; r</div><div class="line">    then q &lt;- partition(A, p, r)</div><div class="line">        quicksort(A, p, q - 1)</div><div class="line">        quicksort(A, q + 1, r)</div></pre></td></tr></table></figure></p>
+<p>4.快排性能:<br>划分是对称的, 生成的递归树亦对称,等同于merge sort;<br>划分极度不对称, 生成递归树为单支树, 树高为n, 等同于insert sort;<br>因此在真正的应用时很容易出现待排序的数组其实已经是有序的情况下,它在待排数组有序时的效率是最差的$O(n^2)$,所以需要随机化技术来使得划分尽可能均匀对称.<br>　　正如第5章所说的,由于工程中的输入可能不随机的,所以我们要将其随机化.有两种可选方案</p>
+<blockquote>
+<p>a.直接对输入数据进行随机化排列<br>b.采用随机取样的随机化技术。<br>采用更高效的(2)随机取样(random sampling):随机选择key元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">randomized-partition(A, p, r)</div><div class="line">i &lt;- random(p, r)</div><div class="line">exchange A[r] &lt;-&gt; A[i]</div><div class="line">return partition(A, p, r)</div></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+<h4 id="Chapter8-排序算法的下界在哪里"><a href="#Chapter8-排序算法的下界在哪里" class="headerlink" title="Chapter8 排序算法的下界在哪里?"></a>Chapter8 排序算法的下界在哪里?</h4><blockquote>
+<p>1.任何比较的排序在最坏的情况下都要用$\Theta(n\log n)$次比较来进行排序,<br>采用决策树来证明:<br>\begin{align}<br>高度h, 叶节点个数l的决策树模拟n个元素的比较排序 \\<br>\because n元素有 n!个排列 \to  n! \leq l \\<br>又\because l \leq 2^h \\<br>\therefore n! \leq l \leq 2^h \\<br>\therefore h \geq \log(n!) = \Omega(n\log n)<br>\end{align}<br>所以合并排序和堆排序是渐近最优的。但要注意:快排不是渐近最优的,因为它在最坏的情况下是$O(n^2)$</p>
+<p>2.三种以线性时间运行的排序算法:计数排序、基数排序和桶排序，皆基于非比较的模型．</p>
+<p>2.1 计数排序: 统计元素个数, 从小到大输出, $\Theta(n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">counting-sort(A, B, k)</div><div class="line">for i &lt;- 0 to k</div><div class="line">    do C[i] = 1</div><div class="line">for j &lt;- 1 to length[A]</div><div class="line">    do C[A[j]] &lt;- C[A[j]] + 1</div><div class="line">C[i]: 等于i的元素个数</div><div class="line">for i &lt;- 1 to k</div><div class="line">    do C[i] &lt;- C[i] + C[i-1]</div><div class="line">C[i]: 小于等于i的元素个数</div><div class="line">for j &lt;- lenght[A]</div><div class="line">    do B[C[A[j]]] &lt;- A[j]</div><div class="line">        C[A[j]] &lt;- C[A[j]] - 1</div></pre></td></tr></table></figure></p>
+<p>a. 计数排序的一个重要性就是它是稳定的排序算法,这个稳定性是基数排序的基石。<br>b. 计数排序的思想简单、高效、可靠．<br>c. 缺点在于:</p>
+<blockquote>
+<p>i. 需要很多额外的空间(当前类型的值的范围)<br>ii. 只能对离散的数据有效,比如int(double不行)<br>iii.基于假设:输入是小范围内的整数构成的。</p>
+</blockquote>
+<p>2.2 基数排序: 基于数位(k), $\Theta(d(n+k))$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">radix-sort(A, d)</div><div class="line">for i &lt;- 1 to d</div><div class="line">    do use a stable sort array A on digit i</div></pre></td></tr></table></figure></p>
+<p>a. 低位相同时用高一位进行排序,要求基数排序时对每一位进行调用子排序算法时要求这个子排序算法必须是稳定的, 即同Key, 相对顺序不变.<br>b. 基数排序与直觉相反:它是按照从低位到高位的顺序排序的。我认为原因在于高有效位对低有效位有着决定性的作用。</p>
+<p>2.3 桶排序:分割子区间(桶), 桶内排序后输出 $\Theta(n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bucket-sort</div><div class="line">n &lt;- length[A]</div><div class="line">for i &lt;- 1 to n</div><div class="line">    do insert A[i] into list B[nA[i]]</div><div class="line">for i &lt;- 0 to n-1</div><div class="line">    do sort list B[i] with insert sort</div><div class="line">output the lists B[0], B[1],..B[n-1] in order</div></pre></td></tr></table></figure></p>
+<p>a.桶排序也只是期望运行时间能达到线性,对于最坏的情况,它的运行时间取决于它内部使用的子排序算法的运行时间,<br>一般为 O(nlgn)。<br>b.桶排序基于假设:输入的的元素均匀的分布在区间[0, 1]上。</p>
+<p>3.总结: 所有的线性时间内的排序算法,都作出了一定的假设, 必须建立在一定的输入数据的条件上.</p>
+</blockquote>
+<h4 id="Chapter9-如何找到第i小的数"><a href="#Chapter9-如何找到第i小的数" class="headerlink" title="Chapter9 如何找到第i小的数?"></a>Chapter9 如何找到第i小的数?</h4><blockquote>
+<p>1.the i-th order statistic: 第i小的元素<br>    直观的讲, 先排序然后直接选出A[i]就是该问题的解答.但实际上问题只要求第i小的数,排序则是求出了所有元素的次序, 那么是否不需要较大的消耗的排序,而去直接求解呢?</p>
+<p>2.由简入深</p>
+<blockquote>
+<p>min(max): 线性遍历, $\Theta(n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">minimum(A)</div><div class="line">min &lt;- A[1]</div><div class="line">for i &lt;- 2 to length[A]</div><div class="line">        do if min &gt; A[i]</div><div class="line">            then min &lt;- A[i]</div><div class="line">return min</div></pre></td></tr></table></figure></p>
+<p>i-th:随机选择与分割定位: 递归, $\Theta(n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">randomized-select(A, p, r, i)</div><div class="line">if p = r</div><div class="line">        then return A[p]</div><div class="line">q &lt;- randomized-partition(A, p, r)</div><div class="line">k &lt;- q - p + 1</div><div class="line">if i = k</div><div class="line">        then return A[q]</div><div class="line">elseif i &lt; k</div><div class="line">        then return randomized-select(A, p, q-1, i)</div><div class="line">else</div><div class="line">        return randomized-select(A, q+1, r, i-k)</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>3.在第8章,比较模型中平均情况下需要$\Theta(n\log n)$的时间, 输入满足一定假设情况下可以达到线性时间按$O(n)$.以期望线性时间选择i-th的方法以快速排序为模型,如同在快速排序中一样,此算法的思想也是对输入数组进行递归划分。但和快速排序不同的是,快速排序会递归处理划分的两边,而randomized-select只处理划分的一边,并由此将期望的运行时间由$O(n\log n)$下降到了$O(n)$。</p>
+</blockquote>
+<h3 id="Part3-数据结构"><a href="#Part3-数据结构" class="headerlink" title="Part3 数据结构"></a>Part3 数据结构</h3><p>####</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          
+            <a href="/tags/data-structure/" rel="tag"># data_structure</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/hw2/" rel="next" title="hw2-shell">
+                <i class="fa fa-chevron-left"></i> hw2-shell
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/10/lab1/" rel="prev" title="lab1-boot-pc">
+                lab1-boot-pc <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#＜Introduction-to-algorithms＞笔记"><span class="nav-number">1.</span> <span class="nav-text">＜Introduction to algorithms＞笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要"><span class="nav-number">1.0.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Part1-基础"><span class="nav-number">1.0.2.</span> <span class="nav-text">Part1 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter1-什么是算法"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">Chapter1 什么是算法?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter2-如何证明一个算法的正确性"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">Chapter2 如何证明一个算法的正确性?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter3-如何比较算法的优劣-运行时间的阶数"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">Chapter3 如何比较算法的优劣?(运行时间的阶数)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter4-如何求解递归式-recurrence"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">Chapter4 如何求解递归式(recurrence)?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter5-如何将概率引入算法分析中"><span class="nav-number">1.0.2.5.</span> <span class="nav-text">Chapter5 如何将概率引入算法分析中?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Part2-排序与顺序统计"><span class="nav-number">1.0.3.</span> <span class="nav-text">Part2 排序与顺序统计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter6-如何结合数据结构和排序算法"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">Chapter6 如何结合数据结构和排序算法?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter7-如何实现快速排序"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">Chapter7 如何实现快速排序?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter8-排序算法的下界在哪里"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">Chapter8 排序算法的下界在哪里?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter9-如何找到第i小的数"><span class="nav-number">1.0.3.4.</span> <span class="nav-text">Chapter9 如何找到第i小的数?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Part3-数据结构"><span class="nav-number">1.0.4.</span> <span class="nav-text">Part3 数据结构</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>
