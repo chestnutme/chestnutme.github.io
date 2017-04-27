@@ -1,0 +1,723 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="os,xv6," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="hw5 cpu alarm目标 这次hw向xv6添加一个功能，以便在进程使用CPU时,定时提醒进程.这对计算敏感的进程很有帮助，限制他们CPU的使用时间，也让进程在计算的同时执行一些周期性任务.更通用来说来说，我们将实现1个用户级别的中断异常处理.在这里会用到上次系统调用的实现机制.即增加1个alarm(interval, handler)系统调用.当1个应用调用alarm(n, fn)时，那么每">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hw5-cpu-alarm">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/hw5/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="hw5 cpu alarm目标 这次hw向xv6添加一个功能，以便在进程使用CPU时,定时提醒进程.这对计算敏感的进程很有帮助，限制他们CPU的使用时间，也让进程在计算的同时执行一些周期性任务.更通用来说来说，我们将实现1个用户级别的中断异常处理.在这里会用到上次系统调用的实现机制.即增加1个alarm(interval, handler)系统调用.当1个应用调用alarm(n, fn)时，那么每">
+<meta property="og:updated_time" content="2017-04-27T10:42:23.389Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hw5-cpu-alarm">
+<meta name="twitter:description" content="hw5 cpu alarm目标 这次hw向xv6添加一个功能，以便在进程使用CPU时,定时提醒进程.这对计算敏感的进程很有帮助，限制他们CPU的使用时间，也让进程在计算的同时执行一些周期性任务.更通用来说来说，我们将实现1个用户级别的中断异常处理.在这里会用到上次系统调用的实现机制.即增加1个alarm(interval, handler)系统调用.当1个应用调用alarm(n, fn)时，那么每">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/24/hw5/"/>
+
+
+
+
+
+  <title> hw5-cpu-alarm | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/24/hw5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hw5-cpu-alarm
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T00:00:00+08:00">
+                2017-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="hw5-cpu-alarm"><a href="#hw5-cpu-alarm" class="headerlink" title="hw5 cpu alarm"></a>hw5 cpu alarm</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><blockquote>
+<p>这次hw向xv6添加一个功能，以便在进程使用CPU时,定时提醒进程.这对计算敏感的进程很有帮助，限制他们CPU的使用时间，也让进程在计算的同时执行一些周期性任务.更通用来说来说，我们将实现1个用户级别的中断异常处理.<br>在这里会用到上次系统调用的实现机制.即增加1个<code>alarm(interval, handler)</code>系统调用.当1个应用调用<code>alarm(n, fn)</code>时，那么每隔n个CPU时钟节拍，内核将使应用调用<code>fn</code>函数.当<code>fn</code>函数返回时，应用从调用地址重新开始执行.</p>
+</blockquote>
+<p>测试程序<code>alarmtest.c</code></p>
+<a id="more"></a>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"types.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stat.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"user.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">periodic</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i;</div><div class="line">  <span class="built_in">printf</span>(<span class="number">1</span>, <span class="string">"alarmtest starting\n"</span>);</div><div class="line">  alarm(<span class="number">10</span>, periodic);</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">50</span>*<span class="number">500000</span>; i++)&#123;</div><div class="line">    <span class="keyword">if</span>((i++ % <span class="number">500000</span>) == <span class="number">0</span>)</div><div class="line">      write(<span class="number">2</span>, <span class="string">"."</span>, <span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">exit</span>();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">periodic</span><span class="params">()</span></div><div class="line">&#123;</div><div class="line">  <span class="built_in">printf</span>(<span class="number">1</span>, <span class="string">"alarm!\n"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其调用<code>alarm(10, periodic)</code>, 使得内核每隔10个tick调用一次<code>periodic</code>.输出形式如下:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$alarmtest</span></div><div class="line">alarmtest starting</div><div class="line">.....alarm!</div><div class="line">....alarm!</div><div class="line">.....alarm!</div><div class="line">......alarm!</div><div class="line">.....alarm!</div><div class="line">....alarm!</div><div class="line">....alarm!</div><div class="line">......alarm!</div><div class="line">.....alarm!</div><div class="line">...alarm!</div><div class="line">...$</div></pre></td></tr></table></figure></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>实现步骤：</p>
+<blockquote>
+<p>1.参照<a href="https://chestnutme.github.io/2017/04/19/hw3/" target="_blank" rel="external">hw3 system call</a>,按照添加系统调用的方式添加用户态调用程序、系统调用号和系统调用程序<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">//user.h</div><div class="line">int alarm(int ticks, void(*hander)());</div><div class="line">//usys.S</div><div class="line">SYSCALL(alarm)</div><div class="line">//Makefile    UPROGS:</div><div class="line">_alarmtest\</div><div class="line">//syscall.h</div><div class="line">#define SYS_alarm 23</div><div class="line">//syscall.c</div><div class="line">extern int sys_alarm(void);</div><div class="line">//syscall.c syscalls[]</div><div class="line">[SYS_alarm]   sys_alarm,</div><div class="line">//sysproc.c</div><div class="line">int</div><div class="line">    sys_alarm(void)</div><div class="line">    &#123;</div><div class="line">      int ticks;</div><div class="line">      void (*handler)();</div><div class="line"></div><div class="line">      if(argint(0, &amp;ticks) &lt; 0)</div><div class="line">        return -1;</div><div class="line">      if(argptr(1, (char**)&amp;handler, 1) &lt; 0)</div><div class="line">        return -1;</div><div class="line">      proc-&gt;alarmticks = ticks;</div><div class="line">      proc-&gt;alarmhandler = handler;</div><div class="line">      return 0;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>2.在<code>proc.c</code>的<code>proc</code>结构体中添加变量记录总<code>ticks</code>、当前<code>ticks</code>和对应的<code>handler</code><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//struct proc</span></div><div class="line"><span class="keyword">int</span> alarmticks;</div><div class="line"><span class="keyword">int</span> curalarmticks;</div><div class="line"><span class="keyword">void</span> (*alarmhander)();</div></pre></td></tr></table></figure></p>
+<p>3.在<code>trap.c</code>中处理时钟中断添加<code>handler</code><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">case</span> T_IRQ0 + IRQ_TIMER:</div><div class="line">    <span class="keyword">if</span>(cpu-&gt;id == <span class="number">0</span>)&#123;</div><div class="line">       acquire(&amp;tickslock);</div><div class="line">       ticks++;</div><div class="line"></div><div class="line">      wakeup(&amp;ticks);</div><div class="line">      release(&amp;tickslock);</div><div class="line">    &#125;</div><div class="line">      <span class="keyword">if</span>(proc &amp;&amp; (tf-&gt;cs &amp; <span class="number">3</span>) == <span class="number">3</span>)&#123;</div><div class="line">        proc-&gt;curalarmtick++;</div><div class="line">        <span class="keyword">if</span>(proc-&gt;alarmticks == proc-&gt;curalarmtick)&#123;  <span class="comment">// tick到达了周期</span></div><div class="line">          proc-&gt;curalarmtick = <span class="number">0</span>;</div><div class="line"></div><div class="line">          <span class="comment">//将eip压栈</span></div><div class="line">          tf-&gt;esp -= <span class="number">4</span>;    </div><div class="line">          *((uint *)(tf-&gt;esp)) = tf-&gt;eip;</div><div class="line">          <span class="comment">// 拷贝alarmhandler给eip，准备执行</span></div><div class="line">          tf-&gt;eip =(uint) proc-&gt;alarmhandler;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    lapiceoi();</div><div class="line">    <span class="keyword">break</span>;</div><div class="line">`</div></pre></td></tr></table></figure></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/os/" rel="tag"># os</a>
+          
+            <a href="/tags/xv6/" rel="tag"># xv6</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/22/CLRS-notes3/" rel="prev" title="introduction to algorithms note3">
+                introduction to algorithms note3 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#hw5-cpu-alarm"><span class="nav-number">1.</span> <span class="nav-text">hw5 cpu alarm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">1.1.</span> <span class="nav-text">目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">1.1.1.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>
