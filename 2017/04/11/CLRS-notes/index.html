@@ -94,7 +94,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/11/CLRS-notes/index.html">
 <meta property="og:site_name" content="Chestnut">
 <meta property="og:description" content="＜Introduction to algorithms＞笔记摘要　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结. Part1 基础算法定">
-<meta property="og:updated_time" content="2017-04-21T14:19:16.504Z">
+<meta property="og:updated_time" content="2017-04-27T04:35:36.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="introduction to algorithms note1">
 <meta name="twitter:description" content="＜Introduction to algorithms＞笔记摘要　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结. Part1 基础算法定">
@@ -355,7 +355,7 @@
 <blockquote>
 <p>a. 增量(increment), 从零构造要求求解的结果(bottom up)<br>b. 分治(divide and conquer), 分解子问题递归解决合并(top down)<br>    divide -&gt; conquer -&gt; combine<br>以merge sort为例来说明分治策略:<br>\begin{align}<br>{A[1] \ldots A[n]}= {A[1] \ldots A[n/2]} + {A[n/2+1] \ldots A[n]} \\<br>recusively \, merge {A[1] \ldots A[n/2]} or {A[n/2+1] \ldots A[n]} \\<br>merge {A[1] \ldots A[n/2]} with {A[n/2+1] \ldots A[n]}<br>\end{align}</p>
 </blockquote>
-<p>4.分治法的分析<br>　　分治法的基本理论是递归的解决子问题, 合并为最终解,即如下公式:<br>$$<br>T(n) =<br>\begin{cases}<br>\Theta(1), &amp; \text {if n &lt;= c} \\<br>aT(n/b) + D(n) + C(n), &amp; else \\<br>\end{cases}<br>$$<br>　　以merge sort为例<br>$$<br>T(n) =<br>\begin{cases}<br>c, &amp; \text {if n = 1} \\<br>2T(n/2) + cn, &amp; \text {if n &gt; 1} \\<br>\end{cases}<br>$$<br>如何求解递归式?<br>　　考虑到问题的分解, 类似从大的树根分叉出小的树枝, 构造递归树(等价形式),树节点表示时间代价,所有节点之和即为总的运行时间.这也是直观形象理解 <em>*$log_m n$</em>在复杂度中出现的理由: </p>
+<p>4.分治法的分析<br>　　分治法的基本理论是递归的解决子问题, 合并为最终解,即如下公式:<br>$$<br>T(n) =<br>\begin{cases}<br>\Theta(1), &amp; \text {if n &lt;= c} \\<br>aT(n/b) + D(n) + C(n), &amp; else \\<br>\end{cases}<br>$$<br>　　以merge sort为例<br>$$<br>T(n) =<br>\begin{cases}<br>c, &amp; \text {if n = 1} \\<br>2T(n/2) + cn, &amp; \text {if n &gt; 1} \\<br>\end{cases}<br>$$<br>如何求解递归式?<br>　　考虑到问题的分解, 类似从大的树根分叉出小的树枝, 构造递归树(等价形式),树节点表示时间代价,所有节点之和即为总的运行时间.这也是直观形象理解 <em>*$log_m n$</em>在复杂度中出现的理由:</p>
 <blockquote>
 <p>m表示问题被分解为m个子问题(m叉树), n表示问题规模, $log_m n$表示递归层数(m叉树的高度)</p>
 </blockquote>
@@ -589,7 +589,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
