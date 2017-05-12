@@ -1,0 +1,820 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="algorithm,data_structure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="＜Introduction to algorithms＞笔记Part6 图算法在前面的部分学习了表示一对一关系的线性数据结构(数组, 链表, stack, queue), 表示一对多关系的树型数据结构(二叉树, 森林, 堆)后, 将其拓展到多对多关系-图.在part6主要是学习用图定义的计算问题和对应的算法,主要包括三个部分:  图的表示,及广度/深度优先的图搜索算法 求解最小生成树问题 最短路径">
+<meta name="keywords" content="algorithm,data_structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="introduction to algorithms note5">
+<meta property="og:url" content="http://yoursite.com/2017/05/09/CLRS-notes5/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="＜Introduction to algorithms＞笔记Part6 图算法在前面的部分学习了表示一对一关系的线性数据结构(数组, 链表, stack, queue), 表示一对多关系的树型数据结构(二叉树, 森林, 堆)后, 将其拓展到多对多关系-图.在part6主要是学习用图定义的计算问题和对应的算法,主要包括三个部分:  图的表示,及广度/深度优先的图搜索算法 求解最小生成树问题 最短路径">
+<meta property="og:image" content="http://yoursite.com/images/graph1.png">
+<meta property="og:image" content="http://yoursite.com/images/graph2.png">
+<meta property="og:image" content="http://yoursite.com/images/bfs.png">
+<meta property="og:image" content="http://yoursite.com/images/dfs.png">
+<meta property="og:image" content="http://yoursite.com/images/dag.png">
+<meta property="og:image" content="http://yoursite.com/images/scc.png">
+<meta property="og:image" content="http://yoursite.com/images/mst.png">
+<meta property="og:image" content="http://yoursite.com/images/kruskal.png">
+<meta property="og:image" content="http://yoursite.com/images/prim.png">
+<meta property="og:image" content="http://yoursite.com/images/n-path.png">
+<meta property="og:image" content="http://yoursite.com/images/mst-path.png">
+<meta property="og:image" content="http://yoursite.com/images/bellman-ford.png">
+<meta property="og:image" content="http://yoursite.com/images/dag-path.png">
+<meta property="og:image" content="http://yoursite.com/images/dijkstra.png">
+<meta property="og:updated_time" content="2017-05-12T02:57:06.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="introduction to algorithms note5">
+<meta name="twitter:description" content="＜Introduction to algorithms＞笔记Part6 图算法在前面的部分学习了表示一对一关系的线性数据结构(数组, 链表, stack, queue), 表示一对多关系的树型数据结构(二叉树, 森林, 堆)后, 将其拓展到多对多关系-图.在part6主要是学习用图定义的计算问题和对应的算法,主要包括三个部分:  图的表示,及广度/深度优先的图搜索算法 求解最小生成树问题 最短路径">
+<meta name="twitter:image" content="http://yoursite.com/images/graph1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/09/CLRS-notes5/"/>
+
+
+
+
+
+  <title> introduction to algorithms note5 | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/09/CLRS-notes5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                introduction to algorithms note5
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-09T00:00:00+08:00">
+                2017-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h2 id="Part6-图算法"><a href="#Part6-图算法" class="headerlink" title="Part6 图算法"></a>Part6 图算法</h2><p>在前面的部分学习了表示一对一关系的线性数据结构(数组, 链表, stack, queue), 表示一对多关系的树型数据结构(二叉树, 森林, 堆)后, 将其拓展到多对多关系-图.在part6主要是学习用图定义的计算问题和对应的算法,主要包括三个部分:</p>
+<ul>
+<li>图的表示,及广度/深度优先的图搜索算法</li>
+<li>求解最小生成树问题</li>
+<li>最短路径问题</li>
+</ul>
+<p>约定:以 $G = (V, E)$ 描述一个图G, 其顶点集为V[G], 顶点数为|V|;边集为E[G], 边数为|E|;故图问题的输入规模的参数有两个, |V|和|G|.例如,算法的复杂度为 $O(VE)$ 表示该算法的运行时间的 $O(|V||E|)$</p>
+<h3 id="Chapter22-如何表示和遍历图"><a href="#Chapter22-如何表示和遍历图" class="headerlink" title="Chapter22 如何表示和遍历图?"></a>Chapter22 如何表示和遍历图?</h3><p>本章的图搜索技术是图算法领域的核心.分为五个部分:</p>
+<ul>
+<li>图的表示</li>
+<li>广度优先搜索</li>
+<li>深度优先搜索</li>
+<li>有向无环图的拓扑排序</li>
+<li>有向图的强连通子图</li>
+</ul>
+<a id="more"></a>
+<h4 id="图的表示"><a href="#图的表示" class="headerlink" title="图的表示"></a>图的表示</h4><p>两种基本的表示方法:</p>
+<ul>
+<li><p>邻接表(adjacency lists)<br>包含|V|个链表的数组<em>Adj</em>表示, 对 $u \in V$, 有Adj[u] 包含图G中和顶点u相邻的所有顶点.其适用于稀疏图($|E|远小于|V|^2$).<br>不论是有向图还是无向图,邻接表法都有一个很好的特性,即它所需要的存储空间为 $O(V+E)$ ;邻接表表示法稍作修改就能支持其它多种图的变体,因而有着很强的适应性.</p>
+</li>
+<li><p>邻接矩阵(adjacency matrix)<br>G的邻接矩阵为|V| * |V|的矩阵 $A = {a_{ij}}$, 其满足:<br>$$ a_{ij} =<br>\begin{cases}<br>1, \text {if (i, j)} \in E \\<br>0, else \\<br>\end{cases}<br>$$<br>适用于稠密图, 空间复杂度 $O(v^2)$<br>无向图的邻接矩阵A就是它的转置矩阵,即$A=A^T$ .在某些应用中采用矩阵严肃哦存储,可以只存储邻接矩阵的对角线及对角线以上的部分,这样一来,图所占用的存储空间可以减少一半.</p>
+</li>
+</ul>
+<p>图1 无向图的邻接表和邻接矩阵表示<br><img src="/images/graph1.png" alt="directed graph"></p>
+<p>图2 有向图的邻接表和邻接矩阵表示<br><img src="/images/graph2.png" alt="undirected graph"></p>
+<p>邻接表表示和邻接矩阵表示在渐近意义上至少是一样有效的,但由于邻接矩阵简单明了,因而当图较小时,更多多地采用邻接矩阵来表示.另外,如果一个图不是加权的,采用邻接矩阵的存储形式还有一个优越性:在存储邻接矩阵的每个元素时,可以只用一个二进位,而不必有一个字的空间.这样,当采用了二进位以及表示无向图的技巧时,邻接矩阵法的占用空间大的缺点就可以得到一定程度上的改善.</p>
+<h4 id="广度优先搜索-bread-first-search"><a href="#广度优先搜索-bread-first-search" class="headerlink" title="广度优先搜索(bread-first search)"></a>广度优先搜索(bread-first search)</h4><p>BFS思路: 给定图G=(V, E)和特定原顶点s, 遍历G中的边, 发现可从s到达的所有顶点, 并计算s到所有可达顶点间的距离(最少的边数).因为始终是将已发现顶点和未发现顶点之间的边界沿广度方向扩展,即首先遍历和s距离k的顶点, 然后发现和s距离k+1的顶点.<br>BFS实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">BFS(G, s)</div><div class="line">for each vertex u in V[G]-&#123;s&#125;</div><div class="line">    do color[u] &lt;- white      #color数组:标记是否访问并可视化算法</div><div class="line">        d[u] &lt;- INT           #d[u]: u到源点s的距离</div><div class="line">        f[u] &lt;- Null          #f[u]: u的父顶点</div><div class="line">color[s] &lt;- gray</div><div class="line">d[s] &lt;- i</div><div class="line">f[s] &lt;- Null</div><div class="line">Q &lt;- Empty                     #Q:先进先出队列</div><div class="line">Enqueue(Q, s)</div><div class="line">while Q != Empty</div><div class="line">    do u &lt;- Dequeu(Q)</div><div class="line">    for each v in Adj[u]</div><div class="line">        do if color[u] = white</div><div class="line">            then color[u] &lt;- gray</div><div class="line">            d[v] &lt;- d[u] + 1</div><div class="line">            f[v] &lt;- u</div><div class="line">            Enqueue(Q, v)</div><div class="line">    color[u] &lt;- black</div></pre></td></tr></table></figure></p>
+<p>算法过程如图3<br><img src="/images/bfs.png" alt="BFS"></p>
+<p>BFS分析:<br>采用part4学习的聚集分析(aggregate analysis), 通过color数组的染色标记,确保每个顶点v只Enqueue一次,故亦只Dequeue一次.Enqueue和Dequeue要求 $O(1)$ 的时间,故队列操作时间为 $O(V)$.又有每个顶点v出队时扫描其邻接表Adj[v], 所以每个顶点邻接表只遍历一次, 花费时间为 $O(E)$. 故总运行时间为 $O(V + E)$.</p>
+<p><strong>将BFS理解为同心圆扩展算法, 想象图G为一片水面, 源点s就是我们扔进石子的点, 激出的波纹沿半径方向延伸,圆圈向外扩展的过程即是遍历水面的过程</strong>.在这个过程中,BFS构造了一棵广度优先搜索树,包括s的所有<strong>可达</strong>顶点.对从s可达的任意顶点v,广度优先树中s到v的路径对应于图G中s到v的一条最短路径(边数最少).从BFS的算法中的数组f[u]可以用前驱图子图 $G_f = (V_f, E_f)$ 表示图G = (V, E)的广度优先树:<br>\begin{align}<br>V_f = {v \in V: f[v] \neq Null } \bigcup {s} \\<br>E_f = {(f[v], v): v \in V_f - {s} }<br>\end{align}</p>
+<p>根据BFS算法用递归输出s到v的最短路径如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">print-path(G, s, v)</div><div class="line">if v == s</div><div class="line">    then print s</div><div class="line">    else if f[v] = Null</div><div class="line">        then print &quot;no path from&quot; s &quot;to&quot; v &quot;exists&quot;</div><div class="line">        else print-path(G, s, f[v])</div><div class="line">            print v</div></pre></td></tr></table></figure></p>
+<h3 id="深度优先搜索-depth-first-search"><a href="#深度优先搜索-depth-first-search" class="headerlink" title="深度优先搜索(depth-first search)"></a>深度优先搜索(depth-first search)</h3><p>DFS思路:对新遍历的顶点u, 如果还有以u为起点而未遍历的边,沿此边继续遍历.如果u的所有边都已遍历,则回溯到发现顶点u有起始点的顶点边.制止发现所有顶点为止.可以发现DFS按深度为策略进行遍历.<br>DFS实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">DFS(G)</div><div class="line">for each vertex u in V[G]</div><div class="line">    do color[u] &lt;- white</div><div class="line">        f[u] &lt;- Null</div><div class="line">time &lt;- 0                       #全局计时器, 确定完成时间f[v]</div><div class="line">for each vertex u in V[G]</div><div class="line">    do if colo[u] = white</div><div class="line">    then DFS-visit[u]</div><div class="line"></div><div class="line">DFS-visit(u)</div><div class="line">colo[u] &lt;- gray</div><div class="line">d[u] &lt;- time + 1</div><div class="line">d[u] &lt;- time</div><div class="line">for each v in Adj[u]</div><div class="line">    do if color[v]  = white</div><div class="line">        then f[v] &lt;- u</div><div class="line">        DFS-visit(v)</div><div class="line">color[u] &lt;- black</div><div class="line">f[u] &lt;- time &lt;- time + 1</div></pre></td></tr></table></figure></p>
+<p>DFS可视化如图4<br><img src="/images/dfs.png" alt="dfs"></p>
+<p>DFS分析: 仍然采用聚集分析, 每个顶点的邻接表被遍历一次, 要求 $O(V)$.对每个顶点u, 过程DFS-visit仅被调用一次,即只对未遍历的顶点调用该过程.在DFS-visit(v)的一次执行中,遍历的标记过程被执行|Adj[v]|次,且有:<br>$$  \sum_{v \in V}|Adj[v]| = O(E) $$<br>故DFS的总运行时间为 $O(V + E)$.</p>
+<p>DFS创建一个深度优先森林外,深度优先搜索同时为每个顶点加盖时间戳.每个顶点 v 有两个时间戳:当顶点 v 第一次被发现时,记录下第一个时间戳 d[v],当结束检查 v 的邻接表时,记录下第二个时间戳 f[v].许多基于深度优先搜索的图算法都用到了时间戳,它们对推算深度优先搜索的时行情况有很大的帮助.</p>
+<h4 id="拓扑排序-Topological-sort"><a href="#拓扑排序-Topological-sort" class="headerlink" title="拓扑排序 Topological sort"></a>拓扑排序 Topological sort</h4><p>对一个有向无环图(Directed Acyclic Graph简称DAG)G进行拓扑排序,是将G中所有顶点排成一个线性序列,使得图中任意一对顶点u和v,若边 $(u,v) \in E[G]$,则u在线性序列中出现在v之前.通常,这样的线性序列称为满足拓扑次序(Topological Order)的序列,简称拓扑序列.拓扑排序运用在在顶点活动网(Activity On Vertex network,简称AOV网)中,确定活动先后的发生顺序.</p>
+<p>一个dag的拓扑排序可以理解为图中所有顶点沿水平线排列而成的一个序列.下面是一个典型的活动安排例子:<br><img src="/images/dag.png" alt="dag"></p>
+<p>一般由AOV网构造拓扑序列的拓扑排序算法主要是循环执行以下两步,直到不存在入度为0的顶点为止.</p>
+<ul>
+<li>选择一个入度为0的顶点并输出之；</li>
+<li>从网中删除此顶点及所有出边.<br>循环结束后,若输出的顶点数小于网中的顶点数,则输出“有回路”信息,否则输出的顶点序列就是一种拓扑序列.</li>
+</ul>
+<p>而在算法导论中运用全局的计时器time,巧妙的实现拓扑排序.通过深度遍历来确定时间完成的时间,按时间顺序自然构造拓扑序列,而无需根据BFS遍历来删除边.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">topoligical-sort(G)</div><div class="line">call DFS(G) to compute finishing times f[v] for each vertex v</div><div class="line">as each vete is finished, insert it onto the front of a linked list</div><div class="line">return the linked list of vertices</div></pre></td></tr></table></figure></p>
+<h4 id="强连通分支"><a href="#强连通分支" class="headerlink" title="强连通分支"></a>强连通分支</h4><p>强连通分支(strongly connected component):有向图G=(V,E)的一个最大顶点集合 $C \subseteq V$, 对C中任意一堆对顶点u, v, 它们是互相可达的.</p>
+<p>寻找SCC的思路: 定义图G的转置:<br>$$ G^T = (V, E^T), E^T = {(u, v):(v, u) \in E} $$<br>对分支图 $G^{SCC} = (V^{SCC}, E^{SCC})$,假设G的强连通分支为 $[C_1, C_2, \dots, C_k]$.顶点集 $V^{SCC} = {v_1, v_2, \dots, v_k }$,对于G的每一个强连通分支 $C_i$,它都包含一个顶点 $v_i$.如果对某个 $x \in C_i$ 以及 $y \in C_i$, G中包含有向边(x, y), 则有一条边 $(v_i,v_j) \in E^{SCC}$. 因此收缩其关联的顶点都处于G的同一强连通分支内的边,即可得到图 $G^{SCC}$. 对应的 $G^{SCC}$是一个有向无环图(dag);<br><img src="/images/scc.png" alt="scc"></p>
+<blockquote>
+<ol>
+<li>对G进行深度优先遍历得到每个顶点的时间戳 f[x];</li>
+<li>求得G的返回图 $G^T$;</li>
+<li>按照f[x]的逆向顺序为顶点顺序对$G^T$进行深度优先遍历,即按照G的拓扑排序的顺序对 $G^T$再进行深度优先遍历;<br>步骤3得到的各棵子树就是原图 G的各强连通分支.<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">strongly-connnected-component(G)</div><div class="line">call DFS(G) to compute finishing times f[u] for each vertex u</div><div class="line">compute GT</div><div class="line">call DFS(GT). but in the main loop of DFS, consider the vertices in order of decreasing f[u](as computed in line 1)</div><div class="line">output the vertices of each tree in the depth-first forest formed in line 3 as a separate strongly connected component</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<h3 id="Chapter23-最小生成树-Minimum-Spanning-Trees"><a href="#Chapter23-最小生成树-Minimum-Spanning-Trees" class="headerlink" title="Chapter23 最小生成树 Minimum Spanning Trees"></a>Chapter23 最小生成树 Minimum Spanning Trees</h3><p>在生成树(spanning tree)T是指: T连接了G的所有顶点且无回路, 因此T必然是一棵树.其中特殊的一类T得到的树的权值最小, 为最小生成树.<br>采用贪心的思路,可以通过Kruskal算法和Prim算法有效的解决生成树问题.</p>
+<h4 id="最小生成树的策略"><a href="#最小生成树的策略" class="headerlink" title="最小生成树的策略"></a>最小生成树的策略</h4><p>最小(权值)生成树:由 n-1 条边,连接了所有的 n 个顶点,并且所有边上的权值和最小.一个典型实例如下:<br><img src="/images/mst.png" alt="mst"></p>
+<p>一个通用的贪心策略是,在每个步骤中都形成最小生成树的一条边,算法维护这个集合A, 并保持了以下循环不变式:<br>每次循环之前, A是最小生成树的一个子集.<br>在算法的每一步,确定一条边(u, v), 使得它加入集合A后, 循环不变式得以保持, 即 $A \bigcup {(u, v) }$仍然是最小生成树的子集.这样的边(u, v)称为安全边(safe edge).描述如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">generic-mst(G, w)</div><div class="line">A &lt;- Empty</div><div class="line">while A does not form a spanning tree</div><div class="line">    do find an edge(u, v) that is safe for A</div><div class="line">        A &lt;- A union (u, v)</div><div class="line">return A</div></pre></td></tr></table></figure></p>
+<h4 id="Kruskal算法"><a href="#Kruskal算法" class="headerlink" title="Kruskal算法"></a>Kruskal算法</h4><p>Kruskal算法直接基于通用贪心策略:找出森林中连接任意两棵树的所有边中,具有最小权值的边作为安全边,添加其到正在生长的森林中.即,集合A是一个森林,加入集合A中的安全边总是图中连接两个不同连通分支的最小权边.<br>通过part5高级数据结构中不相交集合可以很好的实现Kruskal算法.比较<code>find-set(u)</code>和<code>find-set(v)</code>是否等同,确定u和v是否属于同一棵树,通过<code>Union</code>实现树的合并.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mst-kruskal(G, w)</div><div class="line">A &lt;- Empty</div><div class="line">for each vertex v in V[G]</div><div class="line">    do make-set(v)</div><div class="line">sort the edges of E into nondecreasing order by weight w</div><div class="line">for each edge(u, v) in E, taken in nondecreasing order by weight</div><div class="line">    do if find-set(u) != find-set(v)</div><div class="line">        then A &lt;- A union (u, v)</div><div class="line">            Union(u, v)</div><div class="line">return A</div></pre></td></tr></table></figure></p>
+<p>算法可视化如下:<br><img src="/images/kruskal.png" alt="kruskal"></p>
+<p>Kruskal算法分析:<br>如果采用不相交数据集合中的按秩结合和路径压缩的策略,可以最高效的实现.初始化要求 $O(1)$, 对各条边排序需要 $O(E\log E)$.对每一条边, 执行 $O(E)$ 次<code>find-set</code>和<code>union</code>操作, 加上|V|次<code>make-set</code>操作,要求的总时间为$O((V + E)\alpha(V)$.假定G是连通的,则有 |E| &gt; |v| - 1, 因而不相交集合操作时间为 $O(E\alpha(v))$. 又有 $\alpha(|V|) = O(\log V) = O(\log E)$,故有总运行时间为 $O(E\log E)$. 由于 $|E| &lt; |V| ^ 2$, 因而 $\log |E| = O(\log V)$, 即Kruskal总运行时间为 $O(E\log V)$</p>
+<h4 id="Prim算法"><a href="#Prim算法" class="headerlink" title="Prim算法"></a>Prim算法</h4><p>Prim算法的贪心策略:集合A仅形成单棵树,添入集合A中的安全边总是连接树与一个不在树中的顶点的最小权边.树从任意根顶点r开始形成, 每一步里连接了树A与 $G_A=(V, A)$ 中某孤立顶点的轻边(最小权值边)加入到树A中, 直至包含了所有的顶点.如下图:<br><img src="/images/prim.png" alt="prim"></p>
+<p>Prim算法维护一个基于key域的最小优先级队列Q,其包含所有不在树A中的顶点.key[u]表示所有与u相连的树中顶点的边的最小权值.f[u]指向u的父节点.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">mst-prim(G, w, r)</div><div class="line">for each u in V[G]</div><div class="line">    do key[u] &lt;- INT</div><div class="line">        f[u] &lt;- Null</div><div class="line">key[r] &lt;- 0</div><div class="line">Q &lt;- V[G]</div><div class="line">while Q != Empty</div><div class="line">    do u &lt;- extract-min(Q)</div><div class="line">        for each v in Adj[u]</div><div class="line">            do if v in Q and w(u, v) &lt; key[v]</div><div class="line">                then f[u] &lt;- u</div><div class="line">                    key[v] &lt;- w(u, v)</div></pre></td></tr></table></figure></p>
+<p>Prim算法分析:<br>Prim算法性能取决于优先队列Q的实现方案, 如果采用Part5学习的二叉堆实现:通过<code>build-min-heao</code>实现初始化, 需要 $O(V)$. <code>while</code>循环体执行|V|次, 每次调用<code>extract-min</code>需要 $O(\log V)$, 故该循环占用时间 $O(V\log V)$.<code>for</code>循环执行 $O(E)$ 次, 每次调用<code>decrease-key</code>实现对key的赋值要求 $O(\log V)$.因此, Prim算法总的运行时间为 $O(V\log V + E\log V) = O(E\log V)$.从渐进意义上来说, Prim算法和Kruskal算法运行时间相同.<br>如果改进为斐波那契堆, 在Chapter20得到,|V|个元素组成的斐波那契堆,可以在 $O(\log Ｖ)$ 的平摊时间内完成<code>extract-min</code>操作．则Prim算法运行时间可以改进为 $O(E + V\log Ｖ)$.</p>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><p>Prim算法有着更好的实际效率:</p>
+<blockquote>
+<ol>
+<li>Prim算法在执行的过程中,将不在树中的所有顶点都放在一个基于key域的最小优先队列Q中;</li>
+<li>每次在选取安全边时,只需要从Q中弹出最小key值的顶点即可,而不需要像 Kruskal 一样为对所有的边的权值进行一次排序;</li>
+<li>Prim 算法使用了用于快速或者最小权值边的技巧(二叉堆、二项堆、斐波那契堆)来加速算法的运行.在最朴素的选取安全边的算法中,需要遍历剩下的所有的边,所需要的时间复杂度为 $O(EV)$,而采用堆来优化后只需要 $O(E\log V)$ ,大大地改善了算法的执行时间(堆的好处).</li>
+</ol>
+</blockquote>
+<p>不过Kruskal算法实现相对简单,所以对于一般的应用Kruskal算法也是可以的．</p>
+<h3 id="Chapter24-如何在地图中选择最短的路径"><a href="#Chapter24-如何在地图中选择最短的路径" class="headerlink" title="Chapter24 如何在地图中选择最短的路径?"></a>Chapter24 如何在地图中选择最短的路径?</h3><p>考虑一个实际问题:在地图上选出从北京到上海的最短距离.直接的想法是北京和上海两点之间的直线, 但实际不可能存在这条路, 北京和上海是通过之间一个个城市中转的.城市抽象为顶点, 城市之间的道路抽象为边,道路里程为权值,则北京到上海的最短路径问题转化为图中的单源最短路径问题.本章即是学习在图中解决最短路径问题的算法</p>
+<h4 id="最短路径"><a href="#最短路径" class="headerlink" title="最短路径"></a>最短路径</h4><p>定义<br>给定带权有向图G = (V, E),加权函数 $w: E \to R$从边到实数的映射.<br>路径 $p = {v_0, v_1, \dots, v_k}$的权为组成边的所有权值之和:<br>$$ w(p) = \sum_{i=1}^k w(v_{i-1}, v_i) $$<br>u到v的最短路径的权为:<br>$$<br>\delta(u, v) =<br>\begin{cases}<br>min{w(p): u \to v }, \text {if path(u, v) exists} \\<br>\infty, else \\<br>\end{cases}<br>$$<br>对应的最短路径为权 $w(p) = \delta(u, v)$的任何路径.</p>
+<p>注:权值是一种度量标准, 不限于距离, 还可以是时间/费用/损失.</p>
+<p>问题变体</p>
+<ul>
+<li>单终点最短路: 每个顶点v到终点t的最短路, 即将单源最短路问题反向即可</li>
+<li>单对顶点最短路: 给定顶点u和v的最短路,u单源最短路的问题选择终点v即可</li>
+<li>全源最短路: 找出所有顶点之间的最短路径.</li>
+</ul>
+<p>问题分析<br>1.最优子结构<br><strong>最短路径的子路径是最短路径.</strong><br>$$\begin{align}<br>设路径p = &lt; v_0, v_1, \dots, v_k &gt;是v_0到v_k的最短路径,\<br>则对 \forall i, j, 1 \leq i \leq j \leq k \<br>路径p_{ij} = &lt; v_i, v_{i+1}, \dots, v_j&gt;是 v_i到v_j的最短路径 \<br>\end{align}<br>$$</p>
+<p>2.负权值边<br>如果问题中存在负权值边, 但不包含<strong>负权值回路</strong>,则最短路径的定义仍然是正确的.但一旦存在负权值回路, 则不存在最短路径,因为通过不断穿过负权值回路可以得到更小权值的边.<br><img src="/images/n-path.png" alt="negative path"></p>
+<p>3.回路<br>除去负权值回路, 最短路径亦不能包含正权值回路.因为从路径上一出回路后,可以得到源点/终点相同,权值更小的路径.</p>
+<p>4.求解路径<br>最短路径问题中我们不仅想得到最短路径的权,也想得到最短路径是什么.通过类似广度优先搜索树的表示方法,设置顶点v的前驱f[v], 形成最短路径树.然后调用<code>print-path(G, s, v)</code>来递归的输出最短路径即可.<br><img src="/images/mst-path.png" alt="mst-path"></p>
+<p>5.<strong>松弛技术 relaxation</strong><br>对顶点 $ v \in V$, 设置d[v]描述源点s到v的最短路径权值的上界,初始化如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">initialize-single-source(G, s)</div><div class="line">for each vertex v in V[G]</div><div class="line">    do d[v] &lt;- INT</div><div class="line">        f[v] &lt;- Null</div><div class="line">d[s] &lt;- 0</div></pre></td></tr></table></figure></p>
+<p>松弛操作指, 通过顶点u, 对迄今找到的v的最短路径改进的过程:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">relax(u, v, w)</div><div class="line">if d[v] &gt; d[u] + w(u, v)</div><div class="line">    then d[v] &lt;- d[u] + w(u, v)</div><div class="line">        f[v] &lt;- u</div></pre></td></tr></table></figure></p>
+<p>松弛是最短路径的核心操作, 其是改变最短路径和前驱的唯一方式.本章的算法的区别主要就在对每条边的松弛操作的次数和顺序有所不同.Dijkstra算法对每条边执行一次松弛, 而在Bellman-Ford中执行多次.</p>
+<h4 id="Bellman-Ford算法"><a href="#Bellman-Ford算法" class="headerlink" title="Bellman-Ford算法"></a>Bellman-Ford算法</h4><p>Bellman-Ford算法运用松弛技术, 对每个顶点, 逐步减小源s到v的最短路径的估计值d[v]直到达到实际最短路径的权.算法返回布尔值,表明图中是否存在从源点可达的负权值回路.实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">bellman-ford(G, w, s)</div><div class="line">initialize-single-source(G, s)</div><div class="line">for i &lt;- 1 to |V[G]| - 1</div><div class="line">    do for each edge (u, v) in E[G]</div><div class="line">        do relax(u, v, w)</div><div class="line">for each edge(u, v) in E[G]</div><div class="line">    do if d[v] &gt; d[u] + w(u, v)</div><div class="line">        then return false</div><div class="line">return true</div></pre></td></tr></table></figure></p>
+<p>可视化如下:<br><img src="/images/bellman-ford.png" alt="bellman-ford"></p>
+<p>算法分析:<br>初始化需要 $O(V)$, 松弛操作的循环共|V| - 1轮, 每轮运行时间为 $O(E)$.检验是否存在负权值回路需要 $O(E)$.故bellman-ford算法的总运行时间为 $O(EV)$.</p>
+<h4 id="有向无环图dag中的单源最短路径"><a href="#有向无环图dag中的单源最短路径" class="headerlink" title="有向无环图dag中的单源最短路径"></a>有向无环图dag中的单源最短路径</h4><p>按顶点的拓扑顺序对某加权有向无回路图的边进行松弛后, 因为如果存在path(u,v),则拓扑序列中u在v之前.所以在遍历每个顶点时, 只需松弛从该点出发的所有边即可.因此,可以在 $O(V+E)$ 时间内计算出单源最短路径.在一个有向无回路图中最短路径总是存在的,因为即使图中有权值为负的边,也不可能存在负权回路(因为它根本没有任何回路).<br>实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dag-shortest-path(G, w, s)</div><div class="line">topoligically sort the vertices of G</div><div class="line">initialize-single-source(G, s)</div><div class="line">for each vertex u, taken in topoligically sorted order</div><div class="line">    do for each vertex v in Adj[u]</div><div class="line">        do relax(u, v, w)</div></pre></td></tr></table></figure></p>
+<p>可视化如下:<br><img src="/images/dag-path.png" alt="dag-path"></p>
+<h4 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h4><p>Dijkstra算法中设置顶点集合S, 从源点s到集合中顶点的最终最短路径的权值都已确定.其反复选择具有最短路径估计的顶点 $u \in V-S$, 并将u将入S中, 对u的所有出边进行松弛.其中使用了优先级队列Q,来优化顶点d值的选取过程.<br>实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dijkstra(G, w, s)</div><div class="line">initialize-single-source(G, s)</div><div class="line">s &lt;- Empty</div><div class="line">Q &lt;- V[G]</div><div class="line">while Q != Empty</div><div class="line">    do u &lt;- extract-min(Q)</div><div class="line">        s &lt;- s union &#123;u&#125;</div><div class="line">        for each vertex v in Adj[u]</div><div class="line">            do relax(u, v, w)</div></pre></td></tr></table></figure></p>
+<p>可视化如下:<br><img src="/images/dijkstra.png" alt="dijkstra"></p>
+<p>算法分析<br>dijkstra算法同样依赖优先队列Q的具体实现. 初始化Q调用<code>insert</code>方法 $O(1)$, 每个顶点调用一次, 需要 $O(V)$;for循环共有|E|迭代, 即至多|E|次调用<code>decrease-key</code> $O(1)$,共 $O(E)$.又有每个顶点只加入集合S一次, 故调用<code>extract-min</code> $O(v)$ 共|V|次, 于是dijkstra的总的运行时间为 $O(V^2 + E) = O(V^2)$.<br>如果采用斐波那契堆实现优先级队列, 因为|V|个<code>extract-min</code>的平摊代价为 $O(\log V)$, 至多|E|个<code>decrease-key</code>操作的每个的平摊代价为 $O(1)$.使得dijkstra算法可以优化到 $O(V\log V + E)$.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          
+            <a href="/tags/data-structure/" rel="tag"># data_structure</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/04/lab4/" rel="prev" title="lab4-Preemptive Multitasking">
+                lab4-Preemptive Multitasking <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#＜Introduction-to-algorithms＞笔记"><span class="nav-number">1.</span> <span class="nav-text">＜Introduction to algorithms＞笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part6-图算法"><span class="nav-number">1.1.</span> <span class="nav-text">Part6 图算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter22-如何表示和遍历图"><span class="nav-number">1.1.1.</span> <span class="nav-text">Chapter22 如何表示和遍历图?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图的表示"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">图的表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#广度优先搜索-bread-first-search"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">广度优先搜索(bread-first search)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深度优先搜索-depth-first-search"><span class="nav-number">1.1.2.</span> <span class="nav-text">深度优先搜索(depth-first search)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#拓扑排序-Topological-sort"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">拓扑排序 Topological sort</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#强连通分支"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">强连通分支</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter23-最小生成树-Minimum-Spanning-Trees"><span class="nav-number">1.1.3.</span> <span class="nav-text">Chapter23 最小生成树 Minimum Spanning Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最小生成树的策略"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">最小生成树的策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kruskal算法"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">Kruskal算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Prim算法"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">Prim算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter24-如何在地图中选择最短的路径"><span class="nav-number">1.1.4.</span> <span class="nav-text">Chapter24 如何在地图中选择最短的路径?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最短路径"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">最短路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bellman-Ford算法"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">Bellman-Ford算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有向无环图dag中的单源最短路径"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">有向无环图dag中的单源最短路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dijkstra算法"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">Dijkstra算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>

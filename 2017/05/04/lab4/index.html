@@ -94,7 +94,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/05/04/lab4/index.html">
 <meta property="og:site_name" content="Chestnut">
 <meta property="og:description" content="Lab4 抢占式多进程摘要Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：  part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存） part2：实现类似Unix的fork机制，允许在用户模式下创建副本 part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时">
-<meta property="og:updated_time" content="2017-05-11T08:07:09.341Z">
+<meta property="og:updated_time" content="2017-05-11T08:11:06.932Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="lab4-Preemptive Multitasking">
 <meta name="twitter:description" content="Lab4 抢占式多进程摘要Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：  part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存） part2：实现类似Unix的fork机制，允许在用户模式下创建副本 part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时">
@@ -340,6 +340,7 @@
 </ul>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>下载实验代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git pull</div><div class="line">git chekout -b lab4 origin/lab4</div><div class="line">git merge Lab3</div></pre></td></tr></table></figure></p>
 <p>Lab4 新增的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">kern/cpu.h	多处理器支持的内核私有定义</div><div class="line">kern/mpconfig.c	读取多处理器配置的代码</div><div class="line">kern/lapic.c	驱动处理器中的本地APIC单元的内核代码</div><div class="line">kern/mpentry.S	非启动CPU的汇编代码入口</div><div class="line">kern/spinlock.h	包括大内核锁在内的自旋锁的内和私有定义</div><div class="line">kern/spinlock.c	自旋锁的内核代码实现</div><div class="line">kern/sched.c	调度器的代码框架</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
 <h2 id="part1-多处理器支持和多任务协同"><a href="#part1-多处理器支持和多任务协同" class="headerlink" title="part1 多处理器支持和多任务协同"></a>part1 多处理器支持和多任务协同</h2><p>Lab4 part1将首先扩展JOS以在多处理器系统上运行，然后实现新的JOS内核系统调用，以允许用户级环境创建其他新的环境。另外实现协同循环调度，当当前环境自动放弃CPU（或退出）时，允许内核从一个环境切换到另一个环境。之后在part3中，还会实现抢占式调度，即使在环境不允许的情况下，允许内核在一定时间内重新从环境中重新控制CPU。</p>
 <h3 id="多处理器支持"><a href="#多处理器支持" class="headerlink" title="多处理器支持"></a>多处理器支持</h3><p>目标使JOS支持对称多处理器(SMP)。<code>SMP</code>是一种多处理器架构，所有的CPU对等地访问系统资源。在SMP中所有CPU的功能是相同的，但是在启动过程中会被分为2类：引导处理器(<code>BSP</code>)负责初始化系统来启动操作系统，当操作系统被启动后，应用处理器(<code>AP</code>)被引导处理器激活。引导处理器是由硬件和BIOS决定的，目前所有的代码都是运行在BSP上。<br>在个SMP系统中，每个CPU有1个附属的<code>Local APIC（LAPIC）</code>单元。LAPIC单元负责处理系统中的中断，同时为它关联的CPU提供独一无二的标识符。在part1，将使用LAPIC单元以下基本功能(在<code>/kern/lapic.c</code>)：</p>
 <ul>
@@ -554,6 +555,10 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/05/09/CLRS-notes5/" rel="next" title="introduction to algorithms note5">
+                <i class="fa fa-chevron-left"></i> introduction to algorithms note5
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
@@ -634,7 +639,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
