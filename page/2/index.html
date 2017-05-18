@@ -260,6 +260,132 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/29/lab3_part2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/29/lab3_part2/" itemprop="url">
+                  lab3-user-environment-part2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-29T00:00:00+08:00">
+                2017-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab3-用户环境-Part2"><a href="#Lab3-用户环境-Part2" class="headerlink" title="Lab3 用户环境 Part2"></a>Lab3 用户环境 Part2</h1><h2 id="Part2-缺页中断-断点异常和系统调用"><a href="#Part2-缺页中断-断点异常和系统调用" class="headerlink" title="Part2 缺页中断, 断点异常和系统调用"></a>Part2 缺页中断, 断点异常和系统调用</h2><p>part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常.</p>
+<h3 id="处理缺页中断"><a href="#处理缺页中断" class="headerlink" title="处理缺页中断"></a>处理缺页中断</h3><p>　　缺页中断（中断向量14（<code>T_PGFLT</code>））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存器<code>CR2</code>中.在<code>trap.c</code>中,已经提供了一个能够处理这种缺页异常的函数<code>page_fault_handler()</code>.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/29/lab3_part2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/26/lab3_part1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -804,140 +930,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/19/hw3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chestnutme">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chestnut">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/19/hw3/" itemprop="url">
-                  hw3-system-calls
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-19T00:00:00+08:00">
-                2017-04-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="hw3-xv6-system-calls"><a href="#hw3-xv6-system-calls" class="headerlink" title="hw3 xv6 system calls"></a>hw3 xv6 system calls</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在[hw1 boot pc]的基础上,学习xv6的系统调用:</p>
-<blockquote>
-<ul>
-<li>运用xv6的系统调用</li>
-<li>修改xv6 kernel, 添加新系统调用</li>
-</ul>
-</blockquote>
-<h2 id="Part1-系统调用追踪"><a href="#Part1-系统调用追踪" class="headerlink" title="Part1: 系统调用追踪"></a>Part1: 系统调用追踪</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
-<p>修改<code>systemcall.c</code>,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">fork -&gt; 2</div><div class="line"><span class="built_in">exec</span> -&gt; 0</div><div class="line">open -&gt; 3</div><div class="line">close -&gt; 0</div><div class="line"><span class="variable">$write</span> -&gt; 1</div><div class="line"> write -&gt; 1</div></pre></td></tr></table></figure></p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/19/hw3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -987,7 +979,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

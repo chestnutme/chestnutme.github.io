@@ -260,6 +260,134 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/13/lab4_part23/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/13/lab4_part23/" itemprop="url">
+                  lab4-Preemptive Multitasking part23
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-13T00:00:00+08:00">
+                2017-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab4-抢占式多进程"><a href="#Lab4-抢占式多进程" class="headerlink" title="Lab4 抢占式多进程"></a>Lab4 抢占式多进程</h1><h2 id="Part2-写入时复制-copy-on-write-fork"><a href="#Part2-写入时复制-copy-on-write-fork" class="headerlink" title="Part2 写入时复制 copy-on-write fork"></a>Part2 写入时复制 copy-on-write fork</h2><p>如前所述,Unix将fork()系统调用作为进程创建原语.fork()系统调用将调用进程的地址空间（父进程）创建一个新的进程（子进程）.<br>xv6 Unix <code>fork()</code>通过将父进程页面中的所有数据复制到为子进程分配的新页面中,这个机制基本和<code>dumbfork()</code>相同.复制父进程的地址空间到子进程是<code>fork()</code>中代价最大的操作.<br>但是,调用<code>fork()</code>后经常在子进程中跟随<code>exec()</code>调用, 其会用加载新程序到子进程的内存.例如, 这是shell的常用机制.在这种情况下,复制父进程地址空间的时间大部分被浪费,因为子进程在调用<code>exec()</code>之前只使用很少的内存.</p>
+<p>因此,Unix的更高版本利用虚拟内存硬件,允许父子进程<strong>共享</strong>映射到其各自地址空间的内存,直到其中一个进程实际修改这段内存.这种技术被称为<strong>写时复制(copy-on-fork)</strong>.为了做到这一点,调用<code>fork()</code>时,内核上将复制父进程的地址空间映射到进程,而不是复制映射页的内容,同时标记现在共享的页面为只读.当两个进程中的一个尝试写入其中一个共享页面时,该进程将出现页面错误.在这一点上,Unix内核意识到该页面真的是一个“虚拟”或“写时复制”的副本,因此它创建一个新的/私有的故障页面的可写副本.这样,单个页面的内容在实际写入之前实际上并不被复制.<code>fork()</code>的这种优化使随后的<code>exec()</code>代价小很多：在子进程调用<code>exec()</code>之前,可能只需要复制一个页面（它的堆栈的当前页面）.</p>
+<p>在part2,实现一个 Unix <code>fork()</code>,其具有写时复制功能,并作为一个用户空间库例程来.另外,使得单个用户模式程序定义自己的<code>fork()</code>:一个程序想要一个稍微不同的<code>fork()</code>（如总是复制的<code>dumbfork()</code>,或者父子进程共享内存）可以很容易修改而实现.</p>
+<h3 id="用户级页面错误处理"><a href="#用户级页面错误处理" class="headerlink" title="用户级页面错误处理"></a>用户级页面错误处理</h3><p>用户级的写时复制<code>fork()</code>首先需要知道发生在写保护页面上的页面错误,这是首先要实现的.写时复制只是用户级页面故障处理的许多可能用途之一.<br>一般实现方式是:设置一个地址空间,以便页面错误指示出何时需要执行操作.例如,大多数Unix内核最初仅在新进程的堆栈区域中映射单个页面,并且随着进程的堆栈增加而随后分配和映射额外的堆栈页面,并导致尚未映射的堆栈地址发生页面错误,对此典型的Unix内核必须跟踪在进程空间的每个区域中出现页面错误时要执行的操作.又例如,堆栈区域中的故障通常会导致分配和映射物理内存新页面.程序BSS区域的故障通常会分配一个新的页面,以0填充,并在进行映射.<br>以上是内核需要跟踪的信息.不采用传统的Unix方法,而更好地处理用户空间中的每个页面错误,使得bug破坏性更小.这种设计具有额外的优点,允许程序在定义其内存区域方面具有很大的灵活性.<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/13/lab4_part23/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/09/CLRS-notes5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -799,132 +927,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/29/lab3_part2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chestnutme">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chestnut">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/29/lab3_part2/" itemprop="url">
-                  lab3-user-environment-part2
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-29T00:00:00+08:00">
-                2017-04-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Lab3-用户环境-Part2"><a href="#Lab3-用户环境-Part2" class="headerlink" title="Lab3 用户环境 Part2"></a>Lab3 用户环境 Part2</h1><h2 id="Part2-缺页中断-断点异常和系统调用"><a href="#Part2-缺页中断-断点异常和系统调用" class="headerlink" title="Part2 缺页中断, 断点异常和系统调用"></a>Part2 缺页中断, 断点异常和系统调用</h2><p>part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常.</p>
-<h3 id="处理缺页中断"><a href="#处理缺页中断" class="headerlink" title="处理缺页中断"></a>处理缺页中断</h3><p>　　缺页中断（中断向量14（<code>T_PGFLT</code>））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存器<code>CR2</code>中.在<code>trap.c</code>中,已经提供了一个能够处理这种缺页异常的函数<code>page_fault_handler()</code>.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/29/lab3_part2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -974,7 +976,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
