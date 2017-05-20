@@ -260,6 +260,136 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/hw4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/hw4/" itemprop="url">
+                  hw4-lazy-page-allocation
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T00:00:00+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="hw4-lazy-page-allocation"><a href="#hw4-lazy-page-allocation" class="headerlink" title="hw4 lazy page allocation"></a>hw4 lazy page allocation</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><blockquote>
+<p>OS可以使用页表硬件的技巧之一是 <strong>堆内存的懒惰分配</strong>.当进程需要更多的内存的时候,调用<code>malloc()</code>函数申请更多的堆内存,底层系统调用<code>sbrk</code>实际完成这个工作.<code>sbrk</code>系统调用分配物理内存,并映射到进程的虚拟地址.但是有的进程会一次申请大量的内存,但是又可能根本用不到,比如稀疏数组(sparse array).所以说复杂的内核涉及会将实际的allocation的工作推迟到应用程序尝试使用该页面的时候,即发生了<code>page fault</code>,然后再进行实际的分配.  -</p>
+</blockquote>
+<h2 id="Part1-删除’sbrk’的内存分配"><a href="#Part1-删除’sbrk’的内存分配" class="headerlink" title="Part1 删除’sbrk’的内存分配"></a>Part1 删除’sbrk’的内存分配</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
+<p>从<code>sbrk(n)</code>系统调用实现中删除页分配,实现为<code>sysproc.c</code>中的<code>sys_sbrk()</code>函数.<code>sbrk(n)</code>系统调用将进程的内存大小增加n个字节,然后返回新分配区域的开始地址.</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/21/hw4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/19/hw3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -802,144 +932,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/CLRS-notes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chestnutme">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chestnut">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/11/CLRS-notes/" itemprop="url">
-                  introduction to algorithms note1
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-11T00:00:00+08:00">
-                2017-04-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结.</p>
-<h3 id="Part1-基础"><a href="#Part1-基础" class="headerlink" title="Part1 基础"></a>Part1 基础</h3><p>算法定义/基本的算法设计/递归的复杂度/概率与随机算法</p>
-<h4 id="Chapter1-什么是算法"><a href="#Chapter1-什么是算法" class="headerlink" title="Chapter1 什么是算法?"></a>Chapter1 什么是算法?</h4><blockquote>
-<p>  算法:<br>    $\require{AMScd}$<br>    \begin{CD}<br>    input @&gt;\text{computing procedure}&gt;&gt; ouput<br>    \end{CD}</p>
-<ul>
-<li>解决一类问题的计算过程, 一个具体问题-实例</li>
-<li>算法最重要的特性: 效率</li>
-</ul>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/11/CLRS-notes/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -984,7 +981,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

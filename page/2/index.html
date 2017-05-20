@@ -260,6 +260,147 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/30/hw6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/30/hw6/" itemprop="url">
+                  hw6-threads-and-locking
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-30T00:00:00+08:00">
+                2017-04-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="hw6-threads-and-locking"><a href="#hw6-threads-and-locking" class="headerlink" title="hw6 threads and locking"></a>hw6 threads and locking</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在多线程OS中，通常是在一个进程中包括多个线程，每个线程都是作为利用CPU的基本单位，是花费最小开销的实体.OS中实现进程和线程提高系统的并行性，hw6探索使用线程和锁来并行编程Hash表.</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>hw6在多核硬件的os上即可编译运行，不依赖于课程的xv6.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://pdos.csail.mit.edu/6.828/2016/homework/ph.c</div><div class="line">gcc -g -02 ph.c -pthread</div></pre></td></tr></table></figure></p>
+<p>源程序（<code>ph.c</code>)如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SOL</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NBUCKET 5</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NKEYS 100000</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> entry &#123;</div><div class="line">  <span class="keyword">int</span> key;</div><div class="line">  <span class="keyword">int</span> value;</div><div class="line">  <span class="keyword">struct</span> entry *next;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">struct</span> entry *table[NBUCKET];</div><div class="line"><span class="keyword">int</span> keys[NKEYS];</div><div class="line"><span class="keyword">int</span> nthread = <span class="number">1</span>;</div><div class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> done;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">double</span></span></div><div class="line"><span class="title">now</span><span class="params">()</span></div><div class="line">&#123;</div><div class="line"> <span class="keyword">struct</span> timeval tv;</div><div class="line"> gettimeofday(&amp;tv, <span class="number">0</span>);</div><div class="line"> <span class="keyword">return</span> tv.tv_sec + tv.tv_usec / <span class="number">1000000.0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i;</div><div class="line">  <span class="keyword">struct</span> entry *e;</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NBUCKET; i++) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d: "</span>, i);</div><div class="line">    <span class="keyword">for</span> (e = table[i]; e != <span class="number">0</span>; e = e-&gt;next) &#123;</div><div class="line">      <span class="built_in">printf</span>(<span class="string">"%d "</span>, e-&gt;key);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">insert</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value, <span class="keyword">struct</span> entry **p, <span class="keyword">struct</span> entry *n)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> entry *e = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> entry));</div><div class="line">  e-&gt;key = key;</div><div class="line">  e-&gt;value = value;</div><div class="line">  e-&gt;next = n;</div><div class="line">  *p = e;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span></span></div><div class="line"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i = key % NBUCKET;</div><div class="line">  insert(key, value, &amp;table[i], table[i]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">struct</span> entry*</span></div><div class="line"><span class="title">get</span><span class="params">(<span class="keyword">int</span> key)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> entry *e = <span class="number">0</span>;</div><div class="line">  <span class="keyword">for</span> (e = table[key % NBUCKET]; e != <span class="number">0</span>; e = e-&gt;next) &#123;</div><div class="line">    <span class="keyword">if</span> (e-&gt;key == key) <span class="keyword">break</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> e;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> *</span></div><div class="line"><span class="title">thread</span><span class="params">(<span class="keyword">void</span> *xa)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">long</span> n = (<span class="keyword">long</span>) xa;</div><div class="line">  <span class="keyword">int</span> i;</div><div class="line">  <span class="keyword">int</span> b = NKEYS/nthread;</div><div class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="comment">//  printf("b = %d\n", b);</span></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b; i++) &#123;</div><div class="line">    <span class="comment">// printf("%d: put %d\n", n, b*n+i);</span></div><div class="line">    put(keys[b*n + i], n);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: put time = %f\n"</span>, n, t1-t0);</div><div class="line"></div><div class="line">  <span class="comment">// Should use pthread_barrier, but MacOS doesn't support it ...</span></div><div class="line">  __sync_fetch_and_add(&amp;done, <span class="number">1</span>);</div><div class="line">  <span class="keyword">while</span> (done &lt; nthread) ;</div><div class="line"></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    <span class="keyword">struct</span> entry *e = get(keys[i]);</div><div class="line">    <span class="keyword">if</span> (e == <span class="number">0</span>) k++;</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: get time = %f\n"</span>, n, t1-t0);</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: %d keys missing\n"</span>, n, k);</div><div class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">pthread_t</span> *tha;</div><div class="line">  <span class="keyword">void</span> *value;</div><div class="line">  <span class="keyword">long</span> i;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</div><div class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s: %s nthread\n"</span>, argv[<span class="number">0</span>], argv[<span class="number">0</span>]);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">  &#125;</div><div class="line">  nthread = atoi(argv[<span class="number">1</span>]);</div><div class="line">  tha = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>) * nthread);</div><div class="line">  srandom(<span class="number">0</span>);</div><div class="line">  assert(NKEYS % nthread == <span class="number">0</span>);</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    keys[i] = random();</div><div class="line">  &#125;</div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_create(&amp;tha[i], <span class="literal">NULL</span>, thread, (<span class="keyword">void</span> *) i) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_join(tha[i], &amp;value) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"completion time = %f\n"</span>, t1-t0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><p>在4核机器上双线程运行程序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./a.out 2</div><div class="line"><span class="comment"># 2：n_threads为在hash表上执行put和get操作的线程数</span></div></pre></td></tr></table></figure></p>
+<p>产生如果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1: put time = 0.007442</div><div class="line">0: put time = 0.007474</div><div class="line">1: get time = 6.559389</div><div class="line">1: 1 keys missing</div><div class="line">0: get time = 6.567974</div><div class="line">0: 1. keys missing</div><div class="line">completion time = 6.575672</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>每个线程分两个阶段运行.在第一阶段<code>put</code>，每个线程将<code>[NKEYS/nthread]</code>key放入hash表.在第二阶段<code>get</code>，每个线程从hash表中获取<code>NKEYS</code>.输入结果为每个线程每个阶段花费多长时间，底部的完成时间为应用程序的总运行时间.在上面的输出中，应用程序的完成时间约为6.5秒.</p>
+</blockquote>
+<p>对比单线程，看双线程是否改进了性能：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">./a.out 1</div><div class="line">0: put time = 0.016793</div><div class="line">0: get time = 5.447454</div><div class="line">0: 0 keys missing</div><div class="line">completion time = 5.464499</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>单线程情况（5.5s）的完成时间略小于双线程情况（6.5s），增加的运行时间应该在消耗线程切换上。但双线程在<code>get</code>阶段的总工作量是单线程的两倍.因此，双线程在两个内核上实现了两倍的并行加速，效果很好.<code>put</code>阶段实现了一些加速; 双线程并行地插入相同数量的key，比单线程多一倍.另外，还有一个问题；<code>1 keys missing</code>说明在双线程运行中，程序在阶段2找不到的阶段1中插入1个键.</p>
+</blockquote>
+<p>在4核机器上运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">23: put time = 0.014067</div><div class="line">1: put time = 0.014450</div><div class="line">2: put time = 0.014245</div><div class="line">0: put time = 0.015714</div><div class="line">3: get time = 6.202647</div><div class="line">3: 45 keys missing</div><div class="line">0: get time = 6.211748</div><div class="line">0: 45 keys missing</div><div class="line">2: get time = 6.287174</div><div class="line">2: 45 keys missing</div><div class="line">1: get time = 6.306257</div><div class="line">1: 45 keys missing</div><div class="line">completion time = 6.322159</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>4线程完成时间与双线程大致相同，但是运行时间是双线程的两倍，实现了良好的并行性.但也发现缺失了更多的key的问题，相比较于单线程不会出现缺少key的问题.</p>
+</blockquote>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><h3 id="key缺失原因"><a href="#key缺失原因" class="headerlink" title="key缺失原因"></a>key缺失原因</h3><p>为什么当两个或多个线程同时运行时，key开始丢失？考虑这样一种情况：假设线程A和B同时运行。如果两个线程同时插入同一个bucket的key，则可能会发生竞争。下面的事件概述将导致这样的结果的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">t-A: calls insert() on bucket 1 (key = 6, 6 % NBUCKETS = 1)</div><div class="line"></div><div class="line">t-B: calls insert() on bucket 1 (key = 21, 21 % NBUCKETS = 1)</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">t-A: executes e-&gt;next = n</div><div class="line"></div><div class="line">t-B: executes e-&gt;next = n</div><div class="line"></div><div class="line">t-A: executes *p = e</div><div class="line"></div><div class="line">t-B: executes *p = e</div></pre></td></tr></table></figure></p>
+<p>这样做的结果是执行的最后一个线程B有效地<code>*p = e</code>覆盖了前一个线程A的动作并设置了新的列表的头指针.按照上面的执行顺序，假设插入线程A的键6将会丢失，因为线程B覆盖了它。</p>
+<h3 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a><strong>锁机制</strong></h3><p>为了避免上述事件的发生，即线程同时访问同一个资源，采用<strong>锁机制</strong>，给<code>put</code>和<code>get</code>加锁，实现线程的<strong>互斥</strong>.linux <code>pthread.h</code>提供的锁机制如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pthread_mutex_t</span> lock;     <span class="comment">// declare a lock</span></div><div class="line">pthread_mutex_init(&amp;lock, <span class="literal">NULL</span>);   <span class="comment">// initialize the lock</span></div><div class="line">pthread_mutex_lock(&amp;lock);  <span class="comment">// acquire lock</span></div><div class="line">pthread_mutex_unlock(&amp;lock);  <span class="comment">// release lock</span></div></pre></td></tr></table></figure></p>
+<p>首先想到的是给每一个<code>put</code>和<code>get</code>操作加锁，但发现这种结果导致多线程变成了线性运行，使得并行性降为0.然后发现<code>get</code>实际是读操作，不会对hash表进行写操作，在经典的读者-写着进程互斥问题中学到，读操作无需加锁，允许多个读操作并行执行，这样就在保证不出现key缺失的情况下提高了并行性。最后考虑<code>put</code>操作是对整个hash表加锁，实际上只需要给<code>put</code>操作访问的bucket加锁，而不是全局加锁，这使得其他<code>put</code>操作可以同时执行bucket的插入进一步提高了并行性。运行效果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">0: put time = 0.022744</div><div class="line">1: put time = 0.022521</div><div class="line">1: get time = 6.309178</div><div class="line">1: 0 keys missing</div><div class="line">0: get time = 6.323614</div><div class="line">0: 0 keys missing</div><div class="line">completion time = 6.350177</div></pre></td></tr></table></figure></p>
+<p><code>ph.c</code>修改结果如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">int</span> keys[NKEYS];</div><div class="line"><span class="keyword">pthread_mutex_t</span> bucket_locks[NBUCKET];</div><div class="line">...</div><div class="line"><span class="function"><span class="keyword">static</span></span></div><div class="line"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i = key % NBUCKET;</div><div class="line">  pthread_mutex_lock(&amp;bucket_locks[i]);</div><div class="line">  insert(key, value, &amp;table[i], table[i]);</div><div class="line">  pthread_mutex_unlock(&amp;bucket_locks[i]);</div><div class="line">&#125;</div><div class="line">...</div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">pthread_t</span> *tha;</div><div class="line">  <span class="keyword">void</span> *value;</div><div class="line">  <span class="keyword">long</span> i;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</div><div class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s: %s nthread\n"</span>, argv[<span class="number">0</span>], argv[<span class="number">0</span>]);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">  &#125;</div><div class="line">  nthread = atoi(argv[<span class="number">1</span>]);</div><div class="line">  tha = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>) * nthread);</div><div class="line">  srandom(<span class="number">0</span>);</div><div class="line">  assert(NKEYS % nthread == <span class="number">0</span>);</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    keys[i] = random();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">//init lock for every bucket</span></div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NBUCKET; i++) &#123;</div><div class="line">    pthread_mutex_init(&amp;bucket_locks[i], <span class="literal">NULL</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_create(&amp;tha[i], <span class="literal">NULL</span>, thread, (<span class="keyword">void</span> *) i) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_join(tha[i], &amp;value) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"completion time = %f\n"</span>, t1-t0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/29/lab3_part2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -800,141 +941,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/hw4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chestnutme">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chestnut">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/21/hw4/" itemprop="url">
-                  hw4-lazy-page-allocation
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T00:00:00+08:00">
-                2017-04-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="hw4-lazy-page-allocation"><a href="#hw4-lazy-page-allocation" class="headerlink" title="hw4 lazy page allocation"></a>hw4 lazy page allocation</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><blockquote>
-<p>OS可以使用页表硬件的技巧之一是 <strong>堆内存的懒惰分配</strong>.当进程需要更多的内存的时候,调用<code>malloc()</code>函数申请更多的堆内存,底层系统调用<code>sbrk</code>实际完成这个工作.<code>sbrk</code>系统调用分配物理内存,并映射到进程的虚拟地址.但是有的进程会一次申请大量的内存,但是又可能根本用不到,比如稀疏数组(sparse array).所以说复杂的内核涉及会将实际的allocation的工作推迟到应用程序尝试使用该页面的时候,即发生了<code>page fault</code>,然后再进行实际的分配.  -</p>
-</blockquote>
-<h2 id="Part1-删除’sbrk’的内存分配"><a href="#Part1-删除’sbrk’的内存分配" class="headerlink" title="Part1 删除’sbrk’的内存分配"></a>Part1 删除’sbrk’的内存分配</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
-<p>从<code>sbrk(n)</code>系统调用实现中删除页分配,实现为<code>sysproc.c</code>中的<code>sys_sbrk()</code>函数.<code>sbrk(n)</code>系统调用将进程的内存大小增加n个字节,然后返回新分配区域的开始地址.</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/21/hw4/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -979,7 +990,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
