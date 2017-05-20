@@ -1,0 +1,900 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="algorithm,data_structure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="＜Introduction to algorithms＞笔记Part7 高级算法问题在part1-6学习基本的数据结构和算法问题后, part7不再集中于对一个算法问题专题进行学习, 而是就不同的高级算法问题进行基本的介绍,其其覆盖的内容十分全面,涉及一下几个领域:  排序网络 矩阵运算 线性规划 字符串匹配  Chapter26 如何利用多核来并行排序?在part2中学习了基本的排序算法,包括插">
+<meta name="keywords" content="algorithm,data_structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="introduction to algorithms notes6">
+<meta property="og:url" content="http://yoursite.com/2017/05/18/CLRS-notes6/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="＜Introduction to algorithms＞笔记Part7 高级算法问题在part1-6学习基本的数据结构和算法问题后, part7不再集中于对一个算法问题专题进行学习, 而是就不同的高级算法问题进行基本的介绍,其其覆盖的内容十分全面,涉及一下几个领域:  排序网络 矩阵运算 线性规划 字符串匹配  Chapter26 如何利用多核来并行排序?在part2中学习了基本的排序算法,包括插">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/comparison.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/sortnet.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/half-cleaner.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/bitonic-sorter.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/bitonic-sorter2.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/merger.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/merger2.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/sorter.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/matrix.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/matrix.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/matrix.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/lu.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/string-match1.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/robin-karp.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/kmp1.png">
+<meta property="og:image" content="http://yoursite.com/images/CLRS_images/kmp2.png">
+<meta property="og:updated_time" content="2017-05-20T03:26:49.969Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="introduction to algorithms notes6">
+<meta name="twitter:description" content="＜Introduction to algorithms＞笔记Part7 高级算法问题在part1-6学习基本的数据结构和算法问题后, part7不再集中于对一个算法问题专题进行学习, 而是就不同的高级算法问题进行基本的介绍,其其覆盖的内容十分全面,涉及一下几个领域:  排序网络 矩阵运算 线性规划 字符串匹配  Chapter26 如何利用多核来并行排序?在part2中学习了基本的排序算法,包括插">
+<meta name="twitter:image" content="http://yoursite.com/images/CLRS_images/comparison.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/18/CLRS-notes6/"/>
+
+
+
+
+
+  <title> introduction to algorithms notes6 | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/18/CLRS-notes6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                introduction to algorithms notes6
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-18T00:00:00+08:00">
+                2017-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h2 id="Part7-高级算法问题"><a href="#Part7-高级算法问题" class="headerlink" title="Part7 高级算法问题"></a>Part7 高级算法问题</h2><p>在part1-6学习基本的数据结构和算法问题后, part7不再集中于对一个算法问题专题进行学习, 而是就不同的高级算法问题进行基本的介绍,其其覆盖的内容十分全面,涉及一下几个领域:</p>
+<ul>
+<li>排序网络</li>
+<li>矩阵运算</li>
+<li>线性规划</li>
+<li>字符串匹配</li>
+</ul>
+<h3 id="Chapter26-如何利用多核来并行排序"><a href="#Chapter26-如何利用多核来并行排序" class="headerlink" title="Chapter26 如何利用多核来并行排序?"></a>Chapter26 如何利用多核来并行排序?</h3><p>在part2中学习了基本的排序算法,包括插入,快排,归并,堆排序等,它们都是在串行计算机上线性执行的算法.随着硬件的发展,多处理器的进步,如何利用多核来进行并行排序?如何推而广之到多核并行算法?这一章就套路基于计算的一种比较网络模型,同时进行多个比较操作.</p>
+<p>比较网络与串行排序算法的区别:</p>
+<ul>
+<li>比较网络只能执行比较操作, 即只能执行基于比较操作的算法.因此part2中学习的计数排序就无法再比较网络中实现</li>
+<li>比较网络中比较操作可以并行的执行, 而串行排序算法各操作是依次执行的.故前者拥有更好的算法效率- 更小的算法复杂度</li>
+</ul>
+<p>1.比较网络定义</p>
+<ul>
+<li>组成：<br>基本构件:线路和比较器<br><img src="/images/CLRS_images/comparison.png" alt="comparsion"></li>
+</ul>
+<a id="more"></a>
+<ul>
+<li>比较网络含义：</li>
+<li>一个由线路互相联接着的比较器的集合,我们把具有n个输入的比较网络画成一个由n条水平线组成的图,比较器则垂直地与两条水平线相连接.每个比较器的输入端要么与网络的n条输入线路 $a_1,a_2, \dots, a_n$ 中的一条相连,要么与另一个比较器的输出端相连接.类似地,每个比较器的输出端要么与网络的n条输出线路 $b_1,b_2, \dots, b_n$中的一条相连,要么与另一个比较器的输入端相连接.互相连接的比较器主要应满足如下要求：<blockquote>
+<ol>
+<li>其互相连接所成的图中必须没有回路.</li>
+<li>只有当同时有两个输入时,比较器才能产生输出值.</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<p>在每个比较器均运行单位时间的假设下,我们可以对比较网络的“运行时间”作出定义,这就是从输入线路接收到其值的时刻到所有输出线路收到其值所花费的时间.</p>
+<ul>
+<li><p>比较网络示意图:<br><img src="/images/CLRS_images/sortnet.png" alt="sortnet"></p>
+</li>
+<li><p>排序网络定义:<br>对每个输入序列其输出序列均为单调递增(即 $b_1 \leq<br>b_2, \dots, b_n$ )的一种比较网络</p>
+</li>
+<li><p>0-1原理：<br>如果一个具有n个输入的比较网络,能够对所有可能存在的2^n个0和1组成的序列进行正确的排序,则对所有任意数组成的序列,该比较网络也可能对其正确排序.<br>0-1原理推定认为：如果对于属于集合{0,1}的每个输入值,排序网络都能正确运行,则对任意输入值,它也能争取而运行(输入值可以是整数、实数或者任意线性排序的值的集合).这样在构造排序网络时,可以专注在0和1组成的输入序列上设计比较器.这个原理目的是简化输入值,而通过0和1来设计比较网络的线路和比较器,只要0和1可运行,那么其他任意值的序列也都可以运行.<br>0-1原理的证明依赖单调递增函数.如果比较网络把输入序列 $a=<a\_1,a\_2, \dots,="" a\_n="">$ 转化为输出序列 $b=<b\_1,b\_2, \dots,="" b\_n="">$,则对任意单调递增函数f,该网络把输入序列f(a)=<f(a1),f(a2),…,f(an)>转化为输出序列f(b)=<f(b1),f(b2),…,f(bn)>.<br>这个可以这样理解,对输入序列a施以f(a)单调递增函数,比较网络(线路和比较器)能够使序列a输出序列b,那么该比较网络同样可以使输入序列f(a)输出序列f(b).<br>这就为0-1原理奠定了基础,只要证明比较网络可以运行于0和1的输入,那么设计一个单调递增函数,0和1是因变量,其自变量自然也可以通过同样比较网络来排序.<br>如果一个具有n个输入的比较网络能够对所有可能存在的2n个0和1组成的序列进行正确的排序,则对所有任意数组成的序列,该比较网络也可能对其正确排序.<br>0-1原理证明用到了单调递增函数概念,同时采用数学归纳法和反证法来证明.这也给出了一个很重要的思想,那就是对现实问题的解决,在构建数学模型时,可以简单到0-1,然后再推广到复杂数.</f(b1),f(b2),…,f(bn)></f(a1),f(a2),…,f(an)></b\_1,b\_2,></a\_1,a\_2,></p>
+</li>
+<li><p>双调序列：<br>序列要么先单调递增然后再单调递减,要么先单调递减然后又单调递增.例如序列<1,4,6,8,3,2>和<9,8,3,2,4,6>都是双调的</9,8,3,2,4,6></1,4,6,8,3,2></p>
+</li>
+</ul>
+<p>2.双调排序网络</p>
+<ul>
+<li><p>双调排序程序由 $log_2n$个阶段组成,其中每一个阶段称为一个半清洁器.每个半清洁器是一个深度为1的比较网络,其中输入线I与输入线I+n/2进行比较,I=1,2,…,n/2(这里假设n为偶数).下图即为一个具有8个输入和8个输出的半清洁器(half-cleaner)<br><img src="/images/CLRS_images/half-cleaner.png" alt="half-cleaner"></p>
+</li>
+<li><p>当由0和1组成的双调序列用作半清洁器的输入时,半清洁器产生的输出序列满足如下条件：</p>
+<blockquote>
+<ol>
+<li>较小的值位于输出的上半部,较大的值位于输出的下半部.</li>
+<li>两部分序列仍是双调的.</li>
+<li>两部分序列中至少有一个是清洁的——全由0或1组成.</li>
+</ol>
+</blockquote>
+</li>
+<li><p>双调排序器(bitonic-sorter)<br>通过递归地连接半清洁器,我们可以建立一个双调排序网络.双调排序网络[n]的第一阶段由半清洁器[n]组成,可知半清洁器[n]产生两个规模缩小一半的双调序列且满足上半部分的每个元素不比下半部分的任一个元素大.因此,我们可以运用两个双调排序网络[n/2]分别对两部分递归地进行排序,以此完成整个排序工作<br><img src="/images/CLRS_images/bitonic-sorter.png" alt="bitonic-sorter"></p>
+</li>
+</ul>
+<p>我们只要把含n个元素的双调排序网络的第一个半清洁器修改一下就可以得到合并网络MERGER[n].由于输入的上半部和下半部都是单调递增的,所以我们把比较网络的下半部分颠倒一下,输入就成了一个双调序列.添上半清洁器,再颠倒回去,半清洁器就变成了把输入 $a_i$和$a_{n-i+1}比较.这时,输出也被颠倒了.但是,一个双调序列颠倒了以后还是一个双调序列.<br>因此就可以用<em>bitonic-sorter</em>对深度为 $\log n$ 的0-1双调序列进行排序.<br><img src="/images/CLRS_images/bitonic-sorter2.png" alt="bitonic-sorter2"></p>
+<p>3.合并网络(mergin network)<br>合并网络,能够把两个已排序的输入序列合并为一个有序的输出序列的网络.基于双调排序网络思想,对已知的两个有序序列进行连接(第二个序列顺序颠倒),所得的序列是双调序列,再利用双调排序器就能完成两个有序序列的合并.其原理如下:<br><img src="/images/CLRS_images/merger.png" alt="merger1"><br><img src="/images/CLRS_images/merger2.png" alt="merger2"></p>
+<p>4.基于0-1原理、双调排序网络、合并网络,我们可以构造一个输入任意序列进行排序的比较排序网络.思想很简单：第一步开展最基础的2个元素的两两比较,这个用普通的比较器就可以实现,输出长度为2的有序序列;第二步对长度为2的有序序列进行两两合并,这个用合并网络排序(基于双调排序器,先连接序列构造双调序列)实现,输出长度为4的有序序列;第三步对长度为4的有序序列进行合并网络,直到 $\log n$次.算法上,可以在 $O(\log n)$内并行地对n个数进行排序.<br><img src="/images/CLRS_images/sorter.png" alt="sorter"></p>
+<p>总结:排序网络可以并行地进行排序,然后再组合各并行排序结果,适合分布式场景的排序需求.</p>
+<h3 id="Chapter27-矩阵运算"><a href="#Chapter27-矩阵运算" class="headerlink" title="Chapter27 矩阵运算"></a>Chapter27 矩阵运算</h3><p>在part4高级设计技术中在动态规划中研究了矩阵链乘法问题后, 这一章深入学习矩阵运算, 特别学习矩阵相乘的Strasssen算法,该算法能在 $O(n^{\log 7})$ 的时间内计算两个 $n*n$ 的矩阵的乘积.</p>
+<p>1.首先重温下矩阵的相关概念和性质,为后续矩阵运算奠定数据理论基础.</p>
+<p>矩阵A：<br>数字的一个矩形阵列,形式化为 $A=(a_{ij})$,第i行j列元素为 $a_ij$,如元素为实数的所有元素mXn矩阵组合的元素用 $R_{mXn}$表示.<br><img src="/images/CLRS_images/matrix.png" alt="matrix"></p>
+<p>矩阵转置AT：是矩阵A的行和列互相交换而产生的矩阵.</p>
+<p>向量(Vector)：是数字的一维向量,列向量看成是nX1的矩阵,转置成行向量就是1Xn的矩阵.</p>
+<p>单位向量$e_i$：矩阵第一个元素为1而其他元素均为0的常量.</p>
+<p>零矩阵：所有元素都是0的矩阵.</p>
+<p>对角矩阵：当i≠j时,$a_ij$,所有非对角线上的元素均为0.</p>
+<p>nXn单位矩阵 $I_n$：是对角线元素都是1的对角矩阵.</p>
+<p>三对角矩阵T：满足 $|i-j|&gt;1$ 的元素 $t_ij$=0的矩阵,非零元素仅出现在主对角线上、靠主对角线上面和对角线下面.</p>
+<p>上三角矩阵U：满足i&gt;j的元素 $U_ij=0$的矩阵,对角线下面的所有元素均为0,若对角线元素为1,则是单位上三角矩阵.</p>
+<p>下三角矩阵L：满足i&lt;j的元素 $L_ij=0$的矩阵,对角线上面的所有元素均为0,若对角线元素为1,则是单位下三角矩阵.</p>
+<p>置换矩阵P：每一行或列中仅包含一个1,其他元素都为0,可以把一个向量x和一个置换矩阵相乘,结果是向量x中的元素的一种置换.</p>
+<p>对称矩阵A：满足条件 $A= A^T$.</p>
+<p>矩阵加法：$C(c_ij)=A(a_ij)+B(b_ij),c_ij=a_ij+b_ij$,都是mXn矩阵.</p>
+<p>矩阵乘法：相容(A的列数等于B的行数)的两个矩阵才可以相乘,$C(c_ij)= \sum_{k=1}^{m} A(a_ik)*B(b_kj)$,矩阵和单位矩阵等于自己、和零矩阵相乘等于零、和向量相乘得到向量,满足结合律和分配律,但不满足交换律.</p>
+<p>逆矩阵A-1：满足 $A A^{-1} = I_n= A^{-1}A$,不可逆的矩阵称为奇异矩阵.</p>
+<p>线性相关：设 $x_1,x_2, \dots, x_n$是n个向量,若存在不全为零的常系数 $c_1,c_2, \dots, c_n$,使 $c_1x_1+c_2x_2+ \dots +c_nx_n=0$成立,就称 $x_1,x_2, \dots, x_n$线性相关.</p>
+<p>非零mXn矩阵A的秩：A的极大线性无关列向量组中向量的个数为列秩,A的极大线性无关行向量组中向量的个数为列秩.任意一个矩阵的行秩和列秩都是相等.mXn的秩是0和min(m,n)之间的一个整数.</p>
+<p>非零mXn矩阵A的秩满足下列条件的最小的数r：存在mXr矩阵B和rXn矩阵C且有A=BC.如果一个nXn的矩阵秩为n,则是满秩,如果一个mXn矩阵的秩为n,则是列满秩.<br>一个方阵满秩当且仅当它为非奇异矩阵.当前仅当A无空向量时,矩阵A为列满秩.<br>当且仅当A具有空向量时,方阵A是奇异的.</p>
+<p>余子式：对于n&gt;1,nXn矩阵A的第ij个余子式是把A的第i行和第j列元素去掉后所形成的一个(n-1)X(n-1)矩阵A[ij],表示为det(A[ij]).</p>
+<p>方阵A的行列式具有如下性质：如果A的任何行或列的元素为0,则det(A)=0;用常如a乘A的行列式任意一行(或任意一列)的诸元素,等于用a乘A的行列式;A的行列式中的一行(或一列)元素加上另一行(或另一列)中的相应元素,行列式的值不变;A的行列式值与其转置矩阵AT的行列式的值相等;行列式的任意两行(或两列)互换,则其值异号.</p>
+<p>正定矩阵：nXn矩阵A,如果对所有n维向量x≠0都有$x^TAx&gt;0$,则矩阵A为正定矩阵.</p>
+<p>对任意列满秩矩阵A,矩阵$A^TA$是正定的.</p>
+<p>2.矩阵乘法的Strassen算法<br>矩阵乘法是种极其耗时的运算.以C = AB为例,其中A和B都是 n x n 的矩阵.根据矩阵乘法的定义,计算过程如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SQUARE-MATRIX-MULTIPLY(A, B)</div><div class="line">n = A.rows</div><div class="line">let C be a new nxn matrix</div><div class="line">for i = 1 to n</div><div class="line">    for j = 1 to n</div><div class="line">        c[i][j] = 0</div><div class="line">        for k = 1 to n</div><div class="line">            c[i][j] += a[i][k] * b[k][j]</div><div class="line">return C</div></pre></td></tr></table></figure></p>
+<p>由于存在三层循环,它的时间复杂度将达到 $O(n^3)$.<br>Strassen算法运用分治法将两个nXn的矩阵乘积运行时间,从简易矩阵乘法算法 $O(n^3)$提升到 $O(n^{\log 7}) = O(n^{2.81})$.下面是算法的主要思想和步骤.</p>
+<blockquote>
+<p>一般情况下,矩阵乘积C=AB,其中A、B和C都是nXn方阵,假定n是2的幂,把A、B和C划分成四个n/2Xn/2矩阵：<br><img src="/images/CLRS_images/matrix.png" alt="matrix2"><br>则矩阵乘法对应四个等式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">r=ae+bg</div><div class="line">s=af+bh</div><div class="line">t=ce+dg</div><div class="line">u=cf+dh</div></pre></td></tr></table></figure></p>
+<p>每个等式运行包含两次 $n/2 <em> n/2$矩阵乘法和两次乘积所得的 $n/2 </em> n/2$矩阵的加法运算,推出 $n * n$ 矩阵相乘所需时间T(n)的递归式：<br>$$T(n)=8T(n/2)+  O(n^2)$$</p>
+</blockquote>
+<p>Strassen算法在这个一般性的递归式上,发现只需要进行7次 $n/2 * n/2$矩阵乘法即可解决,即<br>$$T(n)=7T(n/2)+O(n^2)= O(n^{\log 7}) = O(n^{2.81})$$<br>具体算法步骤如下：</p>
+<ul>
+<li>1.输入矩阵A和B划分为 $n/2 * n/2$的子矩阵;</li>
+<li>2.运行 $O(n^2)$标量加法和减法运算,计算出14个 $n/2 * n/2$的矩阵 $A_1,B_1,A_2,B_2, \dots, A_7,B_7$;</li>
+<li>3.递归计算出7个矩阵的乘积 $P_i=A_i * B_i,i=1,2, \dots, 7$;</li>
+<li>4.使用 $O(n^2)$ 次标量加法与减法运算,对 $P_i$ 矩阵的各种组合进行求和或求差运算,从而获得结果矩阵C的四个子矩阵r\s\t\u.</li>
+</ul>
+<p>Strassen算法的核心思想是什么呢？何以产生如此一个步骤的算法呢？依据是什么？<br>设想每个矩阵的积 $P_i$可以写成如下形式：<br> $$P_i=A_iB_i=(α_{i1}a+α_{i2}b+α_{i3}c+α_{i4}d)( β_{i1}e+β_{i2}f+β_{i3}g+β_{i4}h)$$<br> 其中系数α和β都属于集合{-1,0,1},就是说,对矩阵A和B的子矩阵进行加减运算,并对所得的结果进行相乘法来计算出每个子矩阵的乘积.简单说,将子矩阵的乘法运算变成加减运算,从而将8次乘法减少到7次.这是Strassen算法的核心思想和依据.</p>
+<p>上面给出的描述很好理解算法的思路和步骤.正如算法导论中对该算法的讨论中所指出的问题,对于矩阵乘法的困难(多项式时间内完成的算法)是合理的.Strassen算法并不是最佳,但目前并没有更多的突破.</p>
+<p>2.求解线性方程组(LUP分解思想)<br>求解一组同时成立的线性方程式在很多应用中都会出现,也是线性代数的基本问题.可以将一个线性系统表示为一个矩阵方程,其中每个矩阵或向量元素都属于一个域,如实数域R.<br>n个未知量的n个方程用矩阵表示如下：<br><img src="/images/CLRS_images/matrix.png" alt="matrix3"><br>设 $A=(a_{ij}),x=(x_i),b=(b_i)$,有Ax=b.</p>
+<p>如果A是非奇异矩阵(秩为n),存在逆矩阵 $A^{-1}$,则 $x= A^{-1}b$,且x是唯一解.方程数目少于未知量数目(或A的秩小于n)为不定方程组,具有无穷多解,如果方程组不相容则可能无解;方程数目多于未知量数目为超定方程组,可能无解.<br>LUP分解在求解线性方程组具有数值稳定和速度快的优点.<strong>LUP分解的思想就是找出三个n*n矩阵L、U和P,满足PA=LU,其中L是一个单位下三角矩阵、U是一个上三角矩阵、P是一个置换矩阵.</strong></p>
+<p>定义y=Ux,其中x是要求解的未知向量.用正向替换($O(n^2)$)方法求解Ly=Pb,在用逆向替换($O(n^2)$)方法求解Ux=y,可得：</p>
+<p>$$Ax = P^{-1}LUx = P^{-1}Ly = P^{-1}Pb=b$$</p>
+<p>问题是如何有效找出LUP呢？只要找出LUP就可以通过正向替换和逆向替换求解x.</p>
+<p>LU分解是采用高斯消元法.首先考虑A是nXn的非奇异矩阵,且P等价于$I_n$,找出A=LU,矩阵L和U称为A的LU分解.基于LU分解基础上开展LUP分解,数学基础一致,不失一般性而已,增加对置换矩阵P中值为1的元素的刻画.最重要还是要对矩阵运算和高斯消元法的数据基础有初步掌握.LUP分解如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">lu-decomposition(A)</div><div class="line">n &lt;- rows[A]</div><div class="line">for k &lt;- 1 to n</div><div class="line">    do u&#123;kk&#125; &lt;- a&#123;kk&#125;</div><div class="line">        for i &lt;- k + 1 to n</div><div class="line">            do l&#123;ik&#125; &lt;- a&#123;ik&#125;/u&#123;kk&#125;</div><div class="line">                u&#123;ki&#125; &lt;- a&#123;ki&#125;</div><div class="line">        for i &lt;- k + 1 to n</div><div class="line">            do for j &lt;- k + 1 to n</div><div class="line">                do a&#123;ij&#125; &lt;- a&#123;ij&#125; - l&#123;ik&#125;u&#123;kj&#125;</div><div class="line">return L and U</div></pre></td></tr></table></figure></p>
+<p>LU分解执行过程如下:<br><img src="/images/CLRS_images/lu.png" alt="lu"></p>
+<p>总结:基于LUP分解矩阵求解线性方程组的方法,同样适用于非奇异矩阵的求逆.矩阵乘法和计算逆矩阵问题具有相同难度的两个问题,在一定技术条件限制下可以使用一个算法在相同渐进时间内解决另外一个问题,即可用Strassen矩阵乘法算法来求一个矩阵的逆.</p>
+<h3 id="Chapter28-线性规划"><a href="#Chapter28-线性规划" class="headerlink" title="Chapter28 线性规划"></a>Chapter28 线性规划</h3><p>怎么样问题可以建模为线性规划来解决呢？在给定的有限的资源和竞争约束情况下,取得最大化或最小化目标的问题.导论中给出政治竞选问题、航空航线调度问题、钻井采油问题.最大化或最小化目标是函数的因变量,自变量就是资源的约束因素,其函数就是由这些制约因素构成的等式或不等式.<br>1.线性规划定义.</p>
+<blockquote>
+<p>在一般线性规划问题中,最优化一个满足一组线性不等式约束的线性函数.已知一组实数 $a_1,a_2, \dots,a_n$和一组变量 $x_1,x_2, \dots,x_n$,基于这些变量的一个线性函数f定义为<br>$$ f(x_1,x_2, \dots,x_n) = a_1x_1 + a_2x_2 + \dots + a_nx_n = \sum_{j=1}^n a_jx_j$$<br>如果b是一个实数而f是一个线性函数,则等式：<br>$f(x_1,x_2, \dots,x_n) = b$ 是一个线性等式.<br>$f(x_1,x_2, \dots,x_n) \leq b$ 和 $f(x_1,x_2, \dots,x_n) \geq b$ 是线性不等式.<br>线性约束就是函数f和b的关系,就是求解n个变量m个线性不等式的最大化,约束为线性不等式的线性函数最大化称为标准型;而约束为线性等式的线性函数的最大化称为松弛型.</p>
+</blockquote>
+<p>基于上面描述可知,线性规划问题是要最小化或最大化一个受限于一组有限的线性约束的线性函数.最小化线性规划和最大化线性规划的分类,是基于目标的需求,同样是m个线性不等式约束,去求解n个变量的值,达到目标(最大化或最小化).</p>
+<p>2.凸形区域定义：<br>区域内的任何两点之间连线上的点都属于这个区域.<br>线性规划中,二维空间(两个变量)所构成的凸形区域为可行区域,要最大化的函数为目标函数.可行区域内的每个点都会去评估目标函数$x_1+x_2$,将目标函数的一个特点点上的值称为目标值,识别出一个有最大目标值的点就是最优解.当然有二维线性规划不等式所构成的可行区域上是有无数个点,不可能都去求值,因此需要找出一个有效的方式来寻找最大目标值的点.线性规划的最优解必定是在可行区域的边界上,所以只要沿着边界寻找顶点就可以很快找到最大目标值的点.<br>推而广之,如果有三个变量,则每个约束以三位空间的一个半空间来描述,三个半空间的交集构成了可行区域,目标函数取目标值的点集合是一个平面.因为可行区域也是凸的,取得最优目标值的点集合必然包含可行区域的一个顶点.延伸到n个变量的超平面,每个约束定义了n维空间中的一个半空间,这些半空间的交集形成的可行区域称作单纯形,目标函数是一个超平面,且是凸性,一个最优解也是在单纯形的一个顶点上取得.理解下,无论多少维,找出凸形区域,目标函数的最优解就是在凸形区域的顶点集合之一或多个.</p>
+<p>3.单纯型算法<br>单纯形算法输入一个线性规划(n个变量m个线性不等式),输出一个最优解.算法从单纯形的某个顶点开始,执行一系列迭代,每次迭代中,沿着单纯形的一条边从当前顶点移动到一个目标值不小于当前顶点的相邻顶点.当达到一个局部最大值,即一个顶点的目标值大于其所有相邻顶点的目标值时,算法终止.因为可行区域是凸的且目标函数是线性的,所以具备最优事实就是全局最优的.</p>
+<p>单纯形算法需要指数时间.线性规划的第一类多项式时间算法是椭圆算法,运行缓慢;第二类指数时间的算法是内点法,在大型输入上,性能优于单纯形算法.如果在线性规划中,所有的变量都取整数值,即整数线性规划,对于该问题,找出一个可行解是NP难度的.目前还没有已知的多项式时间算法能NP难度问题,所以没有有效的整数线性规划多项式时间算法.当然,一般的线性规划可以在多项式时间内解决.</p>
+<p>线性规划的关键步骤:<br>1.标准型/松弛型转化<br>标准型的线性规划所有的约束条件都是不等式,而松弛型中的约束是等式.要用单纯形算法求解线性规划,需要将所有线性规划转化为标准型,再将标准型转化为松弛型,线性方程组等式求解.<br>标准型定义：<br>已知n个实数 $c_1,c_2, \dots,c_n$;m个实数 $b_1,b_2, \dots, b_m$;以及m * n个实数 $a_ij,其中i=1,2,\dots, m,而j=1,2, \dots, n$ 希望找出n个实数$x_1,x_2, \dots, x_n$来最大化目标函数：<br>$$ \sum_{j=1}^n c_jx_j$$<br>满足n + m个不等式, 其中n个约束为非负性约束:<br>$$ \sum_{j=1}^n a_{ij}x_j \leq b_i, i = 1,2, \dots, m<br>x_j \geq 0, j= 1, 2, \dots, n$$<br>用矩阵表示更紧凑：<br>$$最大化c^Tx,满足约束：Ax \leq b,x \geq 0$$</p>
+<p>满足所有约束的变量 $x_s$设定为可行解,而不满足至少一个约束的变量 $x_s$ 设定为不可解.称一个解xs拥有目标值 $c^Tx_s$,在所有可行解中其目标值最大的一个可行解 $x_s$是一个最优解,称其为目标值 $c^Tx_s$的最优目标值.如果一个线性规划没有可行解,则称此线性规划不可行,否则是可行的.如果一个线性规划有一些可行解但没有有限的最优目标值,则称此线性规划是无界的.<br>已知一个最小化或最大化的线性函数受若干线性约束,总可以将这个线性规划转换为标准型.换句话说,要将非标准型的线性规划转化为标准型的.为什么会有非标准型的线性规划呢？可能目标函数是一个最小化而不是最大化;可能拥有的变量不具有非负性约束;可能有等式约束;可能有大于等于的不等式约束,而不是小于等于.<br>将非标准的线性规划转化线性规划,最重要是确保转换后的线性规划最优解也是转换前的线性规划最优解,转化前后的两个线性规划是等价的.转化思路就是对目标函数系数取负,并将不具有非负约束性的变量转换成具有非负性约束的变量.</p>
+<p>为了利用单纯形算法高效地求解线性规划,需要将标准型转换成松弛型,就是非负约束是不等式,其他约束都是等式.转换思路就是利用松弛变量,就是将不等式的余量用s来接收,从而使不等式变成等式,形式如下：<br>$$目标函数: z = v + \sum_{j=1}^n c_jx_j \\<br>约束条件(不含变量的非负性约束: b_i - \sum_{j=1}^n a_{ij}x_j = x_i$$<br>基于松弛型线性规划,就可以用单纯形算法求解.</p>
+<p>2.将问题表达为线性规划：建模<br>既然定义了线性规划,也知道线性规划可以在多项式时间内求解,那么对于现实的问题,那些事如果形式化为线性规划的问题来求解呢？这就涉及到建模了,现实中的问题如何建模为线性规划来求解.建模：将问题转化成数学形式来求解.</p>
+<p>算法导论中对单源最短路径变形的单对最短路径、最大流以及最大流变形的最小费用流和多商品流形式化为线性规划.这里描述下单源最短路径的线性规划形式化</p>
+<blockquote>
+<p>在单对最短路径问题中,已知一个带权有向图G=(V,E),加权函数w:E-&gt;R将边映射到实数值的权值、一个源顶点s、一个目的顶点t,要计算从s到t的一条最短路径的权值d[t].将该问题用线性规划表示,要确定变量和约束的集合.在Belleman-Ford算法终止时,对每个顶点v,都一个值d[v],使得每条边 $(u,v) \in E$,有 $d[v] \leq d[u]+w(u,v)$.源顶点初始得到一个值d[s]=0,如此有计算从s到t的最短路径权值的线性规划：<br>最大化：d[t]<br>满足约束：$d[v] \leq d[u]+w(u,v)$,对每条边 $(u,v) \in E$成立d[s]=0<br>共有|V|个变量d[v],每个顶点v∈V各有一个,有|E|+1个约束,每条边各有一个再加上源顶点d[s]=0的额外约束.</p>
+</blockquote>
+<p>3.单纯形算法实现<br>单纯形算法是求解线性规划的古典方法.单纯形算法和高斯消元法迭代原理类似,高斯消元法是从解未知的一个线性等式系统开始.可以将单纯形算法看成是线性不等式系统上的高斯消元法.单纯形算法的迭代主要思想是：从线性规划的松弛型中得到每次迭代关联的基本解,将每个非基本变量设为0,并从等式约束中计算基本变量的值;一个基本解对应于单纯形的一个顶点;代数上,一次迭代将一个松弛型转换成一个等价的松弛型;相应的基本解的目标值不小于前一次迭代中的目标值,要实现迭代过程中目标值的递增,要选择一个非基本变量作为指示变量,从0开始增加这个变量的值,和目标值一起增加,增加到某个基本变量变为0为止再重写松弛型,将这个基本变量和所选的非基本变量进行角色互换,就是重写线性规划直到最优解很明显.</p>
+<p>单纯形算法主要关键是主元选择,并且有三个关键点:</p>
+<ul>
+<li>1.确定线性规划是可行的;</li>
+<li>2.确定线性规划是具有可行解而不是无界;</li>
+<li>3.主元如何选择换入变量和换出变量.<br>主元选择算法如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">pivot(N, B, A, b.c. v, l, e)</div><div class="line">#compute the conefficients of the equation ofr new basic variable x</div><div class="line">b&#123;e&#125; &lt;- b&#123;l&#125;/a&#123;le&#125;</div><div class="line">for each j in N - &#123;e&#125;</div><div class="line">    do a&#123;ej&#125; &lt;- a&#123;lj&#125;/a&#123;le&#125;</div><div class="line">a&#123;el&#125; &lt;- 1/a&#123;le&#125;</div><div class="line">#compute the conefficients of the remaining constraints</div><div class="line">for each i in B - &#123;l&#125;</div><div class="line">    do b&#123;i&#125; &lt;- b&#123;i&#125; - a&#123;ie&#125;b&#123;e&#125;</div><div class="line">    for eahc j in N - &#123;e&#125;</div><div class="line">        do a&#123;ij&#125; &lt;- a&#123;ij&#125; - a&#123;ie&#125;a&#123;ej&#125;</div><div class="line">    a&#123;il&#125; &lt;- a&#123;ie&#125;a&#123;el&#125;</div><div class="line">#compute the objective function</div><div class="line">v &lt;- v + c&#123;e&#125;b&#123;e&#125;</div><div class="line">for each j in N - &#123;e&#125;</div><div class="line">    do c&#123;j&#125; &lt;- c&#123;j&#125; - c&#123;e&#125;a&#123;ej&#125;</div><div class="line">cl&#123;e&#125; &lt;- -c&#123;e&#125;a&#123;el&#125;</div><div class="line">#compute new ses of basic and nonbasic variables</div><div class="line">N = N - &#123;e&#125; union &#123;l&#125;</div><div class="line">B = B - &#123;l&#125; union &#123;e&#125;</div><div class="line">return (N, B, A, b, c, v)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>对标准型的输入来求解最优解的算法描述如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">simple(A, b ,c)</div><div class="line">(N, B, A, b, c, v) &lt;0 initialize-simple(A, b, c)</div><div class="line">while some index j in N has c&#123;j&#125; &gt; 0</div><div class="line">    do choose an index e in N for which c&#123;e&#125; &gt; 0</div><div class="line">        for each index i in B</div><div class="line">            do if a&#123;ie&#125; &gt; 0</div><div class="line">                then delta&#123;i&#125; &lt;- b&#123;i&#125;/a&#123;ie&#125;</div><div class="line">                else delta&#123;i&#125; &lt;- INT</div><div class="line">            choose an index l in B that minimizes delta&#123;i&#125;</div><div class="line">            if delta&#123;i&#125; = INT</div><div class="line">                then return &quot;unbounded&quot;</div><div class="line">                else (N, B, A, b, c, v) &lt;- pivot(N, B, A, b, c, v, l, e)</div><div class="line">for i &lt;- 1 to n</div><div class="line">    do if i in B</div><div class="line">        then x&#123;i&#125; &lt;- b&#123;i&#125;</div><div class="line">        else x&#123;i&#125; &lt;- 0</div><div class="line">return (x&#123;1&#125;, x&#123;2&#125;, ..., x&#123;n&#125;)</div></pre></td></tr></table></figure></p>
+<p>这里一般性地理解下,要通过单纯形算法来求解,在算法之前要肯定线性是可行(单纯性算法最初有一个初始化过程,会判断线性规划是否可行,返回一个初始基本解可行的松弛型),在算法之中要确保不陷入退化或说循环(目标值越迭代越小),能够终止返回最优解.单纯形算法输入一个标准型线性规划,返回线性规划一个最优解,能够顺利找到最优解并终止算法,后续对偶型可以说明.</p>
+<p>一个典型的单纯形算法例子：</p>
+<blockquote>
+<p>首先初始化标准型线性规划,返回一个初始基本解可行的松弛型,或者返回这个线性规划不可行,推出算法;其次对松弛型线性规划开始主元操作,选择非负系数最紧约束的换出变量,和换入变量交换,得到新的线性规划(和原来的线性规划是等价的);不断迭代这个过程,直到最优解确定,并终止返回一个最优解.<br>对于松弛型线性规划通过主元操作生成的新线性规划,二者是等价的.现在很重要的就是主元操作迭代,是如何选择换出变量的.选择一个在目标函数中系数为正值的非基本变量,尽可能增加其值而不违反任何约束.现在通过一个例子来理解单纯形算法的过程.</p>
+</blockquote>
+<p>1.标准型线性规划转化为松弛型线性规划<br>标准型：<br>最大化：<br>3x1+x2+2x3<br>满足约束：<br>x1+x2+3x3≤30<br>2x1+2x2+5x3≤24<br>4x1+x2+2x3≤36<br>x1,x2,x3≥0</p>
+<p>松弛型：<br>最大化：<br>z=3x1+x2+2x3<br>满足约束：<br>x4=30-x1-x2-3x3<br>x5=24-2x1-2x2-5x3<br>x6=36-4x1-x2-2x3</p>
+<p>确定基本解：把等式右边的所有变量设为0,可得基本解(x1,x2,x3,x4, x5, x6)=(0,0,0,30,24,36),目标值z=0;</p>
+<p>2.主元操作迭代第一次,选择增加x1的值.当增加x1值时,x4, x5, x6的值随之减小,但每个变量都有非负约束,所以不能减小到负值,这个时候就要在约束函数上选择最紧约束(就是选择最小增加值).<br>如果x1值增加到30,那么x4是负值;增加到12,则x5是负值;增加到9,则x6是负值;这个就知道了,9是x1值所能增加的最大值,就是最紧约束,对约束函数x6=36-4x1-x2-2x3互换变量x1和x6的角色,得到：x1=9- x2/4- x3/2- x6/4,代入原线性规划据此可得新的松弛型线性规划,如下：<br>最大化：<br>z=27+x2/4+ x3/2- 3x6/4<br>满足约束：<br>x1=9- x2/4- x3/2-x6/4<br>x4=21-3x2/4-5x3/2+x6/4<br>x5=6-3x2/2-4x3+x6/2<br>确定基本解,同样把等式右边的所有变量设为0,可得基本解(x1,x2,x3,x4, x5, x6)=(9,0,0,21,6,0),目标值z=27;</p>
+<p>3.主元操作迭代第二次,选择增加x3的值,最紧约束是x5=6-3x2/2-4x3+x6/2,最大增加到3/2,否则x5的值为负,和第一次迭代一样,互换x3和x5并代入线性等式获得新的线性规划,可得基本解(x1,x2,x3, x4, x5,x6)=(33/4,0,3/2,69/4,0,0),目标值z=111/4;<br>第四：主元操作迭代第三次,互换x2和x4并代入线性等式获得新的线性规划,可得基本解(x1,x2,x3, x4, x5,x6)=(8,4,0,18,0,0),目标值z=28,为最优解,(x1,x2,x3)=(8,4,0).<br>最关心的问题还是具有可行解的线性规划经过这样的迭代,在算法终止时是否确实能找到最优解,这个就留给线性规划对偶性来说明.</p>
+<ol>
+<li>单纯形算法分析<br>现在我们知道单纯形算法可以在多项式时间内求解线性规划最优解,那么关心两点：</li>
+</ol>
+<ul>
+<li>是算法终止时,获得的是最优解,这个就是对偶性要回答;</li>
+<li>二是输入一个线性规划要判断出是可行可解的,这个就是辅助线性规划要回答的.<br>任何线性规划都可能是不可行的,或是无界的,或有一个优先目标值得最优解,针对这些个情况,单纯形算法要能正确识别.</li>
+</ul>
+<p><strong>线性规划的基本定理</strong>：<br>以标准型给出任意的线性规划L可能是以下三者之一：<br>第一：有一个有限目标值的最优解;<br>第二：不可行;<br>第三：无界;</p>
+<p>如果L是不可行的,单纯形算法在初始化中就会返回不可行;如果L是无界的,单纯形算法返回无界,无界就是找不到最优解或者有无限个目标值;当然,满足第一情况的,就会返回有限目标值的最优解.<br>单纯形算法在初始化过程中,会确定线性规划是否有可行解,如果有,则给出一个基本解可行的松弛型线性规划.这个初始化过程其实就是对线性规划测试可行解.那么是如何来确认存在可行解呢？通过构造辅助线性规划,这个辅助线性规划,比较容易找到一个基本解可行的松弛型.只要辅助线性规划有可行解,则要输入的线性规划也就有可行解.如果线性规划L没有可行解,则初始化返回不可行,否则返回一个基本解可行的合法松弛型.怎么构造辅助线性规划呢？</p>
+<p>辅助线性规划：令L是一个标准型的线性规划,令 $L_{aux}$是带有n+1个变量的线性规划：<br>最小化：-x0<br>满足约束：<br>$$ \sum_{j-1}^{n} a_{ij}x_j - x_0 \leq b_i, i = 1, 2, \dots, m \\<br>x_j \geq 0, j = 0, 1, \dots, n<br>$$<br>则当且仅当 $L_{aux}$的最优目标值为0时,L是可行的.<br>辅助线性规划,增加一个x0变量,并且令目标值为0.对辅助线性规划求解可行解,也是按照主元操作,将标准型转换成松弛型后不断交换变量迭代.辅助线性规划较容易找到可行解.算法导论中证明了辅助线性规划存在可行解就是要求解的线性规划存在可行解.</p>
+<p>现在我们要引进线性规划<strong>对偶性</strong>的概念.对偶性有一个很重要的性质：在一个最优化问题中,一个对偶问题的识别总是可以在一个多项式时间内发现.对偶性是用来证明某个解确实是最优解.还是动态规划思想：已知一个最大化问题,定义个相关的最小化问题,来让着两个问题有相同的最优目标值.如最大流问题的最大流最小割原理.对偶的字面意义,就是我的解也是你的解,大问题的解是小问题的解.</p>
+<p>已知一个目标是最大化的线性规划,制定一个对偶线性规划,其目标是最小化,而且最优值与原始线性规划相同.给定一个标准的原线性规划,定义对偶线性规划为：<br>$$<br>最小化: \sum_{i=1}^{m} b_iy_i \\<br>满足约束: \sum_{i=1}^{m} a_{ij}y_i \geq c_j, j = 1,2, \dots, n \\<br>y_i \geq 0, i = 1, 2, \dots, m<br>$$<br>构造对偶,将最大化改成最小化,将约束右边的与目标函数的稀疏角色互换,并且小于等于号变成大于等于号.在原问题的m个约束中,每一个在对偶问题中都一个对应的变量yi,在对偶问题的n个约束中,每一个在原问题中都一个对应的变量xj.</p>
+<p>对偶性能证明最优解主要是两点：</p>
+<ul>
+<li>原线性规划中的目标函数的系数变成对偶线性规划中约束函数的右边值,原线性规划中的约束函数的右边值变成对偶线性规划中目标函数的系数;</li>
+<li>原线性规划中每一个约束函数的左边等于对偶线性规划中的一个变量,就是原线性规划中的m个约束函数等于m个对偶线性规划中的变量,反之也是.最后证明了对偶线性规划的最优值总是等于原线性规划的最优值.</li>
+</ul>
+<h3 id="Chapter28-寻找子串"><a href="#Chapter28-寻找子串" class="headerlink" title="Chapter28 寻找子串"></a>Chapter28 寻找子串</h3><p>字符串匹配是一个很常见的问题,可以扩展为模式的识别,解决字符串问题的思想被广泛地应用.字符串匹配问题可以描述如下:<br><img src="/images/CLRS_images/string-match1.png" alt="string-match1"><br>介绍3种解决该问题的办法,包括：最朴素的遍历法,Rabin-Karp算法,自Knuth-Morris-Pratt算法即KMP.<br>首先对时间复杂度做出一个概括(从大到小)：</p>
+<ul>
+<li>朴素法：$O((n-m+1)m)$;</li>
+<li>Rabin-Karp：预处理：$O(m)$,匹配：最坏 $O((n-m+1)m)$,但是平均和实际中比这个好得多;</li>
+<li>KMP：预处理O(m),匹配O(n).<br>其中,m代表模式P的长度,n代表被匹配的数组S的长度,Σ代表P和S的字符表.</li>
+</ul>
+<p>接下来分开学习对应的算法和思想.</p>
+<p>1.朴素法(native)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">navite-string-matcher(T, P)</div><div class="line">n &lt;- length[T]</div><div class="line">m &lt;- length[P]</div><div class="line">for s &lt;- 0 to n - m</div><div class="line">    do if p[1...m] = T[s+1...s+m]</div><div class="line">        then print &quot;Pattern occurs with shift&quot;</div></pre></td></tr></table></figure></p>
+<p>朴素法简单直接,就是从T的每一个字符开始,看它之后(包括它)的m个字符与P是否一样.P从S中第几个字符开始,可以看作,P在S中位移了几步.<br>朴素法的效率低的问题在于,它几乎忽视了所有的信息,每一次匹配都是“全新地”.如果P=abc,S=abdabc,从位置0开始,当我们匹配到 位置2,即c != d,朴素的做法是下一步从位置1开始匹配, 然而,在之前的匹配过程中,我们可以知道位置1的值b必然不匹配位置0的a.这是我们光通过P就能知道的,因为既然前一步已经开始去匹配位置2了,证明说明0和1已经成功匹配,而通过P自己,我们知道P的位置1不匹配0,则前一步的S位置1必然也不匹配P的位置1,这样就可以跳过这一步.问题在于,告诉程序跳过多少步,这就是我们接下来的算法要做的.显然,跳过得越多匹配越快,同时我们为了尽可能得到跳步的信息,可能需要进行预处理,预处理会产生另外的时间.</p>
+<p>2.Rabin-Karp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">rabin-karp-matcher(T, P, d, q)</div><div class="line">n &lt;- length[T]</div><div class="line">m &lt;- length[P]</div><div class="line">j &lt;- d^&#123;m-1&#125; mod q</div><div class="line">p &lt;- 0</div><div class="line">t&#123;0&#125; &lt;- 0</div><div class="line">for i &lt;- 1 to m   #预处理</div><div class="line">    do p &lt;- (dp + p[i]) mod q</div><div class="line">        t&#123;0&#125; &lt;- (dt&#123;0&#125; + T[i]) mod q</div><div class="line">for s &lt;- 0 to n - m  #匹配</div><div class="line">    do if p = t&#123;s&#125;</div><div class="line">        then if P[1..m] = T[s+1...s+m]</div><div class="line">            then print &quot;Pattern occurs with shift&quot;s</div><div class="line">        if s &lt;- n - m</div><div class="line">            then t&#123;s+1&#125; &lt;- (d(t&#123;s&#125; - T[s+1]h) + T[s+m+1]) mod q</div></pre></td></tr></table></figure></p>
+<p>执行过程如下:<br><img src="/images/CLRS_images/robin-karp.png" alt="robin-karp"></p>
+<p>算法将字符串转化为数,进制就是字符表的字符数目.那么,P是一个m位数,这个转化很容易用 $O(m)$ 算出来,通过遍历可以解决.再将S变为n-m+1个数：第一个数同P一样,$O(m)$ 完成预处理;当有了第k个数,算第k+1个数的时候,只需要去掉高位,补上低位,$O(1)$ 完成这个递推过程;总的预处理还是 $O(m)$.匹配的时候就是比较n-m+1次,所以复杂度是 $O(n-m+1)$.那么,为什么说它匹配最坏是 $O((n-m+1)m)$ 呢？<br>原因在于这个转化得来的数可能很大,算术运算不是常数,怎么处理大数呢？这个时候可以用模除来做一个简单的hash,匹配的数hash一定匹配,hash匹配原数不一定匹配,需要再回去做检查.最差的情况下,所有的hash都一样,每个hash都匹配了,全部需要回去检查一遍,那么这个时候匹配过程和朴素法一样.工程上来说,通常选取一个较大的素数来做模除.算法的最差运行时间是 $O((n-m+1)m)$, 当素数比模式P长度大很多时,期望运行时间是 $O(n+ m)$.</p>
+<p>3.KMP<br>KMP实际上是利用自动机的思想,但是我们并不是预先算好变迁函数.KMP遇到新字符,如果匹配当然是下一个状态,不匹配的话并不像自动机一步到位地接收新字符后到另一个状态,而是先到另一个状态,再递归地看是否接收这个字符,最终接收后在看下一个字符.关键在于,不匹配时,改变状态时是带着新字符还是不带.那么辅助的数组(数组也好,函数也好,总归还是查表),就从多维降到一维,多维是因为自动机遇到不同新字符跳到不同的状态,一维是KMP遇到新字符不匹配时直接跳到另一个状态,跳的时候不考虑新字符.直观上看,构建这样的数组也不再需要遍历Σ,预处理过程复杂度应该会降低.事实,确实省去了O(|Σ|)的复杂度,降到O(m)复杂度.同时,匹配时的复杂度还保持在了O(n).分析复杂度用到平摊分析法.<br>匹配过程是简单直观的,如前所述,遇到新字符,借助辅助数组π不断地改变状态.伪代码乳如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">kmp-matcher(T,P)</div><div class="line">n &lt;- length[T]</div><div class="line">m &lt;- length[P]</div><div class="line">π &lt;- kmp-computer-prefix(P)</div><div class="line">q &lt;- 0               // state , number of char matched</div><div class="line">for i &lt;- 1 to n</div><div class="line">    while q &gt; 0 &amp;&amp; P[q+1] != T[i]  // P and T range from 1 to n, not 0 to n-1</div><div class="line">        do q &lt;- π[q]</div><div class="line">        if P[q+1] = T[i]</div><div class="line">            then q &lt;- q+1</div><div class="line">        if q = m</div><div class="line">            then print &quot;Pattern occurs with shift&quot; i-m</div><div class="line">                q &lt;- π[q]</div></pre></td></tr></table></figure></p>
+<p>那么,问题的关键还是在于计算辅助数组π,即状态如何转移.这里KMP计算的时候,从P的低位(左边)开始计算π,显然只会用到前面低位的信息,不会用到后面高位的信息.那么利用动态规划中利用记录减少迭代的思想,再把计算π的过程看做与匹配过程类似,比如计算q+1那么就是用Pq去匹配Pq+1嘛,而Pq的数组π已经建立好了.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">kmp-computer-prefix(P)</div><div class="line"></div><div class="line">m &lt;- length[P]</div><div class="line">π[1] &lt;- 0</div><div class="line">k &lt;- 0               // just like q above, number of char matched</div><div class="line">for q &lt;-  2 to m     // like i above, and actually it is state, so its name is q</div><div class="line">    while k&gt;0 &amp;&amp; P[k+1] != P[q]  // P range from 1 to n, not 0 to n-1</div><div class="line">        do k &lt;- π[k]</div><div class="line">        if P[k+1] = P[q]</div><div class="line">            then k &lt;- k+1</div><div class="line">        π[q] &lt;- k</div><div class="line">return π</div></pre></td></tr></table></figure></p>
+<p>kmp算法执行如下:<br><img src="/images/CLRS_images/kmp1.png" alt="kmp1"><br><img src="/images/CLRS_images/kmp2.png" alt="kmp2"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          
+            <a href="/tags/data-structure/" rel="tag"># data_structure</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/13/lab4_part23/" rel="prev" title="lab4-Preemptive Multitasking part23">
+                lab4-Preemptive Multitasking part23 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#＜Introduction-to-algorithms＞笔记"><span class="nav-number">1.</span> <span class="nav-text">＜Introduction to algorithms＞笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part7-高级算法问题"><span class="nav-number">1.1.</span> <span class="nav-text">Part7 高级算法问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter26-如何利用多核来并行排序"><span class="nav-number">1.1.1.</span> <span class="nav-text">Chapter26 如何利用多核来并行排序?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter27-矩阵运算"><span class="nav-number">1.1.2.</span> <span class="nav-text">Chapter27 矩阵运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter28-线性规划"><span class="nav-number">1.1.3.</span> <span class="nav-text">Chapter28 线性规划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chapter28-寻找子串"><span class="nav-number">1.1.4.</span> <span class="nav-text">Chapter28 寻找子串</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>
