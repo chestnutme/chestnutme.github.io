@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>lab4-Preemptive Multitasking part23 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Lab4 抢占式多进程Part2 写入时复制 copy-on-write fork如前所述,Unix将fork()系统调用作为进程创建原语.fork()系统调用将调用进程的地址空间（父进程）创建一个新的进程（子进程）.xv6 Unix fork()通过将父进程页面中的所有数据复制到为子进程分配的新页面中,这个机制基本和dumbfork()相同.复制父进程的地址空间到子进程是fork()中代价最大的">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab4-Preemptive Multitasking part23">
+<meta property="og:url" content="http://yoursite.com/2017/05/13/lab4_part23/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Lab4 抢占式多进程Part2 写入时复制 copy-on-write fork如前所述,Unix将fork()系统调用作为进程创建原语.fork()系统调用将调用进程的地址空间（父进程）创建一个新的进程（子进程）.xv6 Unix fork()通过将父进程页面中的所有数据复制到为子进程分配的新页面中,这个机制基本和dumbfork()相同.复制父进程的地址空间到子进程是fork()中代价最大的">
+<meta property="og:image" content="http://yoursite.com/images/lab4/UStack1.png">
+<meta property="og:image" content="http://yoursite.com/images/lab4/UStack2.png">
+<meta property="og:image" content="http://yoursite.com/images/lab4/UStack3.png">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.606Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lab4-Preemptive Multitasking part23">
+<meta name="twitter:description" content="Lab4 抢占式多进程Part2 写入时复制 copy-on-write fork如前所述,Unix将fork()系统调用作为进程创建原语.fork()系统调用将调用进程的地址空间（父进程）创建一个新的进程（子进程）.xv6 Unix fork()通过将父进程页面中的所有数据复制到为子进程分配的新页面中,这个机制基本和dumbfork()相同.复制父进程的地址空间到子进程是fork()中代价最大的">
+<meta name="twitter:image" content="http://yoursite.com/images/lab4/UStack1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-lab4_part23" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/13/lab4_part23/" class="article-date">
+  <time datetime="2017-05-12T16:00:00.000Z" itemprop="datePublished">2017-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      lab4-Preemptive Multitasking part23
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Lab4-抢占式多进程"><a href="#Lab4-抢占式多进程" class="headerlink" title="Lab4 抢占式多进程"></a>Lab4 抢占式多进程</h1><h2 id="Part2-写入时复制-copy-on-write-fork"><a href="#Part2-写入时复制-copy-on-write-fork" class="headerlink" title="Part2 写入时复制 copy-on-write fork"></a>Part2 写入时复制 copy-on-write fork</h2><p>如前所述,Unix将fork()系统调用作为进程创建原语.fork()系统调用将调用进程的地址空间（父进程）创建一个新的进程（子进程）.<br>xv6 Unix <code>fork()</code>通过将父进程页面中的所有数据复制到为子进程分配的新页面中,这个机制基本和<code>dumbfork()</code>相同.复制父进程的地址空间到子进程是<code>fork()</code>中代价最大的操作.<br>但是,调用<code>fork()</code>后经常在子进程中跟随<code>exec()</code>调用, 其会用加载新程序到子进程的内存.例如, 这是shell的常用机制.在这种情况下,复制父进程地址空间的时间大部分被浪费,因为子进程在调用<code>exec()</code>之前只使用很少的内存.</p>
+<p>因此,Unix的更高版本利用虚拟内存硬件,允许父子进程<strong>共享</strong>映射到其各自地址空间的内存,直到其中一个进程实际修改这段内存.这种技术被称为<strong>写时复制(copy-on-fork)</strong>.为了做到这一点,调用<code>fork()</code>时,内核上将复制父进程的地址空间映射到进程,而不是复制映射页的内容,同时标记现在共享的页面为只读.当两个进程中的一个尝试写入其中一个共享页面时,该进程将出现页面错误.在这一点上,Unix内核意识到该页面真的是一个“虚拟”或“写时复制”的副本,因此它创建一个新的/私有的故障页面的可写副本.这样,单个页面的内容在实际写入之前实际上并不被复制.<code>fork()</code>的这种优化使随后的<code>exec()</code>代价小很多：在子进程调用<code>exec()</code>之前,可能只需要复制一个页面（它的堆栈的当前页面）.</p>
+<p>在part2,实现一个 Unix <code>fork()</code>,其具有写时复制功能,并作为一个用户空间库例程来.另外,使得单个用户模式程序定义自己的<code>fork()</code>:一个程序想要一个稍微不同的<code>fork()</code>（如总是复制的<code>dumbfork()</code>,或者父子进程共享内存）可以很容易修改而实现.</p>
+<h3 id="用户级页面错误处理"><a href="#用户级页面错误处理" class="headerlink" title="用户级页面错误处理"></a>用户级页面错误处理</h3><p>用户级的写时复制<code>fork()</code>首先需要知道发生在写保护页面上的页面错误,这是首先要实现的.写时复制只是用户级页面故障处理的许多可能用途之一.<br>一般实现方式是:设置一个地址空间,以便页面错误指示出何时需要执行操作.例如,大多数Unix内核最初仅在新进程的堆栈区域中映射单个页面,并且随着进程的堆栈增加而随后分配和映射额外的堆栈页面,并导致尚未映射的堆栈地址发生页面错误,对此典型的Unix内核必须跟踪在进程空间的每个区域中出现页面错误时要执行的操作.又例如,堆栈区域中的故障通常会导致分配和映射物理内存新页面.程序BSS区域的故障通常会分配一个新的页面,以0填充,并在进行映射.<br>以上是内核需要跟踪的信息.不采用传统的Unix方法,而更好地处理用户空间中的每个页面错误,使得bug破坏性更小.这种设计具有额外的优点,允许程序在定义其内存区域方面具有很大的灵活性.<br><a id="more"></a></p>
+<h4 id="设置页面错误处理器"><a href="#设置页面错误处理器" class="headerlink" title="设置页面错误处理器"></a>设置页面错误处理器</h4><p>为了处理自己的页面错误,用户环境将需要向JOS内核注册页面错误处理程序<code>entrypoint</code>.用户环境通过新的<code>sys_env_set_pgfault_upcall</code>系统调用注册其页面错误入口点.增加一个新成员<code>Env</code>结构<code>env_pgfault_upcall</code>来记录这些信息.</p>
+<h4 id="练习8"><a href="#练习8" class="headerlink" title="练习8"></a>练习8</h4><p>问:</p>
+<blockquote>
+<p>实现<code>sys_env_set_pgfault_upcall</code>系统调用.注:因为这个系统调用危险性很高,所以在查找目标环境的环境ID时要启用权限检查,</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>实现如下:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">sys_env_set_pgfault_upcall</span><span class="params">(<span class="keyword">envid_t</span> envid, <span class="keyword">void</span> *func)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">struct</span> Env *env;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (envid2env(envid, &amp;env, <span class="number">1</span>) &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_BAD_ENV;</div><div class="line">        env-&gt;env_pgfault_upcall = func;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="用户环境的正常-异常堆栈"><a href="#用户环境的正常-异常堆栈" class="headerlink" title="用户环境的正常/异常堆栈"></a>用户环境的正常/异常堆栈</h4><p>在正常运行期间,用户进程运行在用户栈上,栈顶寄存器<code>ESP</code>指向<code>USTACKTOP</code>处,堆栈数据位于<code>USTACKTOP-PGSIZE 与USTACKTOP-1</code>之间的页.当在用户模式发生页面错误时,内核将在专门处理页面错误的用户异常栈上重新启动进程. 异常栈正是为了上面设置的异常处理例程设立的.当异常发生时,而且该用户进程注册了该异常的处理例程,那么就会转到异常栈上,运行异常处理例程.<br>到目前位置出现了三个栈：</p>
+<ul>
+<li>内核态系统栈 [KSTACKTOP, KSTACKTOP-KSTKSIZE]</li>
+<li>用户态错误处理栈 [UXSTACKTOP, UXSTACKTOP - PGSIZE]</li>
+<li>用户态运行栈 [USTACKTOP, UTEXT]</li>
+</ul>
+<p>内核态系统栈是运行内核相关程序的栈,在有中断被触发之后,CPU会将栈自动切换到内核栈上来,而内核栈的设置是在<code>kern/trap.c</code>的<code>trap_init_percpu()</code>中设置的.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">trap_init_percpu</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">        <span class="comment">// Setup a TSS so that we get the right stack</span></div><div class="line">        <span class="comment">// when we trap to the kernel.</span></div><div class="line">        thiscpu-&gt;cpu_ts.ts_esp0 = KSTACKTOP - cpunum() * (KSTKGAP + KSTKSIZE);</div><div class="line">        thiscpu-&gt;cpu_ts.ts_ss0 = GD_KD;</div><div class="line"></div><div class="line">        <span class="comment">// Initialize the TSS slot of the gdt.</span></div><div class="line">        gdt[(GD_TSS0 &gt;&gt; <span class="number">3</span>) + cpunum()] = SEG16(STS_T32A, (<span class="keyword">uint32_t</span>) (&amp;thiscpu-&gt;cpu_ts),</div><div class="line">                                        <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Taskstate) - <span class="number">1</span>, <span class="number">0</span>);</div><div class="line">        gdt[(GD_TSS0 &gt;&gt; <span class="number">3</span>) + cpunum()].sd_s = <span class="number">0</span>;</div><div class="line"></div><div class="line">        <span class="comment">// Load the TSS selector (like other segment selectors, the</span></div><div class="line">        <span class="comment">// bottom three bits are special; we leave them 0)</span></div><div class="line">        ltr(GD_TSS0 + <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Segdesc) * cpunum());</div><div class="line"></div><div class="line">        <span class="comment">// Load the IDT</span></div><div class="line">        lidt(&amp;idt_pd);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而用户态错误处理栈是用户定义注册了自己的中断处理程序之后,相应的例程运行时的栈.整个过程如下：</p>
+<blockquote>
+<p>首先陷入到内核,栈位置从用户运行栈切换到内核栈,进入到<code>trap</code>中,进行中断处理分发,进入到<code>page_fault_handler()</code>.当确认是用户程序触发的<code>page fault</code>的时候(如果是内核触发的,会直接<code>panic</code>),为其在用户错误栈里分配一个<code>UTrapframe</code>的大小.把栈切换到用户错误栈,运行响应的用户中断处理程序中断处理程序可能会触发另外一个同类型的中断,这个时候就会产生递归式的中断嵌套处理.处理完成之后,返回到用户运行栈.</p>
+</blockquote>
+<h4 id="调用用户页面故障处理程序"><a href="#调用用户页面故障处理程序" class="headerlink" title="调用用户页面故障处理程序"></a>调用用户页面故障处理程序</h4><p>将用户自己定义的页面故障处理进程当作是一次函数调用看待,当错误发生的时候,调用一个函数,但实际上还是当前这个进程,并没有发生变化.所以当切换到异常栈的时候,依然运行当前进程,但只是运行的是中断处理函数,所以说此时的栈指针发生了变化,而且程序计数器<code>eip</code>也发生了变化,同时还需要知道的是引发错误的地址在哪.这些都是要在切换到异常栈的时候需要传递的信息.和之前从用户栈切换到内核栈一样,这里是通过在栈上构造结构体,传递指针完成的.<br>在<code>inc / trap.h</code>新定义了一个类似<code>struct Trapframe</code>结构体<code>struct UTrapframe</code>用来记录出现页面错误时候的信息：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> UTrapframe &#123;</div><div class="line">        <span class="comment">/* information about the fault */</span></div><div class="line">        <span class="keyword">uint32_t</span> utf_fault_va;  <span class="comment">/* va for T_PGFLT, 0 otherwise */</span></div><div class="line">        <span class="keyword">uint32_t</span> utf_err;</div><div class="line">        <span class="comment">/* trap-time return state */</span></div><div class="line">        <span class="keyword">struct</span> PushRegs utf_regs;</div><div class="line">        <span class="keyword">uintptr_t</span> utf_eip;</div><div class="line">        <span class="keyword">uint32_t</span> utf_eflags;</div><div class="line">        <span class="comment">/* the trap-time stack to return to */</span></div><div class="line">        <span class="keyword">uintptr_t</span> utf_esp;</div><div class="line">&#125; __attribute__((packed));</div></pre></td></tr></table></figure></p>
+<p>相比于<code>Trapframe</code>,这里多了<code>utf_fault_va</code>,因为要记录触发错误的内存地址,同时还少了<code>es,ds,ss</code>等段记录.因为从用户态栈切换到异常栈,或者从异常栈再切换回去,实际上都是一个用户进程,所以不涉及到段的切换,不用记录.在实际使用中,<code>Trapframe</code>是作为记录进程状态的结构体存在的,也作为函数参数进行传递；而<code>UTrapframe</code>只在处理用户定义的异常时用到.<br>整体上讲,当正常执行过程中发生了页面错误,那么栈的切换是<br><strong>用户运行栈—&gt;内核栈—&gt;异常栈</strong><br>而如果在异常处理程序中发生了页面错误,那么栈的切换是<br><strong>异常栈—&gt;内核栈—&gt;异常栈</strong></p>
+<h4 id="练习9"><a href="#练习9" class="headerlink" title="练习9"></a>练习9</h4><p>问:</p>
+<blockquote>
+<p>实现<code>kern/trap.c</code>中<code>page_fault_handler</code>函数, 把页面错误分发到对应的用户态异常处理函数.</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>如果当前已经在用户错误栈上了,那么需要留出4个字节,否则不需要,具体和跳转机制有关系.简单说就是在当前的异常栈栈顶的位置向下留出保存<code>UTrapframe</code>的空间,然后将<code>tf</code>中的参数复制过来.修改当前进程的程序计数器和栈指针,然后重启这个进程,此时就会在用户错误栈上运行中断处理程序了.中断处理程序运行结束之后,需要再回到用户运行栈中,这是异常处理程序需要做的.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_fault_handler</span><span class="params">(<span class="keyword">struct</span> Trapframe *tf)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">uint32_t</span> fault_va;</div><div class="line"></div><div class="line">        <span class="comment">// Read processor's CR2 register to find the faulting address</span></div><div class="line">        fault_va = rcr2();</div><div class="line"></div><div class="line">        <span class="comment">// Handle kernel-mode page faults.</span></div><div class="line">        <span class="keyword">if</span> (tf-&gt;tf_cs == GD_KT)</div><div class="line">                panic(<span class="string">"page_fault in kernel mode, fault address: %d\n"</span>, fault_va);</div><div class="line"></div><div class="line">        <span class="keyword">struct</span> UTrapframe *utf;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (curenv-&gt;env_pgfault_upcall) &#123;</div><div class="line">                <span class="keyword">if</span> (UXSTACKTOP - PGSIZE &lt;= tf-&gt;tf_esp &amp;&amp; tf-&gt;tf_esp &lt;= UXSTACKTOP - <span class="number">1</span>)</div><div class="line">                        utf = (<span class="keyword">struct</span> UTrapframe *)(tf-&gt;tf_esp - <span class="keyword">sizeof</span>(<span class="keyword">struct</span> UTrapframe) - <span class="number">4</span>);</div><div class="line">                <span class="keyword">else</span></div><div class="line">                        utf = (<span class="keyword">struct</span> UTrapframe *)(UXSTACKTOP - <span class="keyword">sizeof</span>(<span class="keyword">struct</span> UTrapframe));</div><div class="line">                user_mem_assert(curenv, (<span class="keyword">void</span> *)utf, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> UTrapframe), PTE_U | PTE_W);</div><div class="line"></div><div class="line">                utf-&gt;utf_fault_va = fault_va;</div><div class="line">                utf-&gt;utf_err = tf-&gt;tf_trapno;</div><div class="line">                utf-&gt;utf_eip = tf-&gt;tf_eip;</div><div class="line">                utf-&gt;utf_eflags = tf-&gt;tf_eflags;</div><div class="line">                utf-&gt;utf_esp = tf-&gt;tf_esp;</div><div class="line">                utf-&gt;utf_regs = tf-&gt;tf_regs;</div><div class="line">                tf-&gt;tf_eip = (<span class="keyword">uint32_t</span>)curenv-&gt;env_pgfault_upcall;</div><div class="line">                tf-&gt;tf_esp = (<span class="keyword">uint32_t</span>)utf;</div><div class="line">                env_run(curenv);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Destroy the environment that caused the fault.</span></div><div class="line">        cprintf(<span class="string">"[%08x] user fault va %08x ip %08x\n"</span>,</div><div class="line">                curenv-&gt;env_id, fault_va, tf-&gt;tf_eip);</div><div class="line">        print_trapframe(tf);</div><div class="line">        env_destroy(curenv);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="用户模式页面错误的入口"><a href="#用户模式页面错误的入口" class="headerlink" title="用户模式页面错误的入口"></a>用户模式页面错误的入口</h4><p>接下来需要实现汇编程序,该程序将负责调用页面错误处理程序,并在原始故障指令下继续执行,其将调用处理程序<code>sys_env_set_pgfault_upcall()</code>向内核注册.</p>
+<h4 id="练习10"><a href="#练习10" class="headerlink" title="练习10"></a>练习10</h4><p>问:</p>
+<blockquote>
+<p>实现在<code>lib/pfentry.S</code>中的<code>_pgfault_upcall</code>调用.</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p><code>_pgfault_upcall</code>是所有用户页错误处理程序的入口,在这里调用用户自定义的处理程序,并在处理完成后,从异常栈中保存的<code>UTrapframe</code>结构体中恢复相应信息,然后跳回到发生错误之前的指令,恢复原来的进程运行.具体过程如下:<br>调用<code>_pgfault_handler</code>返回时的操作,此时的异常栈结构如下：<br><img src="/images/lab4/UStack1.png" alt="UStack1"><br>这里<code>trap-time esp</code>上的空间有1个4字节的保留空间,是做为中断递归的情形. 然后将栈中的<code>trap-time esp</code>取出减去4,再存回栈中.此时如果是中断递归中,<code>esp-4</code>即是保留的4字节地址；如果不是则是用户运行栈的栈顶. 再将原来出错程序的<code>trap-time eip</code>取出放入保留的4字节,以便后来恢复运行.此时的异常栈布局如下：<br><img src="/images/lab4/UStack2.png" alt="UStack2"><br>紧接着恢复通用寄存器和EFLAG标志寄存器,此时的异常栈结构如下：<br><img src="/images/lab4/UStack3.png" alt="UStack3"><br>最后<code>pop esp</code>切换为原来出错程序的运行栈,最后使用<code>ret</code>返回出错程序.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">.text</div><div class="line">.globl _pgfault_upcall</div><div class="line">_pgfault_upcall:</div><div class="line">        <span class="comment">// Call the C page fault handler.</span></div><div class="line">        pushl %esp                      <span class="comment">// function argument: pointer to UTF</span></div><div class="line">        movl _pgfault_handler, %eax</div><div class="line">        call *%eax</div><div class="line">        addl $<span class="number">4</span>, %esp                   <span class="comment">// pop function argument</span></div><div class="line"></div><div class="line">        movl <span class="number">48</span>(%esp), %ebp</div><div class="line">        subl $<span class="number">4</span>, %ebp</div><div class="line">        movl %ebp, <span class="number">48</span>(%esp)</div><div class="line">        movl <span class="number">40</span>(%esp), %eax</div><div class="line">        movl %eax, (%ebp)</div><div class="line"></div><div class="line">        <span class="comment">// Restore the trap-time registers.  After you do this, you can no longer modify any general-purpose registers.</span></div><div class="line">        addl $<span class="number">8</span>, %esp</div><div class="line">        popal</div><div class="line"></div><div class="line">        <span class="comment">// Restore eflags from the stack.  After you do this, you can</span></div><div class="line">        <span class="comment">// no longer use arithmetic operations or anything else that</span></div><div class="line">        <span class="comment">// modifies eflags.</span></div><div class="line">        addl $<span class="number">4</span>, %esp</div><div class="line">        popfl</div><div class="line"></div><div class="line">        <span class="comment">// Switch back to the adjusted trap-time stack.</span></div><div class="line"></div><div class="line">        popl %esp</div><div class="line"></div><div class="line">        <span class="comment">// Return to re-execute the instruction that faulted.</span></div><div class="line">        ret</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="练习11"><a href="#练习11" class="headerlink" title="练习11"></a>练习11</h4><p>问:</p>
+<blockquote>
+<p>在<code>lib / pgfault.c</code>中完成<code>set_pgfault_handler()</code>,即实现用户级页面故障处理机制的C语言库函数.</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>进程在运行前注册自己的页错误处理程序,重点是申请用户异常栈空间,最后添加上系统调用号.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">void</div><div class="line">set_pgfault_handler(void (*handler)(struct UTrapframe *utf))</div><div class="line">&#123;</div><div class="line">        int r;</div><div class="line"></div><div class="line">        if (_pgfault_handler == 0) &#123;</div><div class="line">                // First time through!</div><div class="line">                if ((r = sys_page_alloc(thisenv-&gt;env_id, (void *)(UXSTACKTOP - PGSIZE), PTE_P | PTE_W | PTE_U)) &lt; 0)</div><div class="line">                        panic("set_pgfault_handler: %e", r);</div><div class="line">                sys_env_set_pgfault_upcall(thisenv-&gt;env_id, _pgfault_upcall);</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // Save handler pointer for assembly to call.</div><div class="line">        _pgfault_handler = handler;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="实现写入时复制-fork"><a href="#实现写入时复制-fork" class="headerlink" title="实现写入时复制 fork"></a>实现写入时复制 fork</h3><p>接下来就是最重要的部分：实现<code>copy-on-write fork</code>.<br>与之前的<code>dumbfork()</code>不同,<code>fork()</code>出一个子进程之后,首先要进行的就是将父进程的页表的全部映射拷贝到子进程的地址空间中去.这个时候物理页会被两个进程同时映射,但是在写的时候是应该隔离的.采取的方法是在子进程映射的时候,将父进程空间中所有可以写的页表的部分全部标记为可读且COW(copy-on-write).而当父进程或者子进程任意一个发生了写的时候,因为页表现在都是不可写的,所以会触发异常,进入到我们设定的page fault处理例程,当检测到是对COW页的写操作的情况下,就可以将要写入的页的内容全部拷贝一份,重新映射.</p>
+<h4 id="练习12"><a href="#练习12" class="headerlink" title="练习12"></a>练习12</h4><p>问:</p>
+<blockquote>
+<p>实现在<code>lib/fork.c</code>的<code>fork,duppage和pgfault</code>.</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>首先需要为父进程设定错误处理例程.调用<code>set_pgfault_handler()</code>是因为当前并不知道父进程是否已经建立了异常栈,没有的话就会建立一个,而<code>sys_env_set_pgfault_upcall</code>则不会建立异常栈.<br>接着调用<code>sys_exofork</code>准备一个和父进程状态相同的子进程,状态暂时设置为<code>ENV_NOT_RUNNABLE</code>.然后进行拷贝映射的部分,在当前进程的页表中所有标记为<code>PTE_P</code>的页的映射都需要拷贝到子进程空间中去.但是有一个例外,是必须要新申请一页来拷贝内容的,就是用户异常栈.因为copy-on-write就是依靠用户异常栈实现的,所以说这个栈要在fork完成的时候每个进程都有一个,要硬拷贝过来.<br>主要流程就是：</p>
+<ol>
+<li>申请新的物理页,映射到子进程的(UXSTACKTOP-PGSIZE)位置上去.</li>
+<li>父进程的PFTEMP位置也映射到子进程新申请的物理页上去,这样父进程也可以访问这一页.</li>
+<li>在父进程空间中,将用户错误栈全部拷贝到子进程的错误栈上去,也就是刚刚申请的那一页.</li>
+<li>然后父进程解除对PFTEMP的映射.</li>
+<li>最后把子进程的状态设置为可运行</li>
+</ol>
+</blockquote>
+<p>具体实现如下:<br>首先是<code>pgfault</code>处理<code>page fault</code>时的写时复制.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">pgfault</span><span class="params">(<span class="keyword">struct</span> UTrapframe *utf)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> r;</div><div class="line">        <span class="keyword">void</span> *addr = (<span class="keyword">void</span> *) utf-&gt;utf_fault_va;</div><div class="line">        <span class="keyword">uint32_t</span> err = utf-&gt;utf_err;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ((err &amp; FEC_WR) == <span class="number">0</span> || (uvpt[PGNUM(addr)] &amp; PTE_COW) == <span class="number">0</span>)</div><div class="line">                panic(<span class="string">"pgfault: it's not writable or attempt to access a non-cow page!"</span>);</div><div class="line">        <span class="comment">// Allocate a new page, map it at a temporary location (PFTEMP),</span></div><div class="line">        <span class="comment">// copy the data from the old page to the new page, then move the new</span></div><div class="line">        <span class="comment">// page to the old page's address.</span></div><div class="line"></div><div class="line">        <span class="keyword">envid_t</span> envid = sys_getenvid();</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_alloc(envid, (<span class="keyword">void</span> *)PFTEMP, PTE_P | PTE_W | PTE_U)) &lt; <span class="number">0</span>)</div><div class="line">                panic(<span class="string">"pgfault: page allocation failed %e"</span>, r);</div><div class="line"></div><div class="line">        addr = ROUNDDOWN(addr, PGSIZE);</div><div class="line">        memmove(PFTEMP, addr, PGSIZE);</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_unmap(envid, addr)) &lt; <span class="number">0</span>)</div><div class="line">                panic(<span class="string">"pgfault: page unmap failed %e"</span>, r);</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_map(envid, PFTEMP, envid, addr, PTE_P | PTE_W |PTE_U)) &lt; <span class="number">0</span>)</div><div class="line">                panic(<span class="string">"pgfault: page map failed %e"</span>, r);</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_unmap(envid, PFTEMP)) &lt; <span class="number">0</span>)</div><div class="line">                panic(<span class="string">"pgfault: page unmap failed %e"</span>, r);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>pgfault()</code>中先判断是否页错误是由写时拷贝造成的,如果不是则<code>panic</code>.借用了一个一定不会被用到的位置<code>PFTEMP</code>,专门用来发生<code>page fault</code>的时候拷贝内容用的.先解除<code>addr</code>原先的页映射关系,然后将<code>addr</code>映射到<code>PFTEMP</code>映射的页,最后解除<code>PFTEMP</code>的页映射关系.<br>接下来是<code>duppage</code>函数,负责进行COW方式的页复制,将当前进程的第pn页对应的物理页的映射到<code>envid</code>的第pn页上去,同时将这一页都标记为COW.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">duppage</span><span class="params">(<span class="keyword">envid_t</span> envid, <span class="keyword">unsigned</span> pn)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> r;</div><div class="line"></div><div class="line">        <span class="keyword">void</span> *addr;</div><div class="line">        <span class="keyword">pte_t</span> pte;</div><div class="line">        <span class="keyword">int</span> perm;</div><div class="line"></div><div class="line">        addr = (<span class="keyword">void</span> *)((<span class="keyword">uint32_t</span>)pn * PGSIZE);</div><div class="line">        pte = uvpt[pn];</div><div class="line">        perm = PTE_P | PTE_U;</div><div class="line">        <span class="keyword">if</span> ((pte &amp; PTE_W) || (pte &amp; PTE_COW))</div><div class="line">                perm |= PTE_COW;</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_map(thisenv-&gt;env_id, addr, envid, addr, perm)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"duppage: page remapping failed %e"</span>, r);</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (perm &amp; PTE_COW) &#123;</div><div class="line">                <span class="keyword">if</span> ((r = sys_page_map(thisenv-&gt;env_id, addr, thisenv-&gt;env_id, addr, perm)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                        panic(<span class="string">"duppage: page remapping failed %e"</span>, r);</div><div class="line">                        <span class="keyword">return</span> r;</div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后是fork函数,将页映射拷贝过去,这里需要考虑的地址范围就是<code>从UTEXT到UXSTACKTOP</code>为止,而在此之上的范围因为都是相同的,在<code>env_alloc</code>的时候已经设置好了.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">envid_t</span></div><div class="line">fork(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">        <span class="keyword">uint32_t</span> addr;</div><div class="line">        <span class="keyword">int</span> i, j, pn, r;</div><div class="line">        <span class="keyword">extern</span> <span class="keyword">void</span> _pgfault_upcall(<span class="keyword">void</span>);</div><div class="line">        <span class="keyword">if</span> ((envid = sys_exofork()) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"sys_exofork failed: %e"</span>, envid);</div><div class="line">                <span class="keyword">return</span> envid;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (envid == <span class="number">0</span>) &#123;</div><div class="line">                thisenv = &amp;envs[ENVX(sys_getenvid())];</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (i = PDX(UTEXT); i &lt; PDX(UXSTACKTOP); i++) &#123;</div><div class="line">                <span class="keyword">if</span> (uvpd[i] &amp; PTE_P) &#123;</div><div class="line">                        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; NPTENTRIES; j++) &#123;</div><div class="line">                                pn = PGNUM(PGADDR(i, j, <span class="number">0</span>));</div><div class="line">                                <span class="keyword">if</span> (pn == PGNUM(UXSTACKTOP - PGSIZE))</div><div class="line">                                        <span class="keyword">break</span>;</div><div class="line">                                <span class="keyword">if</span> (uvpt[pn] &amp; PTE_P)</div><div class="line">                                        duppage(envid, pn);</div><div class="line">                        &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ((r = sys_page_alloc(envid, (<span class="keyword">void</span> *)(UXSTACKTOP - PGSIZE), PTE_P | PTE_U | PTE_W)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"fork: page alloc failed %e"</span>, r);</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_map(envid, (<span class="keyword">void</span> *)(UXSTACKTOP - PGSIZE), thisenv-&gt;env_id, PFTEMP, PTE_P | PTE_U | PTE_W)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"fork: page map failed %e"</span>, r);</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        memmove((<span class="keyword">void</span> *)(UXSTACKTOP - PGSIZE), PFTEMP, PGSIZE);</div><div class="line">        <span class="keyword">if</span> ((r = sys_page_unmap(thisenv-&gt;env_id, PFTEMP)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"fork: page unmap failed %e"</span>, r);</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        sys_env_set_pgfault_upcall(envid, _pgfault_upcall);</div><div class="line">        <span class="keyword">if</span> ((r = sys_env_set_status(envid, ENV_RUNNABLE)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                panic(<span class="string">"fork: set child env status failed %e"</span>, r);</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> envid;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Part3-抢占式调度和进程间通信"><a href="#Part3-抢占式调度和进程间通信" class="headerlink" title="Part3 抢占式调度和进程间通信"></a>Part3 抢占式调度和进程间通信</h2><p>Lab4的最后一部分就是实现抢占式调度和进程间通信。</p>
+<h3 id="时钟中断和抢占"><a href="#时钟中断和抢占" class="headerlink" title="时钟中断和抢占"></a>时钟中断和抢占</h3><p>先前的调度是进程资源放弃CPU，但是实际中没有进程会这样做的，而为了不让某一进程耗尽CPU资源，需要抢占式调度，也就需要硬件定时。但是外部硬件定时在Bootloader的时候就关闭了，至今都没有开启。而JOS采取的策略是，在内核中的时候，外部中断是始终关闭的，在用户态的时候，需要开启中断。</p>
+<h4 id="中断原则"><a href="#中断原则" class="headerlink" title="中断原则"></a>中断原则</h4><p>外部中断称为IRQ。一共有16个可能的IRQ，编号为0到15.从IRQ号到IDT条目的映射不是固定的, <code>picirq.c</code>中的<code>pic_init</code>将IRQ 0-15映射到到IDT的<code>[IRQ_OFFSET,IRQ_OFFSET+15]</code>.<br>在<code>inc / trap.h</code>中， <code>IRQ_OFFSET</code>定义为十进制数32.因此IDT条目32-47对应于IRQ 0-15。例如，时钟中断是IRQ 0.因此，<code>IDT[IRQ_OFFSET + 0]</code>（即<code>IDT[32]</code>）包含内核中时钟的中断处理程序例程的地址。选择正确的<code>IRQ_OFFSET</code>使得设备中断不与处理器异常重叠,可以避免异常处理的混乱.<br>在JOS中，与xv6 Unix相比，做了一个关键的简化。在内核中，外部设备中断始终被禁用（和xv6一样，在用户空间中启用）。外部中断由寄存器的<code>FL_IF标志位%eflags</code>控制（见<code>inc/mmu.h</code>）。当该位置1时，外部中断被使能。虽然可以通过几种方式修改该位，但由于简化，可以通过在<code>%eflags</code>进入和离开用户模式时保存和恢复寄存器的过程来处理该位。必须确保<code>FL_IF</code>标志在用户环境中运行，以便当中断到达时，它将被传递到处理器并由中断代码处理。否则，中断会被屏蔽或忽略，直到重新启用中断。Lab1中用<code>bootloaded</code>的第一个指令屏蔽了中断，到目前为止还没开启过.</p>
+<h4 id="练习12-1"><a href="#练习12-1" class="headerlink" title="练习12"></a>练习12</h4><p>问:</p>
+<blockquote>
+<p>修改<code>kern/trapentry.S</code>和<code>kern/trap.c</code>来初始化<code>IDT中IRQs0-15</code>的入口和处理函数。然后修改<code>env_alloc</code>函数来确保进程在用户态运行时中断是打开的。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>模仿原先设置的默认中断向量即可，在<code>kern/trapentry.S</code>中定义<code>IRQ0-15</code>的处理例程。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">TRAPHANDLER(irq0_entry, IRQ_OFFSET + <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq1_entry, IRQ_OFFSET + <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq2_entry, IRQ_OFFSET + <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq3_entry, IRQ_OFFSET + <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq4_entry, IRQ_OFFSET + <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq5_entry, IRQ_OFFSET + <span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq6_entry, IRQ_OFFSET + <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq7_entry, IRQ_OFFSET + <span class="number">7</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq8_entry, IRQ_OFFSET + <span class="number">8</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq9_entry, IRQ_OFFSET + <span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq10_entry, IRQ_OFFSET + <span class="number">10</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq11_entry, IRQ_OFFSET + <span class="number">11</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq12_entry, IRQ_OFFSET + <span class="number">12</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq13_entry, IRQ_OFFSET + <span class="number">13</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq14_entry, IRQ_OFFSET + <span class="number">14</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">TRAPHANDLER(irq15_entry, IRQ_OFFSET + <span class="number">15</span>, <span class="number">0</span>, <span class="number">0</span>);</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>然后在IDT中注册，修改<code>trap_init</code>，由于先前已经实现简化，故此无需做处理。<br>最后在<code>env_alloc</code>函数中打开中断。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// kern/env_alloc.c</span></div><div class="line"><span class="comment">// Also clear the IPC receiving flag.</span></div><div class="line">e-&gt;env_ipc_recving = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// Set FL_IF so that user environments run with interrupts enabled</span></div><div class="line">e-&gt;env_tf.tf_eflags |= FL_IF;</div><div class="line"></div><div class="line"><span class="comment">// commit the allocation</span></div><div class="line">env_free_list = e-&gt;env_link;</div><div class="line">*newenv_store = e;</div></pre></td></tr></table></figure></p>
+<h4 id="处理时钟中断"><a href="#处理时钟中断" class="headerlink" title="处理时钟中断"></a>处理时钟中断</h4><p>现在虽然中断使能已经打开，在用户态进程运行的时候，外部中断会产生并进入内核，但是现在还没有能处理这类中断。所以需要修改<code>trap_dispatch</code>，在发生外部定时中断的时候，调用调度器，调度另外一个可运行的进程。</p>
+<h4 id="练习14"><a href="#练习14" class="headerlink" title="练习14"></a>练习14</h4><p>问:</p>
+<blockquote>
+<p>修改<code>trap_dispatch</code>h函数，当发生时钟中断时调用<code>sched_yield</code>函数来调度下一个进程。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>添加对应函数即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// kern/trap.c</div><div class="line"></div><div class="line">// Handle clock interrupts. Don&apos;t forget to acknowledge the</div><div class="line">// interrupt using lapic_eoi() before calling the scheduler!</div><div class="line">if (tf-&gt;tf_trapno == IRQ_OFFSET + IRQ_TIMER) &#123;</div><div class="line">                lapic_eoi();</div><div class="line">                sched_yield();</div><div class="line">                return;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="进程间通信-IPC"><a href="#进程间通信-IPC" class="headerlink" title="进程间通信(IPC)"></a>进程间通信(IPC)</h4><p>IPC是计算机系统中非常重要的一部分。在JOS实现IPC的方式是当两个进程需要通信的话，一方要发起<code>recv</code>，然后阻塞，直到有一个进程调用<code>send</code>向正在接受的进程发送了信息，阻塞的进程才会被唤醒。在JOS中，可以允许传递两种信息，一是一个32位整数，另外一个就是传递页的映射，在这个过程中，接收方和发送方将同时映射到一个相同的物理页，此时也就实现了内存共享。最后将这两个功能实现为一个系统调用。
+　　</p>
+<h4 id="实现IPC"><a href="#实现IPC" class="headerlink" title="实现IPC"></a>实现IPC</h4><p>在JOS的IPC实现机制中，修改<code>Env</code>结构体如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> Env &#123;</div><div class="line">        <span class="keyword">struct</span> Trapframe env_tf;        <span class="comment">// Saved registers</span></div><div class="line">        <span class="keyword">struct</span> Env *env_link;           <span class="comment">// Next free Env</span></div><div class="line">        <span class="keyword">envid_t</span> env_id;                 <span class="comment">// Unique environment identifier</span></div><div class="line">        <span class="keyword">envid_t</span> env_parent_id;          <span class="comment">// env_id of this env's parent</span></div><div class="line">        <span class="keyword">enum</span> EnvType env_type;          <span class="comment">// Indicates special system environments</span></div><div class="line">        <span class="keyword">unsigned</span> env_status;            <span class="comment">// Status of the environment</span></div><div class="line">        <span class="keyword">uint32_t</span> env_runs;              <span class="comment">// Number of times environment has run</span></div><div class="line">        <span class="keyword">int</span> env_cpunum;                 <span class="comment">// The CPU that the env is running on</span></div><div class="line"></div><div class="line">        <span class="comment">// Address space</span></div><div class="line">        <span class="keyword">pde_t</span> *env_pgdir;               <span class="comment">// Kernel virtual address of page dir</span></div><div class="line"></div><div class="line">        <span class="comment">// Exception handling</span></div><div class="line">        <span class="keyword">void</span> *env_pgfault_upcall;       <span class="comment">// Page fault upcall entry point</span></div><div class="line"></div><div class="line">        <span class="comment">// Lab 4 IPC</span></div><div class="line">        <span class="keyword">bool</span> env_ipc_recving;           <span class="comment">// Env is blocked receiving</span></div><div class="line">        <span class="keyword">void</span> *env_ipc_dstva;            <span class="comment">// VA at which to map received page</span></div><div class="line">        <span class="keyword">uint32_t</span> env_ipc_value;         <span class="comment">// Data value sent to us</span></div><div class="line">        <span class="keyword">envid_t</span> env_ipc_from;           <span class="comment">// envid of the sender</span></div><div class="line">        <span class="keyword">int</span> env_ipc_perm;               <span class="comment">// Perm of page mapping received</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>其中增加了5个成员：</p>
+<ul>
+<li>env_ipc_recving：<br>当进程使用env_ipc_recv函数等待信息时，会将这个成员设置为1，然后堵塞等待；当一个进程向它发消息解除堵塞后，发送进程将此成员修改为0。</li>
+<li>env_ipc_dstva：<br>如果进程要接受消息并且是传送页，保存页映射的地址，且该地址&lt;=UTOP。</li>
+<li>env_ipc_value：<br>若等待消息的进程接收到消息，发送方将接收方此成员设置为消息值。</li>
+<li>env_ipc_from：<br>发送方负责设置该成员为自己的envid号。</li>
+<li>env_ipc_perm：<br>如果进程要接收消息并且传送页，那么发送方发送页之后将传送的页权限赋给这个成员</li>
+</ul>
+<h4 id="练习15"><a href="#练习15" class="headerlink" title="练习15"></a>练习15</h4><p>问:</p>
+<blockquote>
+<p>实现在<code>kern/syscall.c</code>中的<code>sys_ipc_recv和sys_ipc_try_send</code>函数。最后实现用户态的<code>ipc_recv和ipc_send</code>。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>首先是<code>sys_ipc_recv</code>函数，其功能是当一个进程试图去接收信息的时候，应该将自己标记为正在接收信息，而且为了不浪费CPU资源，应该同时标记自己为<code>ENV_NOT_RUNNABLE</code>，只有当有进程向自己发了信息之后，才会重新恢复可运行。最后将自己标记为不可运行之后，调用调度器运行其他进程。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">sys_ipc_recv</span><span class="params">(<span class="keyword">void</span> *dstva)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">if</span> (dstva &lt; (<span class="keyword">void</span> *)UTOP &amp;&amp; PGOFF(dstva))</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        curenv-&gt;env_ipc_recving = <span class="literal">true</span>;</div><div class="line">        curenv-&gt;env_ipc_dstva = dstva;</div><div class="line">        curenv-&gt;env_status = ENV_NOT_RUNNABLE;</div><div class="line">        curenv-&gt;env_ipc_from = <span class="number">0</span>;</div><div class="line">        sched_yield();</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>接着是<code>sys_ipc_try_send</code>函数，其实现相对来说麻烦很多，因为有很多的检测项，包括权限是否符合要求，要传送的页有没有，能不能将这一页映射到对方页表中去等等。如果<code>srcva</code>是在<code>UTOP</code>之下，那么说明是要共享内存，那就首先要在发送方的页表中找到<code>srcva</code>对应的页表项，然后在接收方给定的虚地址处插入这个页表项。接收完成之后，重新将当前进程设置为可运行，同时把<code>env_ipc_recving</code>设置为0，以防止其他的进程再发送，覆盖掉当前的内容。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">sys_ipc_try_send</span><span class="params">(<span class="keyword">envid_t</span> envid, <span class="keyword">uint32_t</span> value, <span class="keyword">void</span> *srcva, <span class="keyword">unsigned</span> perm)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> r;</div><div class="line">        <span class="keyword">pte_t</span> *pte;</div><div class="line">        <span class="keyword">struct</span> PageInfo *pp;</div><div class="line">        <span class="keyword">struct</span> Env *env;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ((r = envid2env(envid, &amp;env, <span class="number">0</span>)) &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_BAD_ENV;</div><div class="line">        <span class="keyword">if</span> (env-&gt;env_ipc_recving != <span class="literal">true</span> || env-&gt;env_ipc_from != <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_IPC_NOT_RECV;</div><div class="line">        <span class="keyword">if</span> (srcva &lt; (<span class="keyword">void</span> *)UTOP &amp;&amp; PGOFF(srcva))</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> (srcva &lt; (<span class="keyword">void</span> *)UTOP) &#123;</div><div class="line">                <span class="keyword">if</span> ((perm &amp; PTE_P) == <span class="number">0</span> || (perm &amp; PTE_U) == <span class="number">0</span>)</div><div class="line">                        <span class="keyword">return</span> -E_INVAL;</div><div class="line">                <span class="keyword">if</span> ((perm &amp; ~(PTE_P | PTE_U | PTE_W | PTE_AVAIL)) != <span class="number">0</span>)</div><div class="line">                        <span class="keyword">return</span> -E_INVAL;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (srcva &lt; (<span class="keyword">void</span> *)UTOP &amp;&amp; (pp = page_lookup(curenv-&gt;env_pgdir, srcva, &amp;pte)) == <span class="literal">NULL</span>)</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> (srcva &lt; (<span class="keyword">void</span> *)UTOP &amp;&amp; (perm &amp; PTE_W) != <span class="number">0</span> &amp;&amp; (*pte &amp; PTE_W) == <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> (srcva &lt; (<span class="keyword">void</span> *)UTOP &amp;&amp; env-&gt;env_ipc_dstva != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> ((r = page_insert(env-&gt;env_pgdir, pp, env-&gt;env_ipc_dstva, perm)) &lt; <span class="number">0</span>)</div><div class="line">                        <span class="keyword">return</span> -E_NO_MEM;</div><div class="line">                env-&gt;env_ipc_perm = perm;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        env-&gt;env_ipc_from = curenv-&gt;env_id;</div><div class="line">        env-&gt;env_ipc_recving = <span class="literal">false</span>;</div><div class="line">        env-&gt;env_ipc_value = value;</div><div class="line">        env-&gt;env_status = ENV_RUNNABLE;</div><div class="line">        env-&gt;env_tf.tf_regs.reg_eax = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>完成后需要要加上分发机制，将调用号加上。<br>最后是2个用户态库函数的实现。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span></div><div class="line">ipc_recv(<span class="keyword">envid_t</span> *from_env_store, <span class="keyword">void</span> *pg, <span class="keyword">int</span> *perm_store)</div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> r;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (pg == <span class="literal">NULL</span>)</div><div class="line">                r = sys_ipc_recv((<span class="keyword">void</span> *)UTOP);</div><div class="line">        <span class="keyword">else</span></div><div class="line">                r = sys_ipc_recv(pg);</div><div class="line">        <span class="keyword">if</span> (from_env_store != <span class="literal">NULL</span>)</div><div class="line">                *from_env_store = r &lt; <span class="number">0</span> ? <span class="number">0</span> : thisenv-&gt;env_ipc_from;</div><div class="line">        <span class="keyword">if</span> (perm_store != <span class="literal">NULL</span>)</div><div class="line">                *perm_store = r &lt; <span class="number">0</span> ? <span class="number">0</span> : thisenv-&gt;env_ipc_perm;</div><div class="line">        <span class="keyword">if</span> (r &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> r;</div><div class="line">        <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> thisenv-&gt;env_ipc_value;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">ipc_send</span><span class="params">(<span class="keyword">envid_t</span> to_env, <span class="keyword">uint32_t</span> val, <span class="keyword">void</span> *pg, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> r;</div><div class="line">        <span class="keyword">void</span> *dstpg;</div><div class="line"></div><div class="line">        dstpg = pg != <span class="literal">NULL</span> ? pg : (<span class="keyword">void</span> *)UTOP;</div><div class="line">        <span class="keyword">while</span>((r = sys_ipc_try_send(to_env, val, dstpg, perm)) &lt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (r != -E_IPC_NOT_RECV)</div><div class="line">                        panic(<span class="string">"ipc_send: send message error %e"</span>, r);</div><div class="line">                sys_yield();</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/13/lab4_part23/" data-id="cj6sslhbe001a3gamk7f2y506" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/18/CLRS-notes6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          introduction to algorithms notes6
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/09/CLRS-notes5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">introduction to algorithms note5</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

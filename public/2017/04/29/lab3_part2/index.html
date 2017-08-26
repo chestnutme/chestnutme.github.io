@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>lab3-user-environment-part2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Lab3 用户环境 Part2Part2 缺页中断, 断点异常和系统调用part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常. 处理缺页中断　　缺页中断（中断向量14（T_PGFLT））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab3-user-environment-part2">
+<meta property="og:url" content="http://yoursite.com/2017/04/29/lab3_part2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Lab3 用户环境 Part2Part2 缺页中断, 断点异常和系统调用part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常. 处理缺页中断　　缺页中断（中断向量14（T_PGFLT））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lab3-user-environment-part2">
+<meta name="twitter:description" content="Lab3 用户环境 Part2Part2 缺页中断, 断点异常和系统调用part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常. 处理缺页中断　　缺页中断（中断向量14（T_PGFLT））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-lab3_part2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/29/lab3_part2/" class="article-date">
+  <time datetime="2017-04-28T16:00:00.000Z" itemprop="datePublished">2017-04-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      lab3-user-environment-part2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Lab3-用户环境-Part2"><a href="#Lab3-用户环境-Part2" class="headerlink" title="Lab3 用户环境 Part2"></a>Lab3 用户环境 Part2</h1><h2 id="Part2-缺页中断-断点异常和系统调用"><a href="#Part2-缺页中断-断点异常和系统调用" class="headerlink" title="Part2 缺页中断, 断点异常和系统调用"></a>Part2 缺页中断, 断点异常和系统调用</h2><p>part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常.</p>
+<h3 id="处理缺页中断"><a href="#处理缺页中断" class="headerlink" title="处理缺页中断"></a>处理缺页中断</h3><p>　　缺页中断（中断向量14（<code>T_PGFLT</code>））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存器<code>CR2</code>中.在<code>trap.c</code>中,已经提供了一个能够处理这种缺页异常的函数<code>page_fault_handler()</code>.</p>
+<a id="more"></a>
+<h4 id="练习5"><a href="#练习5" class="headerlink" title="练习5"></a>练习5</h4><p>问</p>
+<blockquote>
+<p>修改<code>trap_dispatch</code>函数,使系统能够把缺页异常引导到 <code>page_fault_handler()</code>上执行.在修改完成后,JOS可以成功运行测试程序<code>faultread,faultreadkernel,faultwrite,faultwritekernel</code></p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>根据 <code>trapentry.S</code>文件中的<code>TRAPHANDLER</code>函数可知,这个函数会把当前中断的中断向量压入堆栈中,再根据<code>inc/trap.h</code>文件中的<code>Trapframe</code>结构体可以知道,<code>Trapframe</code>中的<code>tf_trapno</code>成员代表这个中断的中断向量.所以在 <code>trap_dispatch</code>函数中需要根据输入的<code>Trapframe</code>指针<code>tf</code>中的 <code>tf_trapno</code>成员来判断捕捉是什么中断.如果是是缺页中断,则执行 <code>page_fault_handler</code>函数,修改代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">trap_dispatch</span><span class="params">(<span class="keyword">struct</span> Trapframe *tf)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int32_t</span> ret_code;</div><div class="line">    <span class="comment">// Handle processor exceptions.</span></div><div class="line">    <span class="keyword">switch</span>(tf-&gt;tf_trapno) &#123;</div><div class="line">        <span class="keyword">case</span> (T_PGFLT):</div><div class="line">            page_fault_handler(tf);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">         <span class="keyword">default</span>:</div><div class="line">            <span class="comment">// Unexpected trap: The user process or the kernel has a bug.</span></div><div class="line">            print_trapframe(tf);</div><div class="line">            <span class="keyword">if</span> (tf-&gt;tf_cs == GD_KT)</div><div class="line">                panic(<span class="string">"unhandled trap in kernel"</span>);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                env_destroy(curenv);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="断点异常"><a href="#断点异常" class="headerlink" title="断点异常"></a>断点异常</h3><p>断点异常,中断向量3（<code>T_BRKPT</code>）.这个异常可以让调试器能够给程序加上断点.加断点的基本原理就是把要加断点的语句用一个<code>INT3</code>指令替换:执行到<code>INT3</code>时,会触发软中断.在JOS中通过把这个异常转换成一个伪系统调用,这样的话任何用户环境都可以使用这个伪系统调用来触发JOSkernel监视器<code>kernel monitor</code>.</p>
+<h3 id="练习6"><a href="#练习6" class="headerlink" title="练习6"></a>练习6</h3><p>问</p>
+<blockquote>
+<p>修改<code>trap_dispatch()</code>使断点异常发生时,能够触发kernel监视器.要求修改后的 JOS 能够正确运行<code>breakpoint</code>测试程序.</p>
+</blockquote>
+<p>解</p>
+<blockquote>
+<p>这个练习其实和上一个练习是类似的,只不过是在这里需要处理断点异常 (<code>T_BRKPT</code>),kernel monitor 就是定义在<code>kern/monitor.c</code>文件中的<code>monitor</code> 函数,修改程序如下<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">trap_dispatch</span><span class="params">(<span class="keyword">struct</span> Trapframe *tf)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int32_t</span> ret_code;</div><div class="line">    <span class="comment">// Handle processor exceptions.</span></div><div class="line">    <span class="keyword">switch</span>(tf-&gt;tf_trapno) &#123;</div><div class="line">        <span class="keyword">case</span> (T_PGFLT):</div><div class="line">            page_fault_handler(tf);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> (T_BRKPT):</div><div class="line">            monitor(tf);        </div><div class="line">            <span class="keyword">break</span>;</div><div class="line">         <span class="keyword">default</span>:</div><div class="line">            <span class="comment">// Unexpected trap: The user process or the kernel has a bug.</span></div><div class="line">            print_trapframe(tf);</div><div class="line">            <span class="keyword">if</span> (tf-&gt;tf_cs == GD_KT)</div><div class="line">                panic(<span class="string">"unhandled trap in kernel"</span>);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                env_destroy(curenv);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><blockquote>
+<ol>
+<li>在上面的断点异常(<code>break point exception</code>)测试程序中,如果在设置<code>IDT</code>时,对断点异常采用不同的方式进行设置,可能会产生触发不同的异常,有可能是断点异常,有可能是一般保护异常(<code>general protection exception</code>).这是为什么？应该怎么做才能得到一个想要的断点异常,而不是一般保护异常？<br>解:<br>　　通过实验发现出现这个现象的问题就是在设置<code>IDT</code>表中的断点异常的表项时,如果把表项中的<code>DPL</code>字段设置为3,则会触发断点异常,如果设置为0,则会触发一般保护异常.<code>DPL</code>字段代表的含义是段描述符优先级（<code>Descriptor Privileged Level</code>）,如果想要当前执行的程序能够跳转到这个描述符所指向的程序继续执行的话,要求当前运行程序的<code>CPL,RPL</code>的最大值需要小于等于<code>DPL</code>,否则就会出现优先级低的代码试图去访问优先级高的代码的情况,就会触发一般保护异常.那么的测试程序首先运行于用户态,它的<code>CPL</code>为3,当异常发生时,它希望去执行<code>int 3</code>指令,这是一个系统级别的指令,用户态命令的<code>CPL</code>一定大于<code>int 3</code>的<code>DPL</code>,所以就会触发一般保护异常,但是如果把<code>IDT</code>这个表项的<code>DPL</code>字段设置为3时,就不会出现这样的现象了,这时如果再出现异常,肯定是因为还没有编写处理断点异常的程序所引起的,所以是断点异常.</li>
+</ol>
+</blockquote>
+<h3 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h3><p>用户程序会要求kernel帮助它完成系统调用.当用户程序触发系统调用,系统进入kernel态.CPU和操作系统将保存该用户程序当前的上下文状态,然后由kernel执行正确的代码完成系统调用,然后回到用户程序继续执行.而用户程序到底是如何得到操作系统的服务,以及它如何说明它希望操作系统如何服务的方法,有很多不同的实现方式.<br>在JOS中,采用<code>int</code>指令,这个指令会触发一个CPU的中断.特别的,用<code>int $0x30</code>来代表系统调用中断.注意,<code>int 0x30</code>不是通过硬件产生的.<br>应用程序会把系统调用号以及系统调用的参数放到寄存器中.通过这种方法,kernel就不需要去查询用户程序的堆栈了.系统调用号存放到<code>%eax</code>中,参数则存放在<code>%edx, %ecx, %ebx, %edi, 和 %esi</code>中.kernel会把返回值送到<code>%eax</code>中.在<code>lib/syscall.c</code>中已经写好触发一个系统调用的代码.　　</p>
+<h4 id="练习7"><a href="#练习7" class="headerlink" title="练习7"></a>练习7</h4><p>问:</p>
+<blockquote>
+<p>给中断向量<code>T_SYSCALL</code>编写一个中断处理函数.需要编辑<code>kern/trapentry.S</code>和<code>kern/trap.c</code>中的<code>trap_init()</code>函数,也需要修改<code>trap_dispatch()</code>函数,使其能够通过调用<code>syscall()</code>（在<code>kern/syscall.c</code>中定义的）函数处理系统调用中断.最后需要实现<code>kern/syscall.c</code>中的<code>syscall()</code>函数, 确保这个函数会在系统调用号为非法值时返回<code>-E_INVAL</code>.要求充分理解<code>lib/syscall.c</code>文件,处理在<code>inc/syscall.h</code>文件中定义的所有系统调用.<br>　　通过<code>make run-hello</code>指令来运行<code>user/hello</code>程序,它应该在控制台上输出 “hello, world”,然后引发一个缺页中断.</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>需要了解一下系统调用的整个流程:如果现在运行的是kernel态的程序的话,此时调用了一个系统调用,比如<code>sys_cputs</code>函数时,此时不会触发中断,那么系统会直接执行定义在<code>lib/syscall.c</code>文件中的<code>sys_cputs</code>这个文件中定义了几个比较常用的系统调用,包括<code>sys_cputs</code>, <code>sys_cgetc</code>等等.还会发现他们都是统一调用一个 <code>syscall()</code>函数,通过这个函数的代码发现其实它是执行了一个汇编指令.所以最终是这个函数完成了系统调用.<br>以上是运行在kernel态下的程序,调用系统调用时的流程.但是如果是用户态程序呢？这个练习就是让编写程序使的用户程序在调用系统调用时,最终也能经过一系列的处理最终去执行<code>lib/syscall.c</code>中的<code>syscall</code>指令.<br>让看一下这个过程,当用户程序中要调用系统调用时,依然比如<code>sys_cputs</code>,从它的汇编代码中会发现,它会执行一个<code>int $0x30</code>指令,这个指令就是软件中断指令,这个中断的中断号就是<code>0x3</code>,即<code>T_SYSCALL</code>,所以题目要求首先为这个中断号编写一个中断处理函数,首先就要在<code>kern/trapentry.S</code>文件中为它声明它的中断处理函数,即<code>TRAPHANDLER_NOEC</code>,与其他中断号的声明一样.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/trapentry.S</span></div><div class="line">....</div><div class="line">TRAPHANDLER_NOEC(t_fperr, T_FPERR)</div><div class="line">TRAPHANDLER(t_align, T_ALIGN)</div><div class="line">TRAPHANDLER_NOEC(t_mchk, T_MCHK)</div><div class="line">TRAPHANDLER_NOEC(t_simderr, T_SIMDERR)</div><div class="line">....</div><div class="line">TRAPHANDLER_NOEC(t_syscall, T_SYSCALL)</div><div class="line">....</div></pre></td></tr></table></figure></p>
+<p>然后在<code>trap.c</code>文件中声明<code>t_syscall()``函数.并且在</code>trap_init()`函数中为它注册<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/trap.c</span></div><div class="line">....</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">t_fperr</span><span class="params">()</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">t_align</span><span class="params">()</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">t_mchk</span><span class="params">()</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">t_simderr</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">t_syscall</span><span class="params">()</span></span>;</div><div class="line">.....</div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">trap_init</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">extern</span> <span class="keyword">struct</span> Segdesc gdt[];</div><div class="line"></div><div class="line">        .....</div><div class="line">    SETGATE(idt[T_ALIGN], <span class="number">0</span>, GD_KT, t_align, <span class="number">0</span>);</div><div class="line">    SETGATE(idt[T_MCHK], <span class="number">0</span>, GD_KT, t_mchk, <span class="number">0</span>);</div><div class="line">    SETGATE(idt[T_SIMDERR], <span class="number">0</span>, GD_KT, t_simderr, <span class="number">0</span>);</div><div class="line"></div><div class="line">    SETGATE(idt[T_SYSCALL], <span class="number">0</span>, GD_KT, t_syscall, <span class="number">3</span>);</div><div class="line">    <span class="comment">// Per-CPU setup</span></div><div class="line">    trap_init_percpu();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>此时当系统调用中断发生时,系统就可以捕捉到这个中断了,中断发生时,系统会调用 <code>_alltraps</code>代码块,并且运行到<code>trap()</code>函数处,进入<code>trap()</code>函数后,经过一系列处理进入<code>trap_dispatch()</code>函数.题目中要求此时需要去调用<code>kern/syscall.c</code>中的<code>syscall</code>函数,注意到这个函数不是<code>lib/syscall.c1</code>中的<code>syscall</code>函数,但是通过阅读<code>kern/syscall.c</code>中的<code>syscall</code>程序发现,它的输入和 <code>lib/syscall.c</code>中的<code>syscall</code>很像,对比如下</p>
+<p><code>kern/syscall.c</code>中的<code>syscall</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">syscall(<span class="keyword">uint32_t</span> syscallno, <span class="keyword">uint32_t</span> a1, <span class="keyword">uint32_t</span> a2, <span class="keyword">uint32_t</span> a3, <span class="keyword">uint32_t</span> a4, <span class="keyword">uint32_t</span> a5)</div></pre></td></tr></table></figure></p>
+<p> <code>lib/syscall.c</code>中的<code>syscall</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">syscall(<span class="keyword">int</span> num, <span class="keyword">int</span> check, <span class="keyword">uint32_t</span> a1, <span class="keyword">uint32_t</span> a2, <span class="keyword">uint32_t</span> a3, <span class="keyword">uint32_t</span> a4, <span class="keyword">uint32_t</span> a5)</div></pre></td></tr></table></figure></p>
+<p>可以假设,<code>kern/syscall.c</code>中的<code>syscall</code>就是一个外壳函数,它的存在就是为了能够调用<code>lib/syscall</code>.所以按照这个思路继续进行下去,再继续观察 <code>kern/syscall.c</code>中的其他函数,会发现<code>kern/syscall.c</code>中的所有函数和 <code>lib/syscall.c</code>中的所有函数都是一样的.比如 在这两个文件中都有<code>sys_cputs</code> 函数,但仔细观察可以发现这两个同名的函数,发现实现方式却不一样.以<code>sys_cputs</code>函数为例：<br><code>kern/syscall.c</code>中的<code>sys_cputs</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">sys_cputs</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">size_t</span> len)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Check that the user has permission to read memory [s, s+len).</span></div><div class="line">    <span class="comment">// Destroy the environment if not:.</span></div><div class="line"></div><div class="line">    user_mem_assert(curenv, s, len, <span class="number">0</span>);</div><div class="line">    <span class="comment">// Print the string supplied by the user.</span></div><div class="line">    cprintf(<span class="string">"%.*s"</span>, len, s);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>lib/syscall.c</code>中的<code>sys_cputs</code>:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">sys_cputs</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">size_t</span> len)</span></div><div class="line">&#123;</div><div class="line">    syscall(SYS_cputs, <span class="number">0</span>, (<span class="keyword">uint32_t</span>)s, len, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可见在<code>lib/syscall.c</code>中,直接调用<code>syscall</code>,但是注意观察 <code>kern/syscall.c</code>中的<code>sys_cputs</code>,它调用了<code>cprintf</code>,这个调用其实就是为了完成输出的功能.但要注意,当程序运行到这里时,系统已经工作在kernel态了,而<code>cprintf</code>函数其实就是通过调用<code>lib/syscall.c</code>中的<code>sys_cputs</code>来实现的,由于此时系统已经处于kernel态了,所以这个<code>sys_cputs</code>可以被执行了.所以 <code>kern/syscall.c</code>中的<code>sys_cputs</code>函数通过调用<code>cprintf</code>实现了调用 <code>lib/syscall.c</code>中的<code>syscall</code>.<br>所以剩下的部分是如何在<code>kern/syscall.c</code>中的<code>syscall()</code>函数中正确的调用<code>sys_cputs</code>函数了,当然 <code>kern/syscall.c</code> 中其他的函数也能完成这个功能.所以必须根据触发这个系统调用的指令到底想调用哪个系统调用来确定该调用哪个函数.</p>
+<p>如何确定这个指令是要调用哪个系统调用呢？答案是根据<code>syscall</code>函数中的第一个参数<code>syscallno</code>.这个值要手动传递进去的,它存储在哪里？通过阅读 <code>lib/syscall.c</code> 中的<code>syscall</code>函数,可以知道它存放在<code>%eax</code>寄存器中,所以最后完成<code>trap_dispatch</code>和<code>kern/syscall.c</code>中的<code>syscall</code>函数的代码.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">trap_dispatch</span><span class="params">(<span class="keyword">struct</span> Trapframe *tf)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int32_t</span> ret_code;</div><div class="line">    <span class="comment">// Handle processor exceptions.</span></div><div class="line">    <span class="keyword">switch</span>(tf-&gt;tf_trapno) &#123;</div><div class="line">        <span class="keyword">case</span> (T_PGFLT):</div><div class="line">            page_fault_handler(tf);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> (T_BRKPT):</div><div class="line">            monitor(tf);        </div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> (T_SYSCALL):</div><div class="line">    <span class="comment">//        print_trapframe(tf);</span></div><div class="line">            ret_code = syscall(</div><div class="line">                    tf-&gt;tf_regs.reg_eax,</div><div class="line">                    tf-&gt;tf_regs.reg_edx,</div><div class="line">                    tf-&gt;tf_regs.reg_ecx,</div><div class="line">                    tf-&gt;tf_regs.reg_ebx,</div><div class="line">                    tf-&gt;tf_regs.reg_edi,</div><div class="line">                    tf-&gt;tf_regs.reg_esi);</div><div class="line">            tf-&gt;tf_regs.reg_eax = ret_code;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">         <span class="keyword">default</span>:</div><div class="line">            <span class="comment">// Unexpected trap: The user process or the kernel has a bug.</span></div><div class="line">            print_trapframe(tf);</div><div class="line">            <span class="keyword">if</span> (tf-&gt;tf_cs == GD_KT)</div><div class="line">                panic(<span class="string">"unhandled trap in kernel"</span>);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                env_destroy(curenv);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>kern/syscall.c</code> 中的 <code>syscall</code>():<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int32_t</span></div><div class="line">syscall(<span class="keyword">uint32_t</span> syscallno, <span class="keyword">uint32_t</span> a1, <span class="keyword">uint32_t</span> a2, <span class="keyword">uint32_t</span> a3, <span class="keyword">uint32_t</span> a4, <span class="keyword">uint32_t</span> a5)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// Call the function corresponding to the 'syscallno' parameter.</span></div><div class="line">    <span class="comment">// Return any appropriate return value.</span></div><div class="line"></div><div class="line">    <span class="comment">// panic("syscall not implemented");</span></div><div class="line"></div><div class="line">    <span class="keyword">switch</span> (syscallno) &#123;</div><div class="line">        <span class="keyword">case</span> (SYS_cputs):</div><div class="line">            sys_cputs((<span class="keyword">const</span> <span class="keyword">char</span> *)a1, a2);</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">case</span> (SYS_cgetc):</div><div class="line">            <span class="keyword">return</span> sys_cgetc();</div><div class="line">        <span class="keyword">case</span> (SYS_getenvid):</div><div class="line">            <span class="keyword">return</span> sys_getenvid();</div><div class="line">        <span class="keyword">case</span> (SYS_env_destroy):</div><div class="line">            <span class="keyword">return</span> sys_env_destroy(a1);</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            <span class="keyword">return</span> -E_INVAL;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>　</p>
+<h3 id="启动用户模式"><a href="#启动用户模式" class="headerlink" title="启动用户模式"></a>启动用户模式</h3><p>用户程序真正开始运行的地方是在<code>lib/entry.S</code>文件中.该文件中,首先会进行一些设置,然后就会调用<code>lib/libmain.c</code>文件中的<code>libmain()</code>函数.要求修改一<code>libmain()</code>函数,使它能够初始化全局指针<code>thisenv</code> ,让它指向当前用户环境的 <code>Env</code>结构体.<br>然后<code>libmain()</code>函数就会调用<code>umain()</code>.<code>umain()</code>函数恰好是<code>user/hello.c</code>中被调用的函数.在之前的实验中发现,<code>hello.c</code>程序只会打印 “hello, world”,然后就会报出<code>page fault</code>(缺页异常),原因是<code>thisenv-&gt;env_id</code>语句没有被成功初始化..现在已经正确初始化了<code>thisenv</code>的值,再次运行就应该不会报错了.</p>
+<h3 id="练习8"><a href="#练习8" class="headerlink" title="练习8"></a>练习8</h3><p>问：</p>
+<blockquote>
+<p>把上述的要求补全的代码补全,然后重新启动kernel,此时应该看到<code>user/hello</code>程序会打印 “hello, world”, 然后再打印出来 “i am environment 00001000”.然后<code>user/hello</code>通过调用<code>sys_env_destroy()（lib/libmain.c lib/exit.c）</code>尝试退出.由于kernel目前仅仅支持一个用户运行环境,所以它应该报告唯一的用户环境已被销毁的消息,然后退回kernel监控器.</p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>这个练习是通过程序获得当前正在运行的用户环境的<code>env_id</code>, 以及这个用户环境所对应的<code>Env</code>结构体的指针.<code>env_id</code>可以通过调用<code>sys_getenvid()</code>函数来获得.那么如何获得它对应的<code>Env</code>结构体指针呢？<br>　　通过阅读<code>lib/env.h</code>文件知道,<code>env_id</code>的值类型为<code>int32_t</code>,按位模式分为三部分</p>
+<ul>
+<li>第31位被固定为0</li>
+<li>第10~30这21位是标识符,标示这个用户环境</li>
+<li>第0~9位代表这个用户环境所采用的<code>Env</code>结构体,在<code>envs</code>数组中的索引.<br>所以只需知道<code>env_id</code>的低 0~9 位,就可以获得这个用户环境对应的<code>Env</code>结构体了.代码如下：<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">libmain</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// set thisenv to point at our Env structure in envs[].</span></div><div class="line">    thisenv = &amp;envs[ENVX(sys_getenvid())];</div><div class="line"></div><div class="line">    <span class="comment">// save the name of the program so that panic() can use it</span></div><div class="line">    <span class="keyword">if</span> (argc &gt; <span class="number">0</span>)</div><div class="line">        binaryname = argv[<span class="number">0</span>];</div><div class="line"></div><div class="line">    <span class="comment">// call user main routine</span></div><div class="line">    umain(argc, argv);</div><div class="line"></div><div class="line">    <span class="comment">// exit gracefully</span></div><div class="line">    <span class="built_in">exit</span>();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<h3 id="页错误和内存保护"><a href="#页错误和内存保护" class="headerlink" title="页错误和内存保护"></a>页错误和内存保护</h3><p>内存保护是操作系统的非常重要的一项功能,它可以防止由于用户程序崩溃对操作系统带来的破坏与影响.<br>操作系统通常依赖于硬件的支持来实现内存保护.操作系统可以让硬件能够始终知晓哪些虚拟地址是有效的,哪些是无效的.当程序尝试去访问一个无效地址,或者尝试去访问一个超出它访问权限的地址时,处理器会在这个指令处终止,并且触发异常,陷入内核态,与此同时把错误的信息报告给内核.如果这个异常是可以被修复的,那么内核会修复这个异常,然后程序继续运行.如果异常无法被修复,则程序永远不会继续运行.</p>
+<blockquote>
+<p>一个可修复异常的典型是可自动扩展的堆栈.在许多系统中,内核在初始情况下只会分配一个内核堆栈页,如果程序想要访问这个内核堆栈页之外的堆栈空间的话,就会触发异常,此时内核会自动再分配一些页给这个程序,程序就可以继续运行了.</p>
+</blockquote>
+<p>系统调用也为内存保护带来了问题.大部分系统调用接口让用户程序传递一个指针参数给内核.这些指针指向的是用户缓冲区.通过这种方式,系统调用在执行时就可以解引用这些指针.但是这里有两个问题：</p>
+<ol>
+<li>在内核中的页错误（page fault)要比在用户程序中的页错误更严重.如果内核在操作自己的数据结构时出现页错误,这是一个内核的bug,而且异常处理程序会中断整个内核.但是当内核在解引用由用户程序传递来的指针时,它需要一种方法去记录此时出现的页错误都是由用户程序带来的.</li>
+<li>内核通常比用户程序有着更高的内存访问权限.用户程序很有可能要传递一个指针给系统调用,这个指针指向的内存区域是内核可以进行读写的,但是用户程序不能.此时内核必须小心不要去解析这个指针,否则的话内核的重要信息很有可能被泄露.</li>
+</ol>
+<p>现在需要通过仔细检查所有由用户传递来指针所指向的空间来解决上述两个问题.当一个程序传递给内核一个指针时,内核会检查这个地址是否在整个地址空间的用户地址空间部分,如果是将允许页表进行内存操作.</p>
+<h4 id="练习9"><a href="#练习9" class="headerlink" title="练习9"></a>练习9</h4><p>问：</p>
+<blockquote>
+<p>修改<code>kern/trap.c</code>文件,使其能够实现当在内核模式下发现页错误,<code>trap.c</code>将转到<code>panic</code>.阅读<code>user_mem_assert</code>（在<code>kern/pmap.c</code>）,并且实现<code>user_mem_check</code>；修改<code>kern/syscall.c</code>，检查输入参数.<br>启动内核后,运行<code>user/buggyhello</code>程序,用户环境可以被销毁,内核不可以<code>panic</code>,输出应该是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[00001000] user_mem_check assertion failure for va 00000001</div><div class="line">[00001000] free env 00001000</div><div class="line">Destroyed the only environment - nothing more to do!</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>首先确定应该根据什么来判断当前运行的程序时处在内核态下还是用户态下？根据<code>CS</code>段寄存器的低2位,这两位的名称叫做<code>CPL</code>位,表示当前运行的代码的访问权限级别,0代表是内核态,3代表是用户态.<br>题目要求在检测到页错误是出现在内核态时,通过<code>panic</code>跳出来,所以我们把<code>page_fault_handler</code>文件修改如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_fault_handler</span><span class="params">(<span class="keyword">struct</span> Trapframe *tf)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">uint32_t</span> fault_va;</div><div class="line"></div><div class="line">    <span class="comment">// Read processor's CR2 register to find the faulting address</span></div><div class="line">    fault_va = rcr2();</div><div class="line"></div><div class="line">    <span class="comment">// Handle kernel-mode 页错误s.</span></div><div class="line">    <span class="keyword">if</span>(tf-&gt;tf_cs &amp;&amp; <span class="number">0x01</span> == <span class="number">0</span>) &#123;</div><div class="line">        panic(<span class="string">"page_fault in kernel mode, fault address %d\n"</span>, fault_va);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// We've already handled kernel-mode exceptions, so if we get here,</span></div><div class="line">    <span class="comment">// the page fault happened in user mode.</span></div><div class="line"></div><div class="line">    <span class="comment">// Destroy the environment that caused the fault.</span></div><div class="line">    cprintf(<span class="string">"[%08x] user fault va %08x ip %08x\n"</span>,</div><div class="line">        curenv-&gt;env_id, fault_va, tf-&gt;tf_eip);</div><div class="line">    print_trapframe(tf);</div><div class="line">    env_destroy(curenv);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后根据题目的要求,继续完善<code>kern/pmap.c</code>文件中的<code>user_mem_assert()</code>, <code>user_mem_check</code> 函数,通过观察 <code>user_mem_assert()</code>函数发现,它调用了 <code>user_mem_check()</code>函数.而 <code>user_mem_check</code>函数的功能是检查一下当前用户态程序是否有对虚拟地址空间<code>[va, va+len]</code>的<code>perm| PTE_P</code>访问权限.<br>然后要做的事情是,先找到这个虚拟地址范围对应于当前用户态程序的页表中的页表项,然后再去看一下这个页表项中有关访问权限的字段,是否包含<code>perm|PTE_P</code>,只要有一个页表项是不包含的,就代表程序对这个范围的虚拟地址没有<code>perm|PTE_P</code>的访问权限.代码实现如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">user_mem_check</span><span class="params">(<span class="keyword">struct</span> Env *env, <span class="keyword">const</span> <span class="keyword">void</span> *va, <span class="keyword">size_t</span> len, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">char</span> * end = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">char</span> * start = <span class="literal">NULL</span>;</div><div class="line">    start = ROUNDDOWN((<span class="keyword">char</span> *)va, PGSIZE);</div><div class="line">    end = ROUNDUP((<span class="keyword">char</span> *)(va + len), PGSIZE);</div><div class="line">    <span class="keyword">pte_t</span> * cur = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    <span class="keyword">for</span>(; start &lt; end; start += PGSIZE) &#123;</div><div class="line">        cur = pgdir_walk(env-&gt;env_pgdir, (<span class="keyword">void</span> *)start, <span class="number">0</span>);</div><div class="line">        <span class="keyword">if</span>((<span class="keyword">int</span>)start &gt; ULIM || cur == <span class="literal">NULL</span> || ((<span class="keyword">uint32_t</span>)(*cur) &amp; perm) != perm) &#123;</div><div class="line">              <span class="keyword">if</span>(start == ROUNDDOWN((<span class="keyword">char</span> *)va, PGSIZE)) &#123;</div><div class="line">                    user_mem_check_addr = (<span class="keyword">uintptr_t</span>)va;</div><div class="line">              &#125;</div><div class="line">              <span class="keyword">else</span> &#123;</div><div class="line">                      user_mem_check_addr = (<span class="keyword">uintptr_t</span>)start;</div><div class="line">              &#125;</div><div class="line">              <span class="keyword">return</span> -E_FAULT;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后按照题目要求，补全<code>kern/syscall.c</code>文件中的一部分内容,即<code>sys_cputs</code> 函数,这个函数要求检查用户程序对虚拟地指空间<code>[s, s+len]</code>是否有访问权限,所以可以使用刚刚写好的函数<code>user_mem_assert</code>来实现.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">sys_cputs</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">size_t</span> len)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Check that the user has permission to read memory [s, s+len).</span></div><div class="line">    <span class="comment">// Destroy the environment if not:.</span></div><div class="line"></div><div class="line">    user_mem_assert(curenv, s, len, <span class="number">0</span>);</div><div class="line">    <span class="comment">// Print the string supplied by the user.</span></div><div class="line">    cprintf(<span class="string">"%.*s"</span>, len, s);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后在<code>kern/kdebug</code>中修改<code>debuginfo_eip</code>函数,对用户空间的数据使用<code>user_mem_check</code>函数检查当前用户空间是否对其有<code>PTE_U</code>权限.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">    <span class="keyword">const</span> <span class="keyword">struct</span> UserStabData *usd = (<span class="keyword">const</span> <span class="keyword">struct</span> UserStabData *) USTABDATA;</div><div class="line">    <span class="comment">// Make sure this memory is valid.</span></div><div class="line">    <span class="comment">// Return -1 if it is not.  Hint: Call user_mem_check.</span></div><div class="line">    <span class="comment">// LAB 3: Your code here.</span></div><div class="line">    <span class="keyword">if</span> (user_mem_check(curenv, usd, <span class="keyword">sizeof</span>(*usd),PTE_U) &lt;<span class="number">0</span> )</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    stabs = usd-&gt;stabs;</div><div class="line">    stab_end = usd-&gt;stab_end;</div><div class="line">    stabstr = usd-&gt;stabstr;</div><div class="line">    stabstr_end = usd-&gt;stabstr_end;</div><div class="line">    <span class="comment">// Make sure the STABS and string table memory is valid.</span></div><div class="line">    <span class="comment">// LAB 3: Your code here.a</span></div><div class="line">    <span class="keyword">if</span> (user_mem_check(curenv, stabs, stab_end-stabs,PTE_U) &lt;<span class="number">0</span> || `user_mem_check`(curenv, stabstr, stabstr_end-stabstr,PTE_U) &lt;<span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://pdos.csail.mit.edu/6.828/2016/labs/lab3/" target="_blank" rel="external">lab3:user environment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/29/lab3_part2/" data-id="cj6sslhba00133gamnwjkhun9" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/30/hw6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          hw6-threads-and-locking
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/26/lab3_part1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">lab3-user-environment-part1</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

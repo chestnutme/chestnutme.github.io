@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>introduction to algorithms note4 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="＜Introduction to algorithms＞笔记Part5 高级数据结构在part3数据结构中,学习了基本的支持动态集合的数据结构,包括stack/queue/bst/rbt.接着在part4高级设计和分析技术中学习了在分治法/递归等基本算法设计思想上的动态规划和贪心思想,以及如何对复杂的算法进行分析的平摊分析法.在以上学习的基础上,part5学习高级的数据结构如下：  B树:一种被设">
+<meta name="keywords" content="algorithm,data_structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="introduction to algorithms note4">
+<meta property="og:url" content="http://yoursite.com/2017/05/02/CLRS-notes4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="＜Introduction to algorithms＞笔记Part5 高级数据结构在part3数据结构中,学习了基本的支持动态集合的数据结构,包括stack/queue/bst/rbt.接着在part4高级设计和分析技术中学习了在分治法/递归等基本算法设计思想上的动态规划和贪心思想,以及如何对复杂的算法进行分析的平摊分析法.在以上学习的基础上,part5学习高级的数据结构如下：  B树:一种被设">
+<meta property="og:image" content="http://yoursite.com/images/b-heap1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/b-heap2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/union.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/05/02/CLRS-notes4/find-set2.gif">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="introduction to algorithms note4">
+<meta name="twitter:description" content="＜Introduction to algorithms＞笔记Part5 高级数据结构在part3数据结构中,学习了基本的支持动态集合的数据结构,包括stack/queue/bst/rbt.接着在part4高级设计和分析技术中学习了在分治法/递归等基本算法设计思想上的动态规划和贪心思想,以及如何对复杂的算法进行分析的平摊分析法.在以上学习的基础上,part5学习高级的数据结构如下：  B树:一种被设">
+<meta name="twitter:image" content="http://yoursite.com/images/b-heap1.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-CLRS-notes4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/02/CLRS-notes4/" class="article-date">
+  <time datetime="2017-05-01T16:00:00.000Z" itemprop="datePublished">2017-05-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      introduction to algorithms note4
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h2 id="Part5-高级数据结构"><a href="#Part5-高级数据结构" class="headerlink" title="Part5 高级数据结构"></a>Part5 高级数据结构</h2><p>在<a href="https://chestnutme.github.io/2017/04/17/CLRS-notes2/" target="_blank" rel="external">part3数据结构</a>中,学习了基本的支持动态集合的数据结构,包括stack/queue/bst/rbt.接着在<a href="https://chestnutme.github.io/2017/04/22/CLRS-notes3/" target="_blank" rel="external">part4高级设计和分析技术</a>中学习了在分治法/递归等基本算法设计思想上的动态规划和贪心思想,以及如何对复杂的算法进行分析的平摊分析法.在以上学习的基础上,part5学习高级的数据结构如下：</p>
+<ul>
+<li>B树:一种被设计成专门存储在磁盘上的平衡查找树.因为磁盘的速度远远慢于内存,所以 B 树被设计成尽量减少磁盘访问的次数,知道了这一点之后就会很清楚明白B树的变形 B+树了,B+树通过将数据存储在叶子结点从而增大了一个结点所包含的信息进而更加的减少了磁盘的访问次数.</li>
+<li>可合并堆:这种堆支持<code>Insert,Mininum,Extract-Min,union,delete,decrease-key</code>操作.<blockquote>
+<ul>
+<li>二项堆能够在 $O(\log n)$ 的最坏情况时间内支持以上的各种操作.当必须支持 <code>union</code>操作时,二项堆优越于二叉堆,因为后者在最坏情况下,合并两个二叉堆要花 $O(n)$ 的时间.</li>
+<li>斐波那契堆对于以上各种除了<code>extract-min,delete</code>的操作外都只需要 O(1)的实际时间,而<code>extract-min,delete</code>也只需要 $O(\log n)$ 的平摊时间.它的重要优点在于<code>decrease-key</code>也只需要 O(1)的平摊时间.注意斐波那契堆的一些操作都只是平摊时间,并非最坏情况时间.现代的快速图算法(part6,下一部分)中,很多是使用斐波那契堆作为其核心数据结构的.</li>
+</ul>
+</blockquote>
+</li>
+<li>不相交集合(并查集):由n个元素构成的全域集被划分为若干个动态集合.基本操作为<code>union, find-set</code>通过用一棵简单的有根树来表示每个集合,就可以得到惊人的快速操作:一个由m个操作构成的序列的运行时间为 $O(n\alpha (n) )$,而对于宇宙中的原子数总和 n,α(n)也&lt;=4,所以可以认为实际时间是 $O(n)$.</li>
+</ul>
+<a id="more"></a>
+<h3 id="Chapter18-如何对大量数据进行索引？"><a href="#Chapter18-如何对大量数据进行索引？" class="headerlink" title="Chapter18 如何对大量数据进行索引？"></a>Chapter18 如何对大量数据进行索引？</h3><p>1.B-tree 产生背景：</p>
+<blockquote>
+<p>大规模数据存储（如磁盘阵列,数据库）中,实现索引查询这样一个实际背景下,树节点存储的元素数量是有限的(如果元素数量非常多的话,查找就退化成节点内部的线性查找了),这样导致二叉查找树结构由于树的深度过大而造成磁盘 I/O读写过于频繁,进而导致查询效率低下(读取磁盘速度远慢于访问内存),那么如何减少树的深度(而不是能减少查询的数据量),一个基本的、很自然的想法就是:采用多叉树结构.由于树节点元素数量是有限的,自然该节点的子树数量也就是有限的.每个节点储存多个数据使得节点数减少,继而减少树的高度,从而减少对磁盘的访问次数,极大的提高数据操作效率.<br>在大多数系统中,B 树算法的运行时间主要由它所执行的磁盘读取操作<code>disk-read</code>和<code>disk-write</code> 的次数所决定,因而应该有效地使用这两种操作,即让它们读取更多的信息更少的次数.由于这个原因,在 B 树中,一个结点的大小通常相当于一个完整的磁盘页.因此,一个B树结点可以拥有的子女数就由磁盘页的大小所决定.<br>因此, 树的分支因子越大越好,因为这样运行时间的绝大部分都是由磁盘存取次数决定的.分支因子越大,需要进行的磁盘存取次数就越少.但是这个分支因子是有限制的,一个结点的总大小不能大于磁盘中一个页的大小,否则在一个结点内操作时还要来回访问内存,反而会拖慢效率.<br>下图是一棵B树的典型例子.：</p>
+</blockquote>
+<p>！<a href="/images/b-tree.png">b-tree</a></p>
+<p>2.B-tree定义</p>
+<blockquote>
+<p>B树是为了磁盘或其它存储设备而设计的一种多叉（相对于二叉,B树每个内结点有多个分支,即多叉）平衡查找树.与part3介绍的红黑树（red-black-tree)很相似,但在降低磁盘I/0操作方面要更好一些.许多数据库系统都一般使用B树或者B树的各种变形结构,如用B+树,B*树来存储信息.B树与红黑树最大的不同在于,B树的结点可以有许多子女,从几个到几千个.那为什么又说B树与红黑树很相似呢?因为与红黑树一样,一棵含n个结点的B树的高度也为 $O(\log n)$,但可能比一棵红黑树的高度小许多,应为它的分支因子比较大.所以,B树可以在$O(\log n)$时间内,实现各种如<code>insert,delete</code>等动态集合操作.</p>
+<p>有根树（根为root[T])B树性质如下：</p>
+<ol>
+<li>节点x具有以下域：<blockquote>
+<p>a. n[x], 节点x中的关键字数<br>b. n[x]个关键字,非降序排列,即 $key_1[x] \leq key_2[x] \leq \dots \leq key_{n[x]}[x]$<br>c. leaf[x], bool值,为true如果是叶子节点</p>
+</blockquote>
+</li>
+<li>n[x] + 1个指向子女的指针 $c_1[x], c_2[x], \dots, c_{n[x]+1}$</li>
+<li>$key_i[x]$ 对子树的关键字进行分隔,记 $k_i$为储存在以 $c_i[x]$ 为根的子树的关键字, 有：<br>$$ k_1 \leq key_1[x] \leq k_2 \leq key_2[x] \leq \dots key_{n[x]}[x] \leq k_{n[x]+1}$$</li>
+<li>叶节点深度相同, 为树高h</li>
+<li>节点包含关键字数最小值为度树t：<blockquote>
+<p>a. 非根每个结点可包含至多2m-1个关键字.所以一个内结点至多可有2m个子女.如果一个结点恰好有2m-1个关键字,则这个结点是满的<br>b. 每个结点可包含至多2m-1个关键字.所以一个内结点至多可有2m个子女.如果一个结点恰好有2m-1个关键字,我们就说这个结点是满的</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<p>包含n个关键字,高度为h,最小度数 $t \geq 2$的B树有：</p>
+<blockquote>
+<p>若B树高度为h,其根节点至少包含一个关键字,其他节点至少包含t-1个关键字,<br>第一层至少有2个节点, 第二层至少2t个节点,第三层至少 $2t^2$个节点,故有：<br>$$ n \geq 1 + (t-1)\sum_{i=1}^h 2t^{i-1} = 1 + 2(t-1)(\frac{t^h-1}{t-1}) =  2t^h - 1 $$<br>$$ h \leq \log_t \frac{n+1}{2} $$</p>
+</blockquote>
+<p>3.B树的操作:</p>
+<blockquote>
+<ol>
+<li><p>查找 $O(t \log_t n)$：bst上查找的推广</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">b-tree-search(x, k):</div><div class="line">i &lt;- 1</div><div class="line">while i &lt;= n[x] and k &gt; keyi[x]</div><div class="line">  do i &lt;- i + 1</div><div class="line">if i &lt;= n[x] and k= keyi[x]</div><div class="line">  then return (x,i)</div><div class="line">if leaf[x]</div><div class="line">  then return NULL</div><div class="line">  else disk-read(ci[x])</div><div class="line">    return b-tree-search(ci[x], k)</div></pre></td></tr></table></figure>
+</li>
+<li><p>插入 $O(t \log_t n)$：<br>插入一个元素时,首先在B树中是否存在,如果不存在,即在叶子结点处结束,然后在叶子结点中插入该新的元素,注意：如果叶子结点空间足够,这里需要向右移动该叶子结点中大于新插入关键字的元素,如果空间满了以致没有足够的空间去添加新的元素,则将该结点进行“分裂”,将一半数量的关键字元素分裂到新的其相邻右结点中,中间关键字元素上移到父结点中（当然,如果父结点空间满了,也同样需要“分裂”操作）,而且当结点中关键元素向右移动了,相关的指针也需要向右移.如果在根结点插入新元素,空间满了,则进行分裂操作,这样原来的根结点中的中间关键字元素向上移动到新的根结点中,因此导致树的高度增加一层.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">b-tree-split-child(x, i, y)</div><div class="line">z &lt;- allocate-node()</div><div class="line">lead[z] &lt;- leaf[y]</div><div class="line">n[z] &lt;- t - 1</div><div class="line">for j &lt;- 1 ot t - 1</div><div class="line">  do keyi[z] &lt;- key[j+i][y]</div><div class="line">if not leaf[y]</div><div class="line">  then for j &lt;- 1 to t</div><div class="line">    do cj[z] &lt;- c[j+i][y]</div><div class="line">n[y] &lt;- t - 1</div><div class="line">for j &lt;- n[x] + 1 downto i + 1</div><div class="line">  do c[j+1][x] &lt;- cj[x]</div><div class="line">c[i+1][x] &lt;- z</div><div class="line">for j &lt;- n[x] downto i</div><div class="line">  do key[j+1][x] &lt;- keyj[x]</div><div class="line">keyi[x] &lt;- keyi[y]</div><div class="line">n[x] &lt;- n[x] + 1</div><div class="line">disk-write(y)</div><div class="line">disk-write(z)</div><div class="line">disk-write(x)</div><div class="line"></div><div class="line">b-tree-insert(T, k)</div><div class="line">r &lt;- root[T]</div><div class="line">if n[r] = 2t - 1</div><div class="line">  then s &lt;- allocate-node()</div><div class="line">    root[T] &lt;- s</div><div class="line">    leaf[s] &lt;- False</div><div class="line">    n[s] &lt;- 0</div><div class="line">    c1[s] &lt;- r</div><div class="line">    b-tree-split-child(s, 1, r)</div><div class="line">    b-tree-insert-nonfull(s, k)</div><div class="line">else b-tree-insert-nonfull(r, k)</div><div class="line"></div><div class="line">b-tree-insert-nonfull(x, k): #关键词k插入非满节点x</div><div class="line">i &lt;- n[x]</div><div class="line">if leaf[x]</div><div class="line">  then while i &gt;= 1 and k &lt; keyi[x]</div><div class="line">      do key[i+1][x] &lt;- keyi[x]</div><div class="line">        i&lt;- i - 1</div><div class="line">    key[i+1][x] &lt;- k</div><div class="line">    n[x] &lt;- n[x] + 1</div><div class="line">    disk-write(x)</div><div class="line">  else while i &gt;= 1 and k &lt; keyi[x]</div><div class="line">      do i &lt;- i + 1</div><div class="line">      i &lt;- i + 1</div><div class="line">      disk-read(ci[x])</div><div class="line">      if n[ci[x]] = 2t - 1</div><div class="line">        then b-tree-split-child(x, i, ci[x])</div><div class="line">          if k &gt; keyi[x]</div><div class="line">            then i &lt;- i + 1</div><div class="line">        b-tree-insert-nonfull(ci[x], k)</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除 $O(t \log_t n)$：<br>删除操作稍微复杂一些,因为删除操作不仅仅会发生在叶子结点,还可能会发生在内结点,这与插入操作不同.但是可以通过一个技巧消除这一点,找到要删除结点的前驱,然后与要删除的结点的关键值进行对调,再删除这个前驱结点就可以保证每次要删除的都是叶子结点<br>具体如下:<br>任一关键字 K 的中序前趋(后继)必是 K 的左子树(右子树)中最右(左)下的结点中最后(最前)一个关键字.根据 B 树的性质:B<br>树上每一个结点的关键字的个数必须为[t-1, 2<em>t-1]之间,记Min = t - 1.若被删关键字K所在的结点非树叶,则用 K的中序前趋(或后继)K’取代 K,然后从叶子中删去 K’.从叶子</em>x 开始删去某关键字K的三种情形为:</p>
+<blockquote>
+<p>a. 若 x-&gt;keynum&gt;Min,则只需删去K及其右指针(x是叶子,K的右指针为空)即可使删除操作结束.<br>b. 若 x-&gt;keynum=Min,该叶子中的关键字个数已是最小值,删K及其右指针后会破坏B树的性质3.若x的左(或右)邻兄弟结点y 中的关键字数目大于Min,则将y中的最大(或最小)关键字上移至双亲结点parent 中,而将parent中相应的关键字下移至 x 中.显然这种移动使得双亲中关键字数目不变;y 被移出一个关键字,故其keynum减1,因它原大于Min,故减少1个关键字后keynum仍大于等于Min;而x中已移入一个关键字,故删 K 后x中仍 Min 个关键字.涉及移动关键字的三个结点均满足 B-树的性质3.移动完<br>成后,删除过程亦结束.<br>c.若x及其相邻的左右兄弟(也可能只有一个兄弟)中的关键字数目均为最小值 Min,则上述的移动操作就不奏效,此时节点x和左或右兄弟合并.不妨设x有右邻兄弟y(对左邻兄弟的讨论与此类似),在x中删去K及其右子树后,将双亲结点parent中介于x和y之间的关键字K,作为中间关键字,与并x和y中的关键字一起”合并”为一个新的结点取代x和y.因为x和y原各有Min个关键字,从双亲中移人的K’抵消了从x中删除的 K,故新结点中恰有 2Min(即2t-2 &lt;= 2t-1)个关键字,没有破坏B树的性质3.但由于 K’从双亲中移到新结点后,相当于从parent中删去了K’,若parent-&gt;keynum原大于 Min,则删除操作到此结束;否则,同样要通过移动*parent 的左右兄弟中的关键字或将parent与 左右兄弟合并的方法来维护B树性质.最坏情况下,合并操作会向上传播至根节点,当根节点中只有一个关键字时,合并操作将会使根结点及其两个孩子合并成一个新的根,从而使整棵树的高度减少一层.<br>删除操作看似复杂,但是对一棵高度为h的B树,它只需要 $O(h)$ 次磁盘操作,因为在递归调用的过程之间,仅需要 $O(1)$ 次<code>disk-read,disk-write</code>操作,时间复杂度为 $O(th)=O(tlog_tn)$.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="Chapter19-二项堆"><a href="#Chapter19-二项堆" class="headerlink" title="Chapter19 二项堆"></a>Chapter19 二项堆</h3><p>1.二项堆(Binomial Heaps)定义</p>
+<blockquote>
+<p>二项堆（Binomial Heap）是一种类似于二叉堆(Binary Heap)的堆结构.与二叉堆相比,其优势是可以快速合并两个堆,因此它属于可合并堆（Mergeable Heap）.x下一张的斐波那契堆也是可合并堆.一个二项堆由一组二项树所构成,这里的二项树(Binomial Tree)不同于二叉树(Binary Trees).二叉树是“左孩子,右孩子”的表示方法,而二项树是“左孩子,右兄弟”的表示方法.<br>二项树定义：<br>二项树是一种特殊的多分支有序树.二项树 $B_k$是一种递归定义的有序树.二项树 $B_0$只包含一个结点.二项树 $B_k$由两个子树 $B_{k-1}$连接而成：其中一棵树的根是另一棵树的根的最左孩子.性质如下：<br>1.共有2k个结点.<br>2.树的高度为k.<br>3.在深度i处恰有 $C_i^k$个结点.<br>4.根的度数（子女的个数）为k,它大于任何其他结点的度数；如果根的子女从左到右的编号设为k-1, k-2, …, 0,子女i是子树$B_i$的根.</p>
+</blockquote>
+<p><img src="/images/b-heap1.jpg" alt="b-heap1"></p>
+<blockquote>
+<p>一个二项堆由一组二项树所构成,这里的二项树需要满足下列条件：</p>
+<ol>
+<li>每棵二项树都满足最小堆性质.即,父节点的关键字 &lt;= 它的孩子的关键字.</li>
+<li>对于任意非负整数k,在堆中至多有一棵二项树的根具有度数k.<br>第一个性质保证了二项树的根结点包含了最小的关键字.第二个性质则说明结点数为 n 的二项堆最多只有 $\log n + 1$棵二项树</li>
+</ol>
+</blockquote>
+<p>2.二项堆表示<br>如下图,二项堆(heap[H])每棵二项树按”左孩子,右兄弟方法储存“, 二项堆中的各二项树的根被组织成一个链表为根表.节点x的域如下：</p>
+<blockquote>
+<ol>
+<li>p[x],指向x的父节点</li>
+<li>child[x],指向x的最左孩子节点</li>
+<li>sibling[x], 指向x的最右兄弟节点<br><img src="/images/b-heap2.jpg" alt="b-heap2"></li>
+</ol>
+</blockquote>
+<p>3.二项堆操作</p>
+<blockquote>
+<p>1.创建堆: $O(1)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make</div><div class="line">head[H] = NULL</div></pre></td></tr></table></figure></p>
+<p>2.最小关键字 $O(\log n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">binomial-heap-minimum(H)</div><div class="line">y &lt;- NULL</div><div class="line">x &lt;- heap[H]</div><div class="line">min &lt;- INT</div><div class="line">while x != NULL</div><div class="line">  do if key[x] &lt; min</div><div class="line">    then min &lt;- key[y]</div><div class="line">      y &lt;- x</div><div class="line">  x &lt;- sibling[x]</div><div class="line">return y</div></pre></td></tr></table></figure></p>
+<p>3.合并<br>二项堆最重要的一个操作就是<code>union</code>操作,其它的操作都可以在<code>union</code>操作的基础上轻松的实现.<br>大概思路为:将两个二项堆的根表连接起来组成一个大的二项树的连接,按“度”的单调递增顺序进行排序之后,从左至右来消除具有重复度的二项树.因为原本的每个二项堆中任意度K至多只有一个相应的二项树,所以这个消除重复的操作会非常容易.从小到大找到两个相同度K的二项树,然后连接成一个K+1度的二项树,直到链尾时合并完毕.完成后二项堆就满足对任意度K至多只有一棵二项树.<br>具体分解为三个过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">binomial-link(y, z)：#将两棵根节点度数相同的二项树Bk-1连接成一棵Bk</div><div class="line">p[y] &lt;- z</div><div class="line">sibling[y] &lt;- child[z]</div><div class="line">child[z] &lt;- y</div><div class="line">degree[z] &lt;- degree[z] + 1</div><div class="line">binomial-heap-merge #将H1和H2的根表合并成一个按度数的单调递增次序排列的链表</div><div class="line">binomial-heap-union： #反复连接根节点的度数相同的各二项树</div><div class="line">H &lt;- make-binomial-heap()</div><div class="line">head[H] &lt;- binomial-heap-merge(H1, H2)</div><div class="line">free the objects H1 and H2 but not the lists they point to</div><div class="line">if head[H] = NULL</div><div class="line">  then return H</div><div class="line">prev-x &lt;- NULL</div><div class="line">x &lt;- head[H]</div><div class="line">next-x &lt;- sibling[x]</div><div class="line">while next-x ≠ NULL</div><div class="line">  do if (degree[x] ≠ degree[next-x]) or (sibling[next-x] ≠ NULL and degree[sibling[next-x]] = degree[x])</div><div class="line">    then prev-x &lt;- x ▹ Cases 1 and 2                #case1 and 2</div><div class="line">      x &lt;- next-x ▹ Cases 1 and 2</div><div class="line">    else if key[x] ≤ key[next-x]</div><div class="line">      then sibling[x] &lt;- sibling[next-x] ▹ Case 3   #case3</div><div class="line">        binomial-link(next-x, x) ▹ Case 3</div><div class="line">    else if prev-x = NULL ▹ Case 4                  #case4</div><div class="line">      then head[H] &lt;- next-x ▹ Case 4</div><div class="line">      else sibling[prev-x] &lt;- next-x ▹ Case 4</div><div class="line">      binomial-link(x, next-x) ▹ Case 4</div><div class="line">      x &lt;- next-x ▹ Case 4</div><div class="line">  next-x &lt;- sibling[x]</div><div class="line">return H</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>union</code>操作分为两个阶段：<br>第一阶段：执行<code>binomial-heap-merge</code>,将两个堆H1和H2的根表合并成一个链表H,它按度数排序成单调递增次序.MERGE的时间复杂度 $O(\log n)$.n为H1和H2的结点总数.（对于每一个度数值,可能有两个根与其对应,所以第二阶段要把这些相同的根连起来）.<br>第二阶段：将相等度数的根连接起来,直到每个度数至多有一个根时为止.执行过程中,合并的堆H的根表中至多出现三个根具有相同的度数.合并的时候对于每一个节点,要么在主链上去掉连到其它二项树中,而插入别的二项树中的复杂度为 $O(1)$,要么只是遍历,总的节点是n个,根节点是lg(n)个,所以总的时间为 $O(\log n)$,加上merge的时间为 $O(\log n)$,总的时间为 $O(\log n)$.（merge后H中至多出现两个根具有相同的度数,但是将两个相同度数的根的二项树连接后,可能与后面的至多两棵二项树出现相同的度数的根,因此至多出现三个根具有相同的度数）<br>第二阶段根据当前遍历到的根表中的结点x,分四种情况考虑:<br>Case1：degree[x] != degree[sibling[x]].此时,不需要做任何变化,将指针向根表后移动即可.<br>Case2：degree[x] == degree[sibling[x]] == degree[sibling[sibling[x]]].此时,仍不做变化,将指针后移.<br>Case3 &amp; Case4：degree[x] = degree[sibling[x]] != degree[sibling[sibling[x]]]<br>Case3：key[x] &lt;= key[sibling[x]].此时,将sibling[x]连接到x上.<br>Case4：key[x] &gt; key[sibling[x]].此时,将x连接到sibling[x]上.</p>
+</blockquote>
+<p>4.插入节点: $O(\log n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">binomial-heap-insert(H, x)</div><div class="line">H′ &lt;- make-binomial-heap()</div><div class="line">p[x] &lt;- NULL</div><div class="line">child[x] &lt;- NULL</div><div class="line">sibling[x] &lt;- NULL</div><div class="line">degree[x] &lt;- 0</div><div class="line">head[H′] &lt;- x</div><div class="line">H &lt;- binomial-heap-union(H, H′)</div></pre></td></tr></table></figure></p>
+<p>5.删除最小关键字 $O(\log n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">binomial-heap-extract-min(H):</div><div class="line">find the root x with the minimum key in the root list of H,</div><div class="line">and remove x from the root list of H</div><div class="line">H′ &lt;- make-binomial-heap()</div><div class="line">reverse the order of the linked list of x’s children,</div><div class="line">and set head[H′] to point to the head of the resulting list</div><div class="line">H &lt;- binomial-heap-union(H, H′)</div></pre></td></tr></table></figure></p>
+<p>6.减小关键字值<br>减小关键字的过程类似维护最小堆结构,key[y]与y的父结点z的关键字作比较.如果y为根或者key[y] &gt;= key[z],则该二项树已是最小堆有序.否则结点研究违反了最小堆有序,故将其关键字与其父节点z的关键字相交换,同时还要交换其他数据并循环这个过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">binomial-heap-decrease-key(H, x, k)</div><div class="line">if k &gt; key[x]</div><div class="line">  then error &quot;new key is greater than current key&quot;</div><div class="line">key[x] &lt;- k</div><div class="line">y &lt;- x</div><div class="line">z &lt;- p[y]</div><div class="line">while z ≠ NULL and key[y] &lt; key[z]</div><div class="line">  do exchange key[y] ↔ key[z]</div><div class="line">  y &lt;- z</div><div class="line">  z &lt;- p[y]</div></pre></td></tr></table></figure></p>
+<p>7.删除关键字<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">binomial-heap-delete(H, x)</div><div class="line">1 binomial-heap-decrease-key(H, x, -INT)</div><div class="line">2 binomial-heap-extract-min(H)</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>4.总结</p>
+<blockquote>
+<p>可合并堆 = 普通的堆 + <code>decrease-key,union</code>操作<br>但是其应该高效的实现, <code>union</code>操作是可合并堆最关键的部分.如果不需要高效的支持<code>union</code>操作,则普通的堆结构已经足够.<br>对于所有的堆结构:二叉堆、二项堆、斐波那契堆.它们的<code>search</code>操作都是很慢的,不能像二叉搜索树高效的支持<code>search</code>操作!因而在<code>decrease-key</code>和<code>delete</code>等涉及结点的操作时都需要一个指向结点的指针.</p>
+</blockquote>
+<h3 id="Chapter20-斐波那契堆"><a href="#Chapter20-斐波那契堆" class="headerlink" title="Chapter20 斐波那契堆"></a>Chapter20 斐波那契堆</h3><p>1.定义</p>
+<blockquote>
+<p>斐波那契堆(Fibonacci heap)是堆中一种,它和二项堆一样,也是一种可合并堆；可用于实现合并优先队列.斐波那契堆比二项堆具有更好的平摊分析性能,它的合并操作的时间复杂度是O(1).<br>与二项堆一样,它也是由一组堆最小有序树组成,并且是一种可合并堆.<br>与二项堆不同的是,斐波那契堆中的树不一定是二项树；而且二项堆中的树是有序排列的,但是斐波那契堆中的树都是有根而无序的.</p>
+</blockquote>
+<p>！<a href="/images/fib.jpg">fib-heap</a></p>
+<blockquote>
+<p>斐波那契堆中的所有树的树根被保存在一个链表即根表中.对于一个斐波那契堆,min[H]保存了具有最小节点值的根节点.<br>堆中每个节点的数据结构包含如下域：</p>
+<blockquote>
+<ol>
+<li>p[x],指向x的父节点</li>
+<li>child[x], 指向x的任意一个孩子</li>
+<li>任意一个节点x的所有孩子被链接在一个双向链表环形链表中</li>
+<li>degree,x的孩子的数目</li>
+<li>mark,表示自从x上一次称为另一个节点的子女以来,它是否失掉了一个孩子,TRUE表示是失去了</li>
+</ol>
+</blockquote>
+</blockquote>
+<p>2.操作</p>
+<blockquote>
+<ol>
+<li><p>创建堆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">make-fib-heap()</div><div class="line">H &lt;- allocate-node()</div><div class="line">n[H] = 0</div><div class="line">min[h] = NULL</div><div class="line">return H</div></pre></td></tr></table></figure>
+</li>
+<li><p>插入: $O(1)$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">fib-heap-insert(H, x)</div><div class="line">degree[x] &lt;- 0</div><div class="line">p[x] &lt;- NUll</div><div class="line">child[x] &lt;- NULL</div><div class="line">left[x] &lt;- x</div><div class="line">right[x] &lt;- x</div><div class="line">mark[x] = false</div><div class="line">concatenate the root list containing x with root list H</div><div class="line">if min[H] = NULL or key[x] &lt; key[min[H]]</div><div class="line">  then min[H] &lt;- x</div><div class="line">n[H] &lt;- n[H] + 1</div></pre></td></tr></table></figure>
+</li>
+<li><p>合并: $O(1)$<br>合并两个斐波那契堆的操作非常简单,可以分为两步：</p>
+<blockquote>
+<p>1.将两个根表通过指针合并为一个根表<br>2.更新min[H],比较两个堆的min[H],取较小的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">fib-heap-union(H1, H2)</div><div class="line">H &lt;- make-fib-heap()</div><div class="line">min[H] &lt;- min[H1]</div><div class="line">concatenate the root list of H@ with the root list of H</div><div class="line">if (min[H1] = NULL) or (min[H2] != NULL) and min[H2] &lt; min[H1])</div><div class="line">  then min[H1] &lt;- min[H2]</div><div class="line">n[H] &lt;- n[H1] + n[H2]</div><div class="line">free the objects H1 and H2</div><div class="line">return H</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>删除最小节点: $O(\log n)$<br>删除最小节点的操作比较复杂,其算法思想为：</p>
+<blockquote>
+<ol>
+<li>删除最小节点,并将被删除节点的每个孩子都看做新的堆中的一棵树的根,将它们加入到根表中</li>
+<li>遍历根表,合并度数相同的树<br>这里的在根链上合并操作与二项树基本相同,就是按“度的递增”顺序排列所有的子树之后,合并具有相同度的子树,使得最后的根链上每一个度 K 都只有至多一棵子树.(这里又与二项堆神似了,所以说斐波那契堆是松散地基于二项堆.)调整根表的步骤<br>1:在根表中找出两个具有相同度数的根 x 和 y,且 key[x]&lt;key[y]<br>2:将y与x连接.将 y 从根表里去掉,成为 x一个孩子,并增加degree[x].同时,如果y上有标记的话也被清除掉.”<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">fib-heap-extract-min(H)</div><div class="line">z &lt;- min[H]</div><div class="line">if z != NULL</div><div class="line">  then for each child x of z</div><div class="line">    do add x to the root list of H</div><div class="line">      p[x] &lt;- NULL</div><div class="line">    remove z from the root list of H</div><div class="line">    if z = right[z]</div><div class="line">      then min[H] &lt;- NULL</div><div class="line">      else min[H] &lt;- right[z]</div><div class="line">        consolidate(H)</div><div class="line">    n[H] &lt;- n[H] - 1</div><div class="line"></div><div class="line">consolidate(H): #合并H的根表,减少堆中树的数量</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>减小一个关键字: $O(1)$<br>减小一个关键字的字,会破坏最小堆的性质,所以要进行最小堆维护.因为斐波那契支持减小关键字和删除结点操作,所以斐波那契堆的子树就不一定是二项树了.步骤如下：</p>
+<blockquote>
+<p>1.减此减小不影响堆序,不作调整;<br>2.若影响堆序,则从堆中删除该节点,将其加入根表,并检查其父亲的 mark 位;若为 false,则停止,并将其置为 true;若为 true,则删除其父亲,继续递归向上执行;直到一个节点 mark 域为 false 或该节点为根节点为止.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">fib-heap-decrease-key(H, x, k)</div><div class="line">if k &gt; key[x]</div><div class="line">  then return error &quot;new key is greater than current key&quot;</div><div class="line">key[x] &lt;- k</div><div class="line">y &lt;- p[x]</div><div class="line">if y != NULL and key[x] &lt; key[y]</div><div class="line">  then cut(H, x, y)</div><div class="line">    cascading-cut</div><div class="line">if key[x] &lt; key[min[h]]</div><div class="line">  then min[h] &lt;- x</div><div class="line"></div><div class="line">cut(H, x, y)</div><div class="line">remove x from the child list of y, decrementing degree[y]</div><div class="line">add x to the root list of H</div><div class="line">p[x] &lt;- NULL</div><div class="line">mark[x] &lt;- False</div><div class="line"></div><div class="line">cascading-cut(H, y)</div><div class="line">z &lt;- p[y]</div><div class="line">if z != NULL</div><div class="line">   then if mark[y] = False</div><div class="line">      mark[y] &lt;- true</div><div class="line">      else cut(H, y, z)</div><div class="line">        cascading-cut(H, z)</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>删除节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fib-heap-delete(H, x)</div><div class="line">fib-heap-decrease-key(H, x, -INT)</div><div class="line">fib-heap-extract-min(H)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<p>3.总结<br>斐波那契堆之所以高效,就是因为它放宽了条件了,将很多二项堆要维护的工作都推迟到了<code>extract-min</code> 和 <code>delete</code>操作之中去了.而它之所以能够放宽条件,就是因为它的限制非常的少,并没有像二项堆一样的要求子树全部必须是二项树,而且根表上的任意度数的子树至多只能有一个.没有了这些限制,斐波那契堆就可以实现的非常的松散以至少将日常工作的维护时间都平摊给 <code>extract-min</code> 和 <code>delete</code> 操作.<br>但是,正如斐波那契堆现在更多的应用于理论中,实践中使用的并不多的现象所映射的,在大部分的应用中斐波那契堆并不能带来大幅度的效率的提升.因为它并不是减少了要做的工作,只是将很多要做的工作都进行了推迟.<br>但一般对于规模足够大的输入,斐波那契堆是能够很大改善算法的性能的,尤其是对于一些 <code>extract-min</code>和 <code>delete</code> 操作少的情况.比如斐波那契堆的使用能加快Prime 和 Djikstra 算法的执行速度.</p>
+<h3 id="Chapter21-用于划分的数据结构-不相交集合"><a href="#Chapter21-用于划分的数据结构-不相交集合" class="headerlink" title="Chapter21 用于划分的数据结构-不相交集合"></a>Chapter21 用于划分的数据结构-不相交集合</h3><p>1.定义：<br>不相交集合数据结构（disjoing-set data structure)保持一组不相交的动态集合 $S = \{S_1,S_2,S_3, \dots, S_k\}$.每个集合通过一个代表来识别,代表即集合中的某个成员.<br>不相交集合数据结构支持如下操作：</p>
+<blockquote>
+<ol>
+<li><code>make-set(x)</code>： 建立一个新的集合,其唯一成员就是x,所以其代表也就是自己.因为各集合是不相交的,故要求x没有在其他集合中出现过.</li>
+<li><code>union(x,y)</code>： 将包含x和y的动态集合（比如说 $S_x和S_y$）合并为一个新的集合（即这两个集合的并集）.假定这个操作之前是不相交的.在经过此操作后,所得集合的代表可以是$Sx \bigcup Sy$中的任何一个成员,但在<code>union</code>的很多实现细节中,都选择Sx或Sy的代表作为新的代表.由于要求各集合是不相交的,故我们“消除”集合Sx和Sy,把它们从S中删去.</li>
+<li><code>find-set(x)</code>：返回一个指针,指向包含x的（唯一）集合的代表.</li>
+</ol>
+</blockquote>
+<p>2.表示<br>不相交数据集合一般用链表或森林来实现,有根树的速度更快.</p>
+<blockquote>
+<p>1.链表表示</p>
+<blockquote>
+<p>a. 每个链表的第一个对象作为它所在集合的代表<br>b. 链表上的第个结点都有指向它所在集合的代表的指针,从而使得找出所属集合的操作时间降为 $O(1)$<br>c. 但是因为每个结点都有指向代表的指针,使得在进行合并操作时,需要更新所有结点的指向代表的指针,从而时间复杂度为 $O(n)$.<br>d. 一种加权合并启发式策略:在进行合并操作时,总是把较短的表拼到较长的表上去.</p>
+</blockquote>
+<p>2.树表示<br>用有根树来表示集合,树中的每个节点都包含集合的一个成员,每棵树都表示一个集合.不相交森林中,每个成员仅指向其父节点.每个树的根包含了代表,并且是它自己的父节点.尽管采用了这种表示的直观算法并不比采用链表表示的直观算法并不比采用链表表示的算法更快,但是,通过引入两种启发式策略（“按秩合并”和“路径压缩”）,就可以获得目前已知的,渐进意义上最快的不相交集合的数据结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">make-set(x)</div><div class="line">p[x] &lt;- x</div><div class="line">rank[x] &lt;- 0</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>1.按秩合并,其思想是是包含较少节点的树的根指向包含较多节点的树的根.我们并不显示的记录以每个节点为根的子树大小,而是采用了一种能够简化分析的方法.对每个节点,用秩表示节点高度的一个上届.在按秩合并中具有较小秩的根在<code>union</code>操作中要指向具有较大秩的根.<br><img src="/images/union.jpg" alt="tree-set"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">union(x, y)</div><div class="line">link(find-set(x), find-set(y))</div><div class="line"></div><div class="line">link(x, y)</div><div class="line">if rank[x] &gt; rank[y]</div><div class="line">  then p[y] &lt;- x</div><div class="line">  else p[x] &lt;- y</div><div class="line">    if rank[x] = rank[y]</div><div class="line">      then rank[y] &lt;- rank[y] + 1</div></pre></td></tr></table></figure></p>
+<p>2.路径压缩,它非常简单而有效.如下图所示,在<code>find-set</code>操作中,利用这种启发式策略,来使查找路径上的每个节点都直接指向根节点.路径压缩并不改变节点的秩<br>！<a href="find-set1.gif">find-set1</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">find-set(x)</div><div class="line">if x != p[x]</div><div class="line">  then p[x] &lt;- find-set(p[x])</div><div class="line">return p[x]</div></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+<p>3.应用<br>不相交集合数据结构有多种应用,其中之一是用于确定一个无向图中连通子图的个数.在下面给出的过程<code>connected-components</code>中,利用了不相交集合操作来计算一个图的连通子图.一旦<code>connected-components</code>作为预处理步骤执行后,过程<code>same-component</code>回答两个顶点是否在同一连通子图的查询.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">connected-components(G) #图G,顶点集V[G],边集E[G]</div><div class="line">for each vertex v in V[G]</div><div class="line">    do make-set(v)</div><div class="line">for each edge(u, v) in E[G]</div><div class="line">    do if find-set(u) != find-set(v)</div><div class="line">        then union(u, v)</div><div class="line"></div><div class="line">same-component(u, v)</div><div class="line">if find-set(u) = find-set(v)</div><div class="line">    then return true</div><div class="line">    else return false</div></pre></td></tr></table></figure></p>
+<p><img src="find-set2.gif" alt="find-set2"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/05/02/CLRS-notes4/" data-id="cj6sslhav00083gamypcq3who" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-structure/">data_structure</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/04/lab4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          lab4-Preemptive Multitasking
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/30/hw6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">hw6-threads-and-locking</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

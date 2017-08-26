@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>hw1-boot-xv6 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hw1-boot-xv6">
+<meta property="og:url" content="http://yoursite.com/2017/04/09/hw1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta property="og:image" content="http://yoursite.com/2017/04/09/hw1/_start.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/09/hw1/br_start.png">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hw1-boot-xv6">
+<meta name="twitter:description" content="hw1: boot xv6摘要   6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.  answer1. xv6源码1git clone git://github">
+<meta name="twitter:image" content="http://yoursite.com/2017/04/09/hw1/_start.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hw1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/09/hw1/" class="article-date">
+  <time datetime="2017-04-08T16:00:00.000Z" itemprop="datePublished">2017-04-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hw1-boot-xv6
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hw1-boot-xv6"><a href="#hw1-boot-xv6" class="headerlink" title="hw1: boot xv6"></a>hw1: boot xv6</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
+<p>  6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.<br>xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.</p>
+</blockquote>
+<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>
+<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> xv6</div><div class="line">make</div></pre></td></tr></table></figure>
+<p>生成xv6.img镜像文件, 在qemu上模拟运行.</p>
+<a id="more"></a>
+<h4 id="3-定位-start"><a href="#3-定位-start" class="headerlink" title="3. 定位_start"></a>3. 定位_start</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nm kernel | grep _start</div></pre></td></tr></table></figure>
+<p><img src="./_start.png" alt="_start.png"><br>定位_start的address为0x10000c<br>接着运行xv6, 在_start打断点,确定xv6启动时的系统信息<br>双开终端, 在一个终端<code>make qemu-gdb</code>, 另一个<code>gdb</code>,gdb成功连接上qemu的远程调试后,调试xv6<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">br * 0x10000c</div><div class="line">0x10000c:	mov    %cr4,%eax</div></pre></td></tr></table></figure></p>
+<p><img src="./br_start.png" alt="br_start"></p>
+<h4 id="4-启动时堆栈上有什么"><a href="#4-启动时堆栈上有什么" class="headerlink" title="4. 启动时堆栈上有什么?"></a>4. 启动时堆栈上有什么?</h4><p>根据boot.S、boot.c和boot.asm中的代码，并结合四个问题</p>
+<blockquote>
+<p>1.在0x7c00设置断点，单步指令调试，查看堆栈指针$esp在哪里被初始化。<br>2.单步调试，直到调用bootmain函数，观察堆栈内容。<br>3.在bootmain函数中第1条汇编指令做了什么。<br>4.在boot.asm中查找使eip变为0x10000c的指令，观察堆栈的变化。</p>
+</blockquote>
+<p>1.在调用bootmain函数前，esp被初始化为0x7c00，即boot.s的入口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm  mov    $start,  $esp</div><div class="line">0x7c40:   mov    $0x7c00, $esp</div></pre></td></tr></table></figure></p>
+<p>２.在调用bootmain函数时，调用者保存调用地址，即下一条指令，并使$esp-4。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7c45:  call bootmain</div><div class="line">spin:</div><div class="line">0x7c4a:  jmp spin</div></pre></td></tr></table></figure></p>
+<p>3.在bootmain函数中，第1条汇编指令<code>为push     $ebp</code>，将$ebp压入堆栈，即保存调用者的栈帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7d0c:  push $ebp</div></pre></td></tr></table></figure></p>
+<p>４.当eip变为0x10000c时，bootmain函数将调用地址压入堆栈。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/09/hw1/" data-id="cj6sslhay000e3gamvmb9ap3z" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/10/lab1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          lab1-boot-pc
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/08/lab0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">lab0-build-env</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

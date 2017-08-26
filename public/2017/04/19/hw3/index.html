@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>hw3-system-calls | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="hw3 xv6 system calls目标在[hw1 boot pc]的基础上,学习xv6的系统调用:   运用xv6的系统调用 修改xv6 kernel, 添加新系统调用   Part1: 系统调用追踪任务 修改systemcall.c,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:1234567...fork -&amp;gt; 2exec -&amp;gt; 0op">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hw3-system-calls">
+<meta property="og:url" content="http://yoursite.com/2017/04/19/hw3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="hw3 xv6 system calls目标在[hw1 boot pc]的基础上,学习xv6的系统调用:   运用xv6的系统调用 修改xv6 kernel, 添加新系统调用   Part1: 系统调用追踪任务 修改systemcall.c,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:1234567...fork -&amp;gt; 2exec -&amp;gt; 0op">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hw3-system-calls">
+<meta name="twitter:description" content="hw3 xv6 system calls目标在[hw1 boot pc]的基础上,学习xv6的系统调用:   运用xv6的系统调用 修改xv6 kernel, 添加新系统调用   Part1: 系统调用追踪任务 修改systemcall.c,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:1234567...fork -&amp;gt; 2exec -&amp;gt; 0op">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+</head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hw3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/19/hw3/" class="article-date">
+  <time datetime="2017-04-18T16:00:00.000Z" itemprop="datePublished">2017-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hw3-system-calls
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hw3-xv6-system-calls"><a href="#hw3-xv6-system-calls" class="headerlink" title="hw3 xv6 system calls"></a>hw3 xv6 system calls</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在[hw1 boot pc]的基础上,学习xv6的系统调用:</p>
+<blockquote>
+<ul>
+<li>运用xv6的系统调用</li>
+<li>修改xv6 kernel, 添加新系统调用</li>
+</ul>
+</blockquote>
+<h2 id="Part1-系统调用追踪"><a href="#Part1-系统调用追踪" class="headerlink" title="Part1: 系统调用追踪"></a>Part1: 系统调用追踪</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
+<p>修改<code>systemcall.c</code>,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">fork -&gt; 2</div><div class="line"><span class="built_in">exec</span> -&gt; 0</div><div class="line">open -&gt; 3</div><div class="line">close -&gt; 0</div><div class="line"><span class="variable">$write</span> -&gt; 1</div><div class="line"> write -&gt; 1</div></pre></td></tr></table></figure></p>
+</blockquote>
+<a id="more"></a>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><blockquote>
+<p>系统调用的储存形式是: 在<code>syscall[]</code>数组中指向系统调用函数的指针.因此修改<code>syscall()</code>函数, 使其获取函数指针的索引, 而从索引到系统调用的映射在<code>syscall.h</code>头文件中.添加<code>syscall_name</code>字符串数组, 映射系统调用索引到其名称上, 然后在<code>syscall()</code>函数内添加<code>cprintf</code>输出:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">char</span> syscalls_name[][<span class="number">8</span>] = &#123;</div><div class="line">[SYS_fork]    <span class="string">"fork"</span>,</div><div class="line">[SYS_exit]    <span class="string">"exit"</span>,</div><div class="line">[SYS_wait]    <span class="string">"wait"</span>,</div><div class="line">[SYS_pipe]    <span class="string">"pipe"</span>,</div><div class="line">[SYS_read]    <span class="string">"read"</span>,</div><div class="line">[SYS_kill]    <span class="string">"kill"</span>,</div><div class="line">[SYS_exec]    <span class="string">"exec"</span>,</div><div class="line">[SYS_fstat]   <span class="string">"fstat"</span>,</div><div class="line">[SYS_chdir]   <span class="string">"chdir"</span>,</div><div class="line">[SYS_dup]     <span class="string">"dup"</span>,</div><div class="line">[SYS_getpid]  <span class="string">"getpid"</span>,</div><div class="line">[SYS_sbrk]    <span class="string">"sbrk"</span>,</div><div class="line">[SYS_sleep]   <span class="string">"sleep"</span>,</div><div class="line">[SYS_uptime]  <span class="string">"uptime"</span>,</div><div class="line">[SYS_open]    <span class="string">"open"</span>,</div><div class="line">[SYS_write]   <span class="string">"write"</span>,</div><div class="line">[SYS_mknod]   <span class="string">"mknod"</span>,</div><div class="line">[SYS_unlink]  <span class="string">"unlink"</span>,</div><div class="line">[SYS_link]    <span class="string">"link"</span>,</div><div class="line">[SYS_mkdir]   <span class="string">"mkdir"</span>,</div><div class="line">[SYS_close]   <span class="string">"close"</span>,</div><div class="line">[SYS_date]    <span class="string">"date"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">syscall</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> num;</div><div class="line"></div><div class="line">  num = proc-&gt;tf-&gt;eax;  <span class="comment">//获取系统调用号</span></div><div class="line">  <span class="keyword">if</span>(num &gt; <span class="number">0</span> &amp;&amp; num &lt; NELEM(syscalls) &amp;&amp; syscalls[num])</div><div class="line">	&#123;</div><div class="line">    proc-&gt;tf-&gt;eax = syscalls[num]();  <span class="comment">//存储系统调用返回值</span></div><div class="line">    cprintf(<span class="string">"%s -&gt; %d\n"</span>, syscalls_name[num], proc-&gt;tf-&gt;eax);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    cprintf(<span class="string">"%d %s: unknown sys call %d\n"</span>,</div><div class="line">            proc-&gt;pid, proc-&gt;name, num);</div><div class="line">    proc-&gt;tf-&gt;eax = <span class="number">-1</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="Part2-日期系统调用"><a href="#Part2-日期系统调用" class="headerlink" title="Part2 日期系统调用"></a>Part2 日期系统调用</h2><h3 id="任务-1"><a href="#任务-1" class="headerlink" title="任务"></a>任务</h3><blockquote>
+<p>添加一个新的系统调用<code>date</code>,其获取当前的UTC时间并将其返回给用户程序.完成后,在xv6 shell提示符下输入<code>date</code>可打印当前的UTC时间.</p>
+</blockquote>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><blockquote>
+<p>使用帮助函数<code>cmostime()</code>(定义在<code>lapic.c</code>)来读取实时时钟,然后根据<code>date.h</code>中定义的struct rtcdate结构体,作为一指针参数传递给<code>cmostime()</code>.<br>查看<code>uptime</code>系统调用的实现如下<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">grep -n uptime *.[chS]</div><div class="line"><span class="meta">#output</span></div><div class="line">syscall.c: <span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">sys_uptime</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line">syscall.c:[SYS_uptime] sys_uptime,</div><div class="line">syscall.c:[SYS_uptime] <span class="string">"uptime"</span>,</div><div class="line">syscall.h:<span class="meta">#<span class="meta-keyword">define</span> SYS_uptime 14</span></div><div class="line">sysproc.c:sys_uptime(<span class="keyword">void</span>)</div><div class="line">user.h:<span class="function"><span class="keyword">int</span> <span class="title">uptime</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line">usys.S:SYSCALL(uptime)</div></pre></td></tr></table></figure></p>
+<p>归纳出添加系统调用的一般步骤:</p>
+<ul>
+<li>在<code>syscall.h</code>中添加系统调用号</li>
+<li>在<code>user.h</code>中添加用户态函数的定义</li>
+<li>在<code>usys.S</code>中添加用户态函数的实现</li>
+<li>在<code>syscall.c</code>中添加系统调用函数的外部声明</li>
+<li>在<code>sysproc.c</code>中添加系统调用函数的实现</li>
+</ul>
+<p>‘date’系统调用函数具体实现代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">sys_date</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> rtcdate *r;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (argptr(<span class="number">0</span>, (<span class="keyword">void</span> *)&amp;r, <span class="keyword">sizeof</span>(*r)) &lt; <span class="number">0</span>)</div><div class="line">          <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">  cmostime(r);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/19/hw3/" data-id="cj6sslhb2000o3gam42svhnu1" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/21/hw4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          hw4-lazy-page-allocation
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/18/lab2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">lab2-memeory-management</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
