@@ -1,0 +1,994 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="algorithm,data_structure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="＜Introduction to algorithms＞笔记Part3: 数据结构  动态集合:随着时间改变而变化 关键字(keyword) -&amp;gt; 全序集(排序) 基本操作  search(S, k) insert(S, x) delete(S, x) maximum/minimum(S) successor/predecessor(S, x)">
+<meta name="keywords" content="algorithm,data_structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="introduction to algorithms note2">
+<meta property="og:url" content="http://yoursite.com/2017/04/17/CLRS-notes2/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="＜Introduction to algorithms＞笔记Part3: 数据结构  动态集合:随着时间改变而变化 关键字(keyword) -&amp;gt; 全序集(排序) 基本操作  search(S, k) insert(S, x) delete(S, x) maximum/minimum(S) successor/predecessor(S, x)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="introduction to algorithms note2">
+<meta name="twitter:description" content="＜Introduction to algorithms＞笔记Part3: 数据结构  动态集合:随着时间改变而变化 关键字(keyword) -&amp;gt; 全序集(排序) 基本操作  search(S, k) insert(S, x) delete(S, x) maximum/minimum(S) successor/predecessor(S, x)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/17/CLRS-notes2/"/>
+
+
+
+
+
+  <title> introduction to algorithms note2 | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/17/CLRS-notes2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                introduction to algorithms note2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T00:00:00+08:00">
+                2017-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h3 id="Part3-数据结构"><a href="#Part3-数据结构" class="headerlink" title="Part3: 数据结构"></a>Part3: 数据结构</h3><blockquote>
+<ol>
+<li>动态集合:随着时间改变而变化</li>
+<li>关键字(keyword) -&gt; 全序集(排序)</li>
+<li>基本操作<blockquote>
+<ul>
+<li><code>search(S, k)</code></li>
+<li><code>insert(S, x)</code></li>
+<li><code>delete(S, x)</code></li>
+<li><code>maximum/minimum(S)</code></li>
+<li><code>successor/predecessor(S, x)</code></li>
+</ul>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<a id="more"></a>
+<h4 id="Chapter10-基本数据结构实现动态集合"><a href="#Chapter10-基本数据结构实现动态集合" class="headerlink" title="Chapter10 基本数据结构实现动态集合?"></a>Chapter10 基本数据结构实现动态集合?</h4><ol>
+<li>stack<blockquote>
+<ul>
+<li>LIFO: 后进先出</li>
+<li>data<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Sequence S; #可由数组或链表实现</div><div class="line">int top;</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li><p>method</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">stack-empty(S): O(1)</div><div class="line">  if top[S] = 0</div><div class="line">    then return true</div><div class="line">    else return false</div><div class="line"></div><div class="line">push(S, x): O(1)</div><div class="line">  top[S] &lt;- top[S] + 1</div><div class="line">  S[top[S]] &lt;- x</div><div class="line"></div><div class="line">pop(S): O(1)</div><div class="line">   if stack-empty(S)</div><div class="line">    then error &quot;underflow&quot;</div><div class="line">    else top[S] &lt;- top[S] - 1</div><div class="line">      return S[top[S] + 1]</div><div class="line"></div><div class="line">#若考虑实现stack的底层数据结构是静态的, 即栈容量有限,可能会上溢</div><div class="line">stack-full(S): O(1)</div><div class="line"> if top[S] == size(S)</div><div class="line">    then return true</div><div class="line">    else return false</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>apply:</p>
+<blockquote>
+<p>函数调用-递归<br>括号匹配与表达式求值</p>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<ol>
+<li>queue<br>在第6章排序中由heap实现了priority_queue, 是特殊一类queue:在queue上实现了优先级.基本的queue:<blockquote>
+<ul>
+<li>FIFO: 先进先出</li>
+<li>data:<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Sequence S;</div><div class="line">int head, tail;</div><div class="line">int length;</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li><p>method</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">enqueue(Q, x): O(1)</div><div class="line">  Q[tail[Q]] &lt;- x</div><div class="line">  if tail[Q] = length[Q]</div><div class="line">    then tail[Q] &lt;- 1</div><div class="line">    else tail[Q] &lt;- tail[Q] + 1</div><div class="line"></div><div class="line">dequeue(Q): O(1)</div><div class="line">  x &lt;- Q[head[Q]]</div><div class="line">  if head[Q] = length[Q]</div><div class="line">    then head[Q] &lt;- 1</div><div class="line">    else head[Q] &lt;- head[Q] + 1</div><div class="line">  return x</div><div class="line">&gt;&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>apply:</p>
+<blockquote>
+<ul>
+<li>FIFO算法; 先来先服务</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>层次算法: 层次遍历, BFS</li>
+</ul>
+</blockquote>
+<ol>
+<li>linkedlist<br>与数组的线性序是由下标决定(连续储存, 随机访问)不同, 链表的顺序由指针确定(易动态扩充)<blockquote>
+<ul>
+<li>data:<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Datatype data</div><div class="line">pointer next, prev</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<ul>
+<li><p>method:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">search(L, k): O(n)</div><div class="line">  x &lt;- head[L]</div><div class="line">  while x  != NULL and key[x] != k</div><div class="line">    do x &lt;- next[x]</div><div class="line">  return x</div><div class="line"></div><div class="line">insert(L, x): O(1) 头插法</div><div class="line">  next[x] &lt;- head[L]</div><div class="line">  if head[L] != NULL</div><div class="line">    then prev[head[L]] &lt;- x</div><div class="line">  head[L] &lt;- x</div><div class="line">  prev[x] &lt;- NULL</div><div class="line"></div><div class="line">delete(L, x): x is pointer, O(1); x is key, O(n)</div><div class="line">  if prev[x] != NULL</div><div class="line">    then next[prev[x]] &lt;- next[x]</div><div class="line">    else head[L] &lt;- next[x]</div><div class="line">  if next[x] != NULL</div><div class="line">    then prev[next[x]] &lt;- prev[x]</div></pre></td></tr></table></figure>
+</li>
+<li><p>techique: 哨兵(sentinel)</p>
+<blockquote>
+<ul>
+<li>简化了边界条件, 代码实现更简洁,紧凑<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">search(L, k)</div><div class="line">  x &lt;- next[nil[L]]</div><div class="line">  while x != nil[L] and key[x] != k</div><div class="line">    do x &lt;- next[x]</div><div class="line">  return x</div><div class="line"></div><div class="line">insert(L, x)</div><div class="line">  next[x] &lt;- next[nil[L]]</div><div class="line">  prev[next[nil[L]]] &lt;- x</div><div class="line">  next[nil[L]] &lt;- x</div><div class="line">  prev[x] &lt;- nil[L]</div><div class="line"></div><div class="line">delete(L, x)</div><div class="line">  next[prev[x]] &lt;- next[x]</div><div class="line">  prev[next[x]] &lt;- prev[x]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>apply:<br>数组和链表作为两种基本的线性结构, 两者实现的功能基本相同, 但各有优劣:数组由下标实现随机访问, 可以实现二分,快排等高效算法, 但容量受限,动态增删复杂度高;链表只能线性遍历, 查找排序效率低, 但由于指针特性,易于动态增删, 常用于管理动态的内容.</p>
+</li>
+</ul>
+</blockquote>
+<ol>
+<li><p>静态数组和分配释放<br>在某些编程语言(如fortran)中没有指针的概念, 可以添加2个域储存prev, next对象的下标,模拟指针的功能.<br>另外,动态增删元素时要向内存申请或释放内存, 一种机制是添加tag, 但最后销毁整个数据结构时处理, 一种则是C中的malloc/free机制,实现内存的分配和回收.</p>
+</li>
+<li><p>有根树<br>将前驱后置的思想推广到任意同构的数据结构上, 自然导出了链接实现的树结构上, 这节只讨论树的基本结构:</p>
+<blockquote>
+<ul>
+<li>binary tree<blockquote>
+<ul>
+<li>node:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">data</div><div class="line">pointer left, right</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<blockquote>
+<ul>
+<li>multi tree</li>
+<li>node:<blockquote>
+<ul>
+<li>data:</li>
+<li>pointer left-child, right-sibling #左孩子右兄弟表示法</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</blockquote>
+<h4 id="Chapter10-如何实现映射关系的数据结构"><a href="#Chapter10-如何实现映射关系的数据结构" class="headerlink" title="Chapter10 如何实现映射关系的数据结构?"></a>Chapter10 如何实现映射关系的数据结构?</h4><ol>
+<li>hash table: key -&gt;(mapto) identifier<blockquote>
+<p>　在散列表中查找一个元素的时间与在链表中查找一个元素的时候相同,在最坏情况为 $O(n)$,但期望时间为 $O(1)$.在实践中,散列表的效率是很高的,一般可认为是$O(1)$, 基本的字典操作只需要$O(1)$的平均时间.<br>当待排序的关键字集合是静态的(即当关键字集合一旦存入后不再改变),”完全散列”能够在$O(1)$的最坏情况时间内支持关键字查找。当待排序的关键字的集合是静态的(即当关键字集合一旦存入后不需要再改变),“完全散列”能够在 O(1)的最坏时间内支持查找操作。</p>
+</blockquote>
+</li>
+</ol>
+<p>２. 散列方法</p>
+<blockquote>
+<ol>
+<li><p>直接寻址<br>适用于关键字个数小于可能的关键字总数(一般是表长)<br>但如果关键字的全集U很大,但实际关键字集合k很小, 则会造成大量空间的浪费.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">search(T, k)</div><div class="line">  return T[k]</div><div class="line"></div><div class="line">insert(T, x)</div><div class="line">  T[key[x]] &lt;- x</div><div class="line"></div><div class="line">delete(T, x)</div><div class="line">  T[key[x]] &lt;- NULL</div></pre></td></tr></table></figure>
+</li>
+<li><p>散列表<br>关键字集合k映射到长为m的散列表T上,即:<br>\begin{align}<br>hash-func: h: U -&gt; {0, 1, \ldots ,m-1} \\<br>即 k \mapsto h(k)<br>\end{align}<br>问题: 碰撞(collision)two key -&gt; one position<br>解决碰撞的方法:</p>
+<blockquote>
+<ol>
+<li>好的hash-func, 尽可能减少碰撞</li>
+<li>链接法(chaining): 散列到同一位置的存入链表中<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">search(T, x): O(1)</div><div class="line">  search for an element with key in list T[h(k)]</div><div class="line"></div><div class="line">insert(T, x): O(1)</div><div class="line">  insert x at the head of list T[h(key[x])]</div><div class="line"></div><div class="line">delete(T, x): O(1)</div><div class="line">  delete x from the list T[h(key[x])]</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<p>在众多的简单的解决碰撞的方法中,我觉得比较好的是通过链表法解决碰撞,虽然这个方法的理论最坏效率为 O(n),但是在平均情况下,它的性能也是非常好的,实现简单又高效。</p>
+<ol>
+<li>hash-func<blockquote>
+<ol>
+<li>好的hash-func<br>\begin{align}<br>对random \, k \, 0 \leq k &lt; 1,\\<br>h(k) = \lfloor km \rfloor<br>\end{align}</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<ol>
+<li>多数的散列函数都假定关键字域为自然数集$N$,如果所给关键字不是自然数,则必须有一种方法来将它们解释为自然数。<blockquote>
+<p>a. 除法散列法:<br>一般选取 m 的值为与2的整数幂不大接近的质数<br>$$h(k) = k\mod m$$<br>b. 乘法散列法:<br>构造散列函数的乘法方法包含两个步骤:首先用关键字剩上常数 A(0&lt;A&lt;1),并抽取 kA 的小数部分;然后用m剩以这个值,再取结果的底。<br>$$h(k) = \lfloor m(kA \mod 1) \rfloor$$<br>c.全域散列:全域散列的基本思想是在执行开始时,就从一族仔细设计的函数中,随机地选择一个作为散列函数。<br>i. 全域散列表是一种使用“链接法”来解决碰撞问题的散列表方法。<br>ii. 随机化保证了对于任何输入,算法都具有较好的平均性能。<br>iii. 全域的散列函数组:设$H$为一组散列函数,它将给定的关键字域$U$映射到{0,1,…,m-1}中,这样的一个函数组称为是全域的.如果从$H$中随机地选择一个散列函数,当关键字K≠J时,两者发生碰撞的概率不大于1/m。<br>iv.常用的一个全域散列函数类:<br>首先选择一个足够大的质数p,使得每一个可能的关键字k都落到0到p-1的范围内,包括首尾的0和p-1.这里我们假设全域是0–15, p为17。设集合Zp {0, 1, 2, ,…,p-1},集合Zp’为{1, 2, 3,…,p-1}。由于 p 是质数,<br>我们可以定义散列函数<br>$h(a, b, k) = ((a*k + b) \mod p) \mod m$<br>其中a属于Zp,b属于Zp’。由所有这样的a和b构成的散列函数,组成了函数簇,即全域散列。<br>v.明白这个散列函数的选取是在“执行开始”随机的选取一个是很重要的,要不然就会不明白到时候怎么进行查找。这里所谓的随机性应该这样理解:对于某一个散列表来说,它在初始化时已经把a,b固定了,但是对于一个还未初始化的全域散列表来说,a,b是随机选取的。</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<ol>
+<li>开放寻址法:所有的元素都放在散列表里<blockquote>
+<ul>
+<li>开放寻址法的好处就在于它根本不用指针,而是计算出要存取的各个pos。这样一来,由于不用存储指针就节省了空间,从而可以用同样的空间来提供更多的pos,其潜在的效果就是可以减少碰撞,提高查找速度。</li>
+<li>开放寻址法很像一个启发式的搜索,它的最坏性能也是 O(n),只不过散列函数为它提供了启发信息从而使得一般的平均性能会很好。</li>
+<li>在开放寻址法中,对散列元素的删除操作执行起来比较困难,因为删除操作会影响查找操作。解决办法是在pos里的值,被删除后置一个特定的值tag标记删除,而不是直接删除导致查找断开.</li>
+<li>探查法<br>线性探查、二次探查和双重散列都是对最基本的数组法的改进.<blockquote>
+<ol>
+<li>线性探查 linear probing<br>$$h(k,i) = (h’(k)+i) \mod m$$<br>$$h’ = U \mapsto [0, 1, \ldots, m-1]$$</li>
+<li>二次探查 quadrating probing<br>$$h(k,i) = (h’(k) + c_1i+ c_2i^2) \mod m$$</li>
+<li>双重探查<br>双重散列是用于开放寻址的最好方法之一,因为它所产生的排列具有随机选择的排列的许多特性.<br>$$h(k,i) = (h_1(k) + ih_2(k)) \mod m$$</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li>完全散列:<blockquote>
+<p>如果某一种散列技术在进行查找时,其最坏情况内存访问次数为$O(1)$的话,则称其为完全散列。书上使用了一种两级的散列方案,每一级都采用全域散列.通常利用一种两级的散列方案,每一级上都采用全域散列.<br>完全散列的关键在于:二次散列表中要求没有碰撞.这是通过确保槽的个数是关键字的个数的平方来实现的。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="Chapter12-如何用树结构实现动态集合"><a href="#Chapter12-如何用树结构实现动态集合" class="headerlink" title="Chapter12 如何用树结构实现动态集合?"></a>Chapter12 如何用树结构实现动态集合?</h4><ol>
+<li>二叉查找树 binary search tree<blockquote>
+<ul>
+<li>define:<br>$$key[left[x]] \leq key[x] \bigcup key[right[x]] \geq key[x]$$</li>
+<li>method<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">inorder-walk(x): $O(n)$</div><div class="line">  if x != NULL</div><div class="line">    then inorder-walk(left[x])</div><div class="line">      visit key[x]</div><div class="line">      inorder-walk[right[x]]</div><div class="line"></div><div class="line">search(x, k): $O(h)$</div><div class="line">  if x = NULL or k = key[x]</div><div class="line">    then return x</div><div class="line">  if k &lt; key[x]</div><div class="line">    then return search(left[x], k)</div><div class="line">    else return search(right[x], k)</div><div class="line"></div><div class="line">minimum(x): $O(h)$</div><div class="line">  while left[x] != NULL</div><div class="line">    do x &lt;- left[x]</div><div class="line">  return x</div><div class="line"></div><div class="line">maximum(x): $O(h)$</div><div class="line">  while right[x] != NULL</div><div class="line">    do x &lt;- right[x]</div><div class="line">  return x</div><div class="line"></div><div class="line">successor(x): $O(h)$, 中序后继</div><div class="line">  if right[x] != NULL</div><div class="line">    then return minimum(right[x])</div><div class="line">  y &lt;- p[x]</div><div class="line">  while y != NULL and x = right[y]</div><div class="line">    do x &lt;- y</div><div class="line">      y &lt;- p[y]</div><div class="line">  return y</div><div class="line"></div><div class="line">predecessor(x): $O(h)$ 中序前驱</div><div class="line">  if left[x] != NULL</div><div class="line">    then return maxinum(left[x])</div><div class="line">  y &lt; p[x]</div><div class="line">  while y != NUll and x = left[y]</div><div class="line">    do x &lt;- y</div><div class="line">      y &lt;- p[y]</div><div class="line">  return y</div><div class="line"></div><div class="line">insert(T, k): $O(h)$</div><div class="line">  y &lt;- NUll</div><div class="line">  x &lt;- root[T]</div><div class="line">  while x != NUll</div><div class="line">    do y &lt;- x</div><div class="line">      if key[k] &lt; key[x]</div><div class="line">        then x &lt;- left[x]</div><div class="line">        else x &lt;- right[x]</div><div class="line">  p[x] &lt;- u</div><div class="line">  if y = NUll</div><div class="line">    then root[T] &lt;- x #tree T is empty</div><div class="line">    else if key[k] &lt; key[y]</div><div class="line">      then left[y] &lt;- k</div><div class="line">      else right[y] &lt;- k</div><div class="line"></div><div class="line">delete(T, k): $O(h)$</div><div class="line">  if left[k] = NUll or right[k] = NUll</div><div class="line">    then y &lt;- k</div><div class="line">    else y &lt;- successor(k)</div><div class="line">  if left[y] != NUll</div><div class="line">    then x &lt;- left[y]</div><div class="line">    else x &lt;- right[y]</div><div class="line">  if x != NUll</div><div class="line">    then p[x] &lt;- p[y]</div><div class="line">  if p[y] = NUll</div><div class="line">    then root[T] &lt;- x</div><div class="line">    else if y = left[p[y]]</div><div class="line">      then left[p[y]] &lt;- x</div><div class="line">      else right[p[y]] &lt;- de</div><div class="line">  if y != k</div><div class="line">    then key[k] &lt;- key[y]</div><div class="line">      copy y&apos;s satellite date into k</div><div class="line">  return y</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>BST的删除情况较复杂, 有难度的地方就是在删除同时存在左右子树的结点时需要进行处理.理解后可以概括为:对于这样的结点 x,找到 x 结点的前趋(或后继)y,将 x 的值替换为 y 的值,然后递归删除 y 结点就可以了。因为 y 一定没有右子树(后继对应没有左子树),所以递归删除的时候就是很简单的情况了。</p>
+</blockquote>
+<h4 id="Chapter13-如何降低树高-提高二叉树的操作效率"><a href="#Chapter13-如何降低树高-提高二叉树的操作效率" class="headerlink" title="Chapter13 如何降低树高,提高二叉树的操作效率?"></a>Chapter13 如何降低树高,提高二叉树的操作效率?</h4><p>从12章可以看到, BST的性能与树高直接相关.如果BST是单支树,则效率会降到$O(n)$, 如果树较为均匀平衡, 则效率提升到$O(\log n)$.红黑树即是一种自平衡的二叉查找树, 具有很好的时间性能.</p>
+<blockquote>
+<ul>
+<li>define<blockquote>
+<ul>
+<li>node: color, key, left, right, p</li>
+<li>性质:<blockquote>
+<ol>
+<li>每个结点或是红色,或是是黑色。</li>
+<li>根结点是黑的。</li>
+<li>所有的叶结点(NULL)是黑色的。(NULL 被视为一个哨兵结点,所有应该指向 NULL 的指针,都看成指向了 NULL 结点。)</li>
+<li>如果一个结点是红色的,则它的两个儿子节点都是黑色的。</li>
+<li>对每个结点,从该结点到其子孙结点的所有路径上包含相同数目的黑结点。</li>
+<li>黑高度的定义: 从某个结点出发(不包括该结点)到达一个叶结点的任意一条路径上,黑色结点的个数成为该结点x的黑高度.红黑树的黑高度定义为其根结点的黑高度.</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>哨兵 nil[T] 代表所有的空节点, 其color=black</p>
+</li>
+<li><p>性能:<br>红黑树是一种近似平衡的二叉树),它能保证在最坏的情况下,基本的动态集合操作的时间为 O(lgn)。通过对任何一条从根到叶子的路径上各个结点着色方式的限制,红黑树确保没有一条路径会比其它路径长出两倍,因而是接近平衡的。<br>注:全黑结点的满二叉树也满足红黑树的定义。满二叉树的效率本身就非常高,它是效率最好的二叉树之一.</p>
+</li>
+<li><p>method</p>
+<blockquote>
+<ul>
+<li>旋转操作(左旋和右旋):<br>旋转操作是一种能保持二叉查找树性质的查找树局部操作。<br>所有对红黑树结构的修改都只能通过左右旋来完成,这样才能保证修改后的红黑树首先是一棵二叉查找树。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">left-rotate(T, x)</div><div class="line">  y &lt;- right[x]</div><div class="line">  right[x] &lt;- left[y]</div><div class="line">  p[left[y]] &lt;- x</div><div class="line">  p[y] &lt;- p[x]</div><div class="line">  if p[x] = nil[T]</div><div class="line">    then root[t] &lt;- y</div><div class="line">    else if x = left[p[x]]</div><div class="line">      then ledt[p[x]] &lt;- y</div><div class="line">      else right[p[x]] &lt;- y</div><div class="line">  left[y] &lt;- y</div><div class="line">  p[x] &lt;- y</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li><p>插入操作:<br>将结点Z插入树T中,就好像T是一棵普通的二叉查找树一样,然后将Z着为红色。为保证红黑性质能继续保持,我们调用一个辅助程序来对结点重新着色并旋转。插入结点Z的位置的确应该和普通二叉查找树一样,因为红黑树本身就首先是一棵二叉查找树;然后将Z着为红色,是为了保证性质5的正确性,因为性质5如果被破坏了是最难以恢复的;到这里,有可能被破坏的性质就只剩下性质2和性质4了,这都可以通过后来的辅助程序进行修复的。<br>插入操作可能破坏的性质:<br>i. 性质2:当被一棵空树进行插入操作时发生;<br>ii. 性质4:当新结点被插入到红色结点之后时发生;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">insert(T, k)</div><div class="line">  y &lt;- nil[T]</div><div class="line">  x &lt;- root[T]</div><div class="line">  while x != nil[T]</div><div class="line">    do y &lt;- x</div><div class="line">      if key[k] &lt; key[x]</div><div class="line">        then x &lt;- left[x]</div><div class="line">        else x &lt;- right[x]</div><div class="line">  p[x] &lt;- y</div><div class="line">  if y = nil[T]</div><div class="line">    then root[T] &lt;- k</div><div class="line">    else if key[k] &lt; key[y]</div><div class="line">      then left[y] &lt;- k</div><div class="line">      else right[y] &lt;- k</div><div class="line">  left[k] &lt;- nil[T]</div><div class="line">  right[k] &lt;- nil[T]</div><div class="line">  color[k] &lt;- red</div><div class="line">  insert-fixup(T, k)</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除操作:<br>和插入操作一样,先用BST的删除结点操作,然后调用相应的辅助函数做相应的调整。<br>首先只有被删除的结点为黑结点时才需要进行调整,理由如下:<br>i. 树中各结点的黑高度都没有变化<br>ii. 不存在两个相邻的红色结点<br>iii. 因为如果被删除的点是红色,就不可能是根,所以根仍然是黑色的<br>当被删除了黑结点之后,红黑树的性质5被破坏,上面说过了性质5被破坏后的修复难度是最大的。所以这里的修复过程使用了一个很新的思想,即视为被删除的结点的子结点有额外的一种黑色,当这一重额外的黑色存在之后,性质5就得到了继续。然后再通过转移的方法逐步把这一重额外的黑色逐渐向上转移直到根或者红色的结点,最后消除这一重额外的黑色。<br>删除操作中可能被破坏的性质:<br>i. 性质2:当y是根时,且 y 的一个孩子是红色,若此时这个孩子成为根结点;<br>ii. 性质4:当x和p[y]都是红色时;<br>iii.性质5:包含y的路径中,黑高度都减少了;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">delete(T, k)</div><div class="line">  if left[k] = nil[T] or right[k] = nil[T]</div><div class="line">    then y &lt;- k</div><div class="line">    else y &lt;- successor(k)</div><div class="line">  if left[y] != nil[T]</div><div class="line">    then x &lt;- left[y]</div><div class="line">    else x &lt;- right[y]</div><div class="line">  p[x] &lt;- p[y]</div><div class="line">    then root[T] &lt;- x</div><div class="line">    else if y = left[p[y]]</div><div class="line">      then left[p[y]] &lt;- x</div><div class="line">      else right[p[y]] &lt;- x</div><div class="line">  if y != k</div><div class="line">    then key[k] &lt;- key[y]</div><div class="line">      copy y&apos;s satelite date into z</div><div class="line">  if color[y] = black</div><div class="line">    then delete-fixup(T, x)</div><div class="line">  return y</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li>红黑树是真正的在实际中得到大量应用的复杂数据结构:C++STL中的关联容器 map,set都是红黑树的应用(所以标准库容器的效率太好了,;Linux 内核中的用户态地址空间管理也使用了红黑树。</li>
+</ul>
+</blockquote>
+<h4 id="Chapter14-数据规模扩大后-如何扩展数据结构"><a href="#Chapter14-数据规模扩大后-如何扩展数据结构" class="headerlink" title="Chapter14 数据规模扩大后,如何扩展数据结构?"></a>Chapter14 数据规模扩大后,如何扩展数据结构?</h4><blockquote>
+<ol>
+<li>实际的工程中,极少会去创造新的数据结构,通常是对标准的数据结构附加一些信息,并添加一些新的操作以支持应用的要求。</li>
+<li>动态顺序统计(Dynamic order statistics)<br>关于顺序统计这个问题，在中位数和顺序统计量介绍了在O(n)时间内获取一组数据中第i小的数据。在算导第十四章介绍了另外一种方式来求第i小的数据，它的算法复杂度为$O(\log n)$，但却要依赖于另外一种数据结构顺序统计树(order statistic tree)。<br>顺序统计树，是从红黑树扩展而来。相较于红黑树，一个顺序统计树的结点x，比一个红黑树的结点要多拥有一个字段size.size为以x为根结点的子树所包含的所有结点的数目(也包括x本身)。可以得出一条结论：<br>$$x.size=x.left.size+x.right.size+1$$<br>在一棵顺序统计树中，可以很轻便的求该树中第 i小的结点：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">OS-SELECT(x, i)</div><div class="line">    r = x.left.size + i</div><div class="line">    if i == r</div><div class="line">        return x</div><div class="line">    else if i &lt; r</div><div class="line">        return OS-SELECT(x.left, i)</div><div class="line">    else</div><div class="line">        return OS-SELECT(x.right, i - r)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如上面的伪码所示，先求出 x 结点的排位r,因x不小于其左子树的所有结点，<br>所以r = x.left.size + 1。<br>若r等于i自不必说。若r大于i，说明所找的数，排在x之前，应从排在x之前的数中找第i小的数。即，从x的左子树中找第i小的数。若r小于i，则应该在比r大的数中找第i-r小的数，即在x的右子树中找第i-r小的数。同样也可以在O(lg n)的时间内求得指定结点的排位:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">OS-RANK(T, x)</div><div class="line">    r = x.left.size + 1</div><div class="line">    y = x</div><div class="line">    while y != T.root</div><div class="line">        if y == y.p.right</div><div class="line">            r = r+ y.p.left.size + 1</div><div class="line">        y = y.p</div><div class="line">    return r</div></pre></td></tr></table></figure></p>
+<p>因为size记录的是以当前结点为根结点的子树所包含的所有结点的数目(也包括当前节点本身)，所以左侧伪码通过统计从x到根结点这条路径中本身为右孩子的结点本身以及它们的的左孩子的size来求得x的排位。<br>顺序统计树以红黑树为基础进行扩展,所以红黑树的原有操作我们都可以继承下来。但是它增加了一个字段size,对于红黑树的删除和插入操作，我们不得不进</p>
+<ol>
+<li>数据结构的扩张:指在实际应用数据结构时对标准的数据结构中增加一些信息、编入一些新的操作等等。附加的信息必须能够为该数据结构上的常规操作所更新和维护。</li>
+<li>对一种数据结构的扩张过程可以分为四个步骤:<blockquote>
+<ol>
+<li>选择基础的数据结构</li>
+<li>确定要在基础数据结构中添加哪些信息</li>
+<li>验证可用基础数据结构上的基本修改操作来维护这些新添加的信息</li>
+<li>设计新的操作</li>
+</ol>
+</blockquote>
+</li>
+<li>红黑树的扩张定理:当结点中新添加的信息可以由该结点和它的左右子树来决定,那么就可以在不影响时间复杂度的前提下在插入和删除等操作中对红黑树的这些附加信息进行维护。</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          
+            <a href="/tags/data-structure/" rel="tag"># data_structure</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/hw2/" rel="next" title="hw2-shell">
+                <i class="fa fa-chevron-left"></i> hw2-shell
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/18/lab2/" rel="prev" title="lab2-memeory-management">
+                lab2-memeory-management <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#＜Introduction-to-algorithms＞笔记"><span class="nav-number">1.</span> <span class="nav-text">＜Introduction to algorithms＞笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Part3-数据结构"><span class="nav-number">1.0.1.</span> <span class="nav-text">Part3: 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter10-基本数据结构实现动态集合"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">Chapter10 基本数据结构实现动态集合?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter10-如何实现映射关系的数据结构"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">Chapter10 如何实现映射关系的数据结构?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter12-如何用树结构实现动态集合"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">Chapter12 如何用树结构实现动态集合?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter13-如何降低树高-提高二叉树的操作效率"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">Chapter13 如何降低树高,提高二叉树的操作效率?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chapter14-数据规模扩大后-如何扩展数据结构"><span class="nav-number">1.0.1.5.</span> <span class="nav-text">Chapter14 数据规模扩大后,如何扩展数据结构?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>

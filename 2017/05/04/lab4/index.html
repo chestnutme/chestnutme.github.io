@@ -1,0 +1,894 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="os,xv6," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Lab4 抢占式多进程摘要Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：  part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存） part2：实现类似Unix的fork机制，允许在用户模式下创建副本 part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时">
+<meta name="keywords" content="os,xv6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab4-Preemptive Multitasking">
+<meta property="og:url" content="http://yoursite.com/2017/05/04/lab4/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="Lab4 抢占式多进程摘要Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：  part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存） part2：实现类似Unix的fork机制，允许在用户模式下创建副本 part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-26T03:38:21.602Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lab4-Preemptive Multitasking">
+<meta name="twitter:description" content="Lab4 抢占式多进程摘要Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：  part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存） part2：实现类似Unix的fork机制，允许在用户模式下创建副本 part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/04/lab4/"/>
+
+
+
+
+
+  <title> lab4-Preemptive Multitasking | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/lab4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                lab4-Preemptive Multitasking
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T00:00:00+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Lab4-抢占式多进程"><a href="#Lab4-抢占式多进程" class="headerlink" title="Lab4 抢占式多进程"></a>Lab4 抢占式多进程</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：</p>
+<ul>
+<li>part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存）</li>
+<li>part2：实现类似Unix的<code>fork</code>机制，允许在用户模式下创建副本</li>
+<li>part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时钟中断和进程抢占的支持。</li>
+</ul>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>下载实验代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git pull</div><div class="line">git chekout -b lab4 origin/lab4</div><div class="line">git merge Lab3</div></pre></td></tr></table></figure></p>
+<p>Lab4 新增的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">kern/cpu.h	多处理器支持的内核私有定义</div><div class="line">kern/mpconfig.c	读取多处理器配置的代码</div><div class="line">kern/lapic.c	驱动处理器中的本地APIC单元的内核代码</div><div class="line">kern/mpentry.S	非启动CPU的汇编代码入口</div><div class="line">kern/spinlock.h	包括大内核锁在内的自旋锁的内和私有定义</div><div class="line">kern/spinlock.c	自旋锁的内核代码实现</div><div class="line">kern/sched.c	调度器的代码框架</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h2 id="part1-多处理器支持和多任务协同"><a href="#part1-多处理器支持和多任务协同" class="headerlink" title="part1 多处理器支持和多任务协同"></a>part1 多处理器支持和多任务协同</h2><p>Lab4 part1将首先扩展JOS以在多处理器系统上运行，然后实现新的JOS内核系统调用，以允许用户级环境创建其他新的环境。另外实现协同循环调度，当当前环境自动放弃CPU（或退出）时，允许内核从一个环境切换到另一个环境。之后在part3中，还会实现抢占式调度，即使在环境不允许的情况下，允许内核在一定时间内重新从环境中重新控制CPU。</p>
+<h3 id="多处理器支持"><a href="#多处理器支持" class="headerlink" title="多处理器支持"></a>多处理器支持</h3><p>目标使JOS支持对称多处理器(SMP)。<code>SMP</code>是一种多处理器架构，所有的CPU对等地访问系统资源。在SMP中所有CPU的功能是相同的，但是在启动过程中会被分为2类：引导处理器(<code>BSP</code>)负责初始化系统来启动操作系统，当操作系统被启动后，应用处理器(<code>AP</code>)被引导处理器激活。引导处理器是由硬件和BIOS决定的，目前所有的代码都是运行在BSP上。<br>在个SMP系统中，每个CPU有1个附属的<code>Local APIC（LAPIC）</code>单元。LAPIC单元负责处理系统中的中断，同时为它关联的CPU提供独一无二的标识符。在part1，将使用LAPIC单元以下基本功能(在<code>/kern/lapic.c</code>)：</p>
+<ul>
+<li>读取LAPIC的标识符(APIC ID)来告诉我们正在哪个CPU上运行代码(<code>cpunum()</code>).</li>
+<li>从BSP发送STARTUP的处理器间中断(<code>IPI</code>) 到APs来唤醒其它CPU(<code>lapic_startup()</code>).</li>
+<li>在part3部分，将编程LAPIC内置的计时器来触发时钟中断来支持多任务抢占(<code>apic_init()</code>).</li>
+</ul>
+<p>处理器访通过内存映射I/O(MMIO)的方式访问它的LAPIC。在MMIO中，一部分物理地址被硬连接到一些IO设备的寄存器上，导致操作内存的指令<code>load/store</code>可以直接操作设备的寄存器。我们已经看到过1个<code>IO hole</code>在物理地址<code>0xA0000</code>(用来写入VGA显示缓存)。LAPIC的hole开始于物理地址<code>0xFE000000</code>(4GB之下地32MB)，但是这地址过高，导致无法访问通过过去的直接映射(虚拟地址<code>0xF0000000</code>映射0x0，即只有256MB)。但是JOS虚拟地址映射预留了4MB空间在<code>MMIOBASE</code>处，需要分配空间一映射设备。</p>
+<h4 id="练习1"><a href="#练习1" class="headerlink" title="练习1"></a>练习1</h4><p>问</p>
+<blockquote>
+<p>在<code>kern/pmap.c</code>中实现<code>mmio_map_region</code>。查看<code>lapic_init</code>函数(<code>kern/lapic.c</code>)来确定使用方式</p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>在<code>lapic_init</code>函数的开头就会调用<code>mmio_map_region</code><br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lapicaddr is the physical address of the LAPIC's 4K MMIO</span></div><div class="line"><span class="comment">// region.  Map it in to virtual memory so we can access it.</span></div><div class="line">lapic = mmio_map_region(lapicaddr, <span class="number">4096</span>);</div></pre></td></tr></table></figure></p>
+<p>在<code>kern/pmap.c</code>中，有具体的提示，设置个静态变量记录每次变化后的虚拟基地址，使用<code>boot_map_region</code>函数将<code>[pa,pa+size)的</code>物理地址映射到<code>[base,base+size)</code>，把<code>size</code>向上进位到<code>PGSIZE</code>。由于这是设备内存并不是正常的DRAM，所以使用cache缓存访问是不安全的，可以用页的标志位来实现。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/pmap.c</span></div><div class="line"><span class="function"><span class="keyword">void</span> *</span></div><div class="line"><span class="title">mmio_map_region</span><span class="params">(<span class="keyword">physaddr_t</span> pa, <span class="keyword">size_t</span> size)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">uintptr_t</span> base = MMIOBASE;</div><div class="line">    <span class="keyword">void</span> *ret = (<span class="keyword">void</span> *)base;</div><div class="line"></div><div class="line">    size = ROUNDUP(size, PGSIZE);</div><div class="line">    <span class="keyword">if</span> (base + size &gt; MMIOLIM || base + size &lt; base)</div><div class="line">                panic(<span class="string">"mmio_map_region: reservation overflow\n"</span>);</div><div class="line"></div><div class="line">    boot_map_region(kern_pgdir, base, size, pa, PTE_P | PTE_PCD | PTE_PWT);</div><div class="line">    base += size;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="引导应用处理器-Application-Processor"><a href="#引导应用处理器-Application-Processor" class="headerlink" title="引导应用处理器(Application Processor)"></a>引导应用处理器(Application Processor)</h3><p>在启动AP之前，BSP应该先收集关于多处理器系统的配置信息，比如CPU总数，CPUs的APIC ID和LAPIC单元的MMIO地址等。在<code>kern/mpconfig</code>文件中的<code>mp_init()</code>函数通过读BIOS设定的<code>MP配置表</code>获取这些信息。<br><code>boot_aps(kern/init.c)</code>函数驱动AP引导程序。AP开始于实模式，跟BSP的开始相同，故此<code>boot_aps</code>函数拷贝AP入口代码(<code>kern/mpentry.S</code>)到实模式下的内存寻址空间。但是跟BSP不一样的是，当AP开始执行时，需要有一些控制将拷贝入口代码到<code>0x7000(MPENTRY_PADDR)</code>。<br>之后，<code>boot_aps</code>函数通过发送<code>STARTUP的IPI</code>(处理器间中断)信号到AP的LAPIC单元来一个个地激活AP。在<code>kern/mpentry.S</code>中的入口代码跟<code>boot/boot.S</code>中的代码类似。在一些简短的配置后，它使AP进入开启分页机制的保护模式，调用C语言的setup函数<code>mp_main</code>（<code>kern/init.c</code>)。<code>boot_aps()</code>等待AP <code>CPU_STARTED</code>在<code>cpu_status</code>其字段中设定出一个flag，设定<code>struct CpuInfo</code>然后继续唤醒下一个。</p>
+<p>结合前几个lab，在i386 <code>init</code>函数中进行BSP启动的一些配置，经由lab2的<code>mem_init</code>，lab3的<code>env_init</code>和<code>trap_init</code>，lab4的<code>mp_init</code>和<code>lapic_init</code>，然后<code>boot_aps</code>函数启动所有的CPU<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lab2 memory management initialization functions</span></div><div class="line">mem_init();</div><div class="line"></div><div class="line"><span class="comment">// lab3 user environment initialization functions</span></div><div class="line">env_init();</div><div class="line">trap_init();</div><div class="line"></div><div class="line"><span class="comment">// lab4 multiprocessor initialization functions</span></div><div class="line">mp_init();</div><div class="line">lapic_init();</div><div class="line"></div><div class="line"><span class="comment">// lab4 multitasking initialization functions</span></div><div class="line">pic_init();</div><div class="line"></div><div class="line"><span class="comment">// Acquire the bit kernel lock before waiting AP</span></div><div class="line">lock_kernel();</div><div class="line"></div><div class="line"><span class="comment">// starting non-boot APs</span></div><div class="line">boot_aps();</div></pre></td></tr></table></figure></p>
+<p>多核处理器的初始化都在mp_init函数中完成，首先是调用mpconfig函数，主要功能是寻找一个MP 配置条目，然后对所有的CPU进行配置，找到启动的处理器。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">mp_init</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">struct</span> mp *mp;</div><div class="line">    <span class="keyword">struct</span> mpconf *conf;</div><div class="line">    <span class="keyword">struct</span> mpproc *proc;</div><div class="line">    <span class="keyword">uint8_t</span> *p;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> i;</div><div class="line"></div><div class="line">    bootcpu = &amp;cpus[<span class="number">0</span>];</div><div class="line">    <span class="keyword">if</span> ((conf = mpconfig(&amp;mp)) == <span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    ismp = <span class="number">1</span>;</div><div class="line">    lapicaddr = conf-&gt;lapicaddr;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (p = conf-&gt;entries, i = <span class="number">0</span>; i &lt; conf-&gt;entry; i++) &#123;</div><div class="line">        <span class="keyword">switch</span> (*p) &#123;</div><div class="line">		    <span class="keyword">case</span> MPPROC:</div><div class="line">        proc = (<span class="keyword">struct</span> mpproc *)p;</div><div class="line">			  <span class="keyword">if</span> (proc-&gt;flags &amp; MPPROC_BOOT)</div><div class="line">				    bootcpu = &amp;cpus[ncpu];</div><div class="line">			  <span class="keyword">if</span> (ncpu &lt; NCPU) &#123;</div><div class="line">				    cpus[ncpu].cpu_id = ncpu;</div><div class="line">				    ncpu++;</div><div class="line">			  &#125; <span class="keyword">else</span> &#123;</div><div class="line">            cprintf(<span class="string">"SMP: too many CPUs, CPU %d disabled\n"</span>,</div><div class="line">            proc-&gt;apicid);</div><div class="line">			  &#125;</div><div class="line">        p += <span class="keyword">sizeof</span>(<span class="keyword">struct</span> mpproc);</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">case</span> MPBUS:</div><div class="line">        <span class="keyword">case</span> MPIOAPIC:</div><div class="line">        <span class="keyword">case</span> MPIOINTR:</div><div class="line">        <span class="keyword">case</span> MPLINTR:</div><div class="line">        p += <span class="number">8</span>;</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            cprintf(<span class="string">"mpinit: unknown config type %x\n"</span>, *p);</div><div class="line">        ismp = <span class="number">0</span>;</div><div class="line">        i = conf-&gt;entry;</div><div class="line">	      &#125;</div><div class="line">	 &#125;</div></pre></td></tr></table></figure></p>
+<p>在启动过程中，<code>mp_init</code>和<code>lapic_init</code>是和硬件以及体系架构紧密相关的，通过读取某个特殊内存地址（当然前提是能读取的到，所以在<code>mem_init</code>中需要修改进行相应映射），来获取CPU的信息，根据这些信息初始化CPU结构。<br>在<code>boot_aps</code>函数中首先找到一段用于启动的汇编代码，该代码和lab3是嵌入在内核代码段之上的一部分，其中<code>mpentry_start</code>和<code>mpentry_end</code>是编译器导出符号，代表这段代码在内存（虚拟地址）中的起止位置，接着把代码复制到<code>MPENTRY_PADDR</code>处。随后调用<code>lapic_startap</code>来命令特定的AP去执行这段代码。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Start the non-boot (AP) processors.</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">boot_aps</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">extern</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> mpentry_start[], mpentry_end[];</div><div class="line">  	<span class="keyword">void</span> *code;</div><div class="line">  	<span class="keyword">struct</span> CpuInfo *c;</div><div class="line"></div><div class="line">  	<span class="comment">// Write entry code to unused memory at MPENTRY_PADDR</span></div><div class="line">  	code = KADDR(MPENTRY_PADDR);</div><div class="line">  	memmove(code, mpentry_start, mpentry_end - mpentry_start);</div><div class="line"></div><div class="line">  	<span class="comment">// Boot each AP one at a time</span></div><div class="line">  	<span class="keyword">for</span> (c = cpus; c &lt; cpus + ncpu; c++) &#123;</div><div class="line">  		<span class="keyword">if</span> (c == cpus + cpunum())  <span class="comment">// We've started already.</span></div><div class="line">  			<span class="keyword">continue</span>;</div><div class="line"></div><div class="line">  		<span class="comment">// Tell mpentry.S what stack to use</span></div><div class="line">  		mpentry_kstack = percpu_kstacks[c - cpus] + KSTKSIZE;</div><div class="line">  		<span class="comment">// Start the CPU at mpentry_start</span></div><div class="line">  		lapic_startap(c-&gt;cpu_id, PADDR(code));</div><div class="line">  		<span class="comment">// Wait for the CPU to finish some basic setup in mp_main()</span></div><div class="line">  		<span class="keyword">while</span>(c-&gt;cpu_status != CPU_STARTED)</div><div class="line">  			;</div><div class="line">  	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="练习2"><a href="#练习2" class="headerlink" title="练习2"></a>练习2</h4><p>问</p>
+<blockquote>
+<p>修改<code>page_init</code>函数(<code>kern/page.c</code>)的实现，来避免将<code>MPENTRY_PADDR</code>处的物理页加入到空闲链表中,使得能安全地拷贝和运行AP的启动代码。</p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>在<code>boot_aps</code>函数中将启动代码放到了<code>MPENTRY_PADDR</code>处，而代码的来源则是在<code>kern/mpentry.S</code>中，功能与<code>boot.S</code>中的非常类似，主要就是开启分页模式，转到内核栈上去，实际上这时内核栈还没建好。在执行完<code>mpentry.S</code>中的代码之后，将会跳转到<code>mp_main</code>函数中去。而这里需要提前做的，就是将<code>MPENTRY_PADDR</code>处的物理页表标识为已用，这样不会将这一页放在空闲链表中分配出去。只需要在<code>page_init</code>中添加一个判断就可以。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/pmap.c</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">page_init</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    ......</div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; npages; i++) &#123;</div><div class="line">        ......</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i == MPENTRY_PADDR / PGSIEZ)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        ......</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><p>问</p>
+<blockquote>
+<p>仔细比较<code>kern/mpentry.S</code>与<code>boot/boot.S</code>，<code>kern/mpentry.S</code>是被编译链接来运行在<code>KERNBASE</code>之上的，那么定义`MPBOOTPHYS宏``的目的是什么？为什么在kern/mpentry.S中是必要的，在boot/boot.S中不是呢？换句话说，如果在kern/mpentry.S中忽略它，会出现什么错误？</p>
+</blockquote>
+<p>解<br>&gt;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#define MPBOOTPHYS(s) ((s) - mpentry_start + MPENTRY_PADDR))))</div><div class="line">// MPBOOTPHYS is to calculate symobl address relative to MPENTRY_PADDR. The ASM is executed in the load address above KERNBASE, but JOS need to run mp_main at 0x7000 address! Of course 0x7000’s page is reserved at pmap.c.</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>在AP的保护模式打开之前，是没有办法寻址到3G以上的空间的，因此用<code>MPBOOTPHYS</code>是用来计算相应的物理地址的。但是在<code>boot.S</code>中，由于尚没有启用分页机制，所以能够指定程序开始执行的地方以及程序加载的地址；但是，在<code>mpentry.S</code>的时候，由于主CPU已经处于保护模式下了，因此是不能直接指定物理地址的，而给定线性地址映射到相应的物理地址是允许的。</p>
+</blockquote>
+<h3 id="CPU的状态和初始化"><a href="#CPU的状态和初始化" class="headerlink" title="CPU的状态和初始化"></a>CPU的状态和初始化</h3><p>在编写多处理器操作系统时，区分每个处理器私有的每个CPU状态以及整个系统共享的全局状态是非常重要的。 <code>kern / cpu.h</code>定义了大多数CPU状态，包括<code>struct CpuInfo</code>存储CPU变量。 <code>cpunum()</code>返回调用它的CPU的ID，可以用作数组的索引<code>cpus</code>。<br>每个CPU独有的变量应该有：</p>
+<ul>
+<li>内核栈<br>因为多个CPU可以同时陷入内核，所以我们需要为每个处理器分配一个内核栈，以防止它们干扰对方的执行。数组<code>percpu_kstacks[NCPU][KSTKSIZE]</code>为<code>NCPU</code>的内核栈提供了空间。</li>
+<li>TSS和TSS描述符<br>每个CPU任务状态段（TSS）也是需要的，以便指定每个CPU内核栈的位置。存储CPU i的<code>TSS cpus[i].cpu_ts</code>，并在GDT条目中定义相应的TSS描述符<code>gdt[(GD_TSS0 &gt;&gt; 3) + i]</code>。<code>ts</code>在<code>kern / trap.c</code>中定义的全局变量将不再有用。</li>
+<li>CPU的当前环境指针<br>由于每个CPU可以同时运行不同的用户进程中，因此重新定义了符号<code>curenv</code>来指代<code>cpus[cpunum()].cpu_env</code>（或<code>thiscpu-&gt;cpu_env</code>），它指向环境当前的上执行当前CPU（在其上运行代码的CPU）。</li>
+<li>CPU的系统寄存器<br>所有寄存器（包括系统寄存器）对于CPU都是专用的。因此，初始化这些寄存器的指令，例如<code>lcr3()， ltr()，lgdt()，lidt()</code>等，必须进行一次各CPU上执行。功能<code>env_init_percpu()</code>和<code>trap_init_percpu()</code>执行此功能。</li>
+</ul>
+<h4 id="练习3"><a href="#练习3" class="headerlink" title="练习3"></a>练习3</h4><p>问</p>
+<blockquote>
+<p>修改<code>mem_init_mp</code>函数来映射开始于<code>KSTACKTOP</code>的CPU栈。</p>
+</blockquote>
+<p>解</p>
+<blockquote>
+<p>多CPU的内存分布如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">KERNBASE ----&gt; +-------------------------+ 0xf0000000</div><div class="line">KSTACKTOP      |   CPU0&apos;s Kernel Stack   | RW/-- KSTKSIZE</div><div class="line">               |-------------------------|</div><div class="line">               |   Invalid Memory(*)     | --/-- KSTKGAP</div><div class="line">               +-------------------------+</div><div class="line">               |    CPU1&apos;s Kernel STACK  | RW/-- KSTKSIZE</div><div class="line">               |-------------------------|</div><div class="line">               |   Invalid Memory(*)     | --/-- KSTKGAP</div><div class="line">               +-------------------------+</div><div class="line">               .             .           .</div><div class="line">               .             .           .</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>需要为每个核都分配一个内核栈，每个内核栈的大小是<code>KSTKSIZE</code>，而内核栈之间的间距是<code>KSTKGAP</code>，起到保护作用。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/pmap.c</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">mem_init_mp</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">    <span class="keyword">uintptr_t</span> kstacktop_i;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NCPU; i++) &#123;</div><div class="line">        kstacktop_i = KSTACKTOP - i * (KSTKGAP + KSTKSIZE);</div><div class="line">        boot_map_region(kern_pgdir,</div><div class="line">                        kstacktop_i - KSTKSIZE,</div><div class="line">                        ROUNDUP(KSTKSIZE, PGSIZE),</div><div class="line">                        PADDR(&amp;percpu_kstacks[i]),</div><div class="line">                        PTE_W | PTE_P);</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="练习4"><a href="#练习4" class="headerlink" title="练习4"></a>练习4</h4><p>问：</p>
+<blockquote>
+<p>在<code>trap_init_percpu</code>函数中为BSP初始化TSS和TSS描述符，这在Lab3中是可行的，但是在这里会有问题，修改代码使它可以运行在所有CPU上。</p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>由于有多个CPU，所以在这里不能使用原先的全局变量<code>ts</code>，应该利用<code>thiscpu</code>指向的<code>CpuInfo</code>结构体和<code>cpunum</code>函数来为每个核的<code>TSS</code>进行初始化。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">trap_init_percpu</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    thiscpu-&gt;cpu_ts.ts_esp0 = KSTACKTOP - cpunum() * (KSTKGAP + KSTKSIZE);</div><div class="line">    thiscpu-&gt;cpu_ts.ts_ss0 = GD_KD;</div><div class="line"></div><div class="line">    <span class="comment">// Initialize the TSS slot of the gdt.</span></div><div class="line">    gdt[(GD_TSS0 &gt;&gt; <span class="number">3</span>) + cpunum()] = SEG16(STS_T32A, (<span class="keyword">uint32_t</span>) (&amp;thiscpu-&gt;cpu_ts), <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Taskstate) - <span class="number">1</span>, <span class="number">0</span>);</div><div class="line">    gdt[(GD_TSS0 &gt;&gt; <span class="number">3</span>) + cpunum()].sd_s = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Load the TSS selector (like other segment selectors, the</span></div><div class="line">    <span class="comment">// bottom three bits are special; we leave them 0)</span></div><div class="line">    ltr(GD_TSS0 + <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Segdesc) * cpunum());</div><div class="line"></div><div class="line">    <span class="comment">// Load the IDT</span></div><div class="line">    lidt(&amp;idt_pd);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>在<code>mp_main</code>函数中初始化AP后，代码就会进入自旋。在让AP进行更多操作之前，首先要解决多CPU同时运行在内核时产生的竞争问题。最简单的办法是实现1个大内核锁（big kernel lock)，1次只让一个进程进入内核模式，当CPU离开内核时释放锁。<br>在<code>kern/spinlock.h</code>中声明了大内核锁，提供了<code>lock_kernel</code>和<code>unlock_kernel</code>函数来快捷地获得和释放锁。总共有四处用到大内核锁：</p>
+<ul>
+<li>在启动的时候，BSP启动其余的CPU之前，BSP需要取得内核锁</li>
+<li><code>mp_main</code>中，也就是CPU被启动之后执行的第一个函数，这里应该是调用调度函数，选择一个进程来执行的，但是在执行调度函数之前，必须获取锁</li>
+<li>`trap函数``也要修改，因为可以访问临界区的CPU只能有一个，所以从用户态陷入到内核态的话，要加锁，因为可能多个CPU同时陷入内核态</li>
+<li><code>env_run</code>函数，也就是启动进程的函数，之前在lab3中实现的，在这个函数执行结束之后，就将跳回到用户态，此时离开内核，也就是需要将内核锁释放</li>
+</ul>
+<p>加锁后，将原有的并行执行过程在关键位置变为串行执行过程，整个启动过程大概如下：</p>
+<blockquote>
+<p>i386_init–&gt;BSP获得锁–&gt;boot_ap–&gt;(BSP建立为每个cpu建立idle任务、建立用户任务，mp_main)—&gt;BSP的sched_yield–&gt;其中的env_run释放锁–&gt;AP1获得锁–&gt;执行sched_yield–&gt;释放锁–&gt;AP2获得锁–&gt;执行sched_yield–&gt;释放锁…..</p>
+</blockquote>
+<h4 id="练习5"><a href="#练习5" class="headerlink" title="练习5"></a>练习5</h4><p>问</p>
+<blockquote>
+<p>在上述位置应用大内核锁。</p>
+</blockquote>
+<p>解<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//i386_init</span></div><div class="line">lock_kernel();</div><div class="line">boot_aps();</div><div class="line"></div><div class="line"><span class="comment">//mp_main</span></div><div class="line">lock_kernel();</div><div class="line">sched_yield();</div><div class="line"></div><div class="line"><span class="comment">//trap</span></div><div class="line"><span class="keyword">if</span> ((tf-&gt;tf_cs &amp; <span class="number">3</span>) == <span class="number">3</span>) &#123;</div><div class="line">    lock_kernel();</div><div class="line">    assert(curenv);</div><div class="line">    ......</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//env_run</span></div><div class="line">lcr3(PADDR(curenv-&gt;env_pgdir));</div><div class="line">unlock_kernel();</div><div class="line">env_pop_tf(&amp;(curenv-&gt;env_tf));</div></pre></td></tr></table></figure></p>
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><p>问：</p>
+<blockquote>
+<p>既然大内核锁保证了只有1个CPU能运行在内核，为什么我们还要为每个CPU准备1个内核栈。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>因为不同的内核栈上可能保存有不同的信息，当1个CPU从内核退出来之后，有可能在内核栈中留下了一些将来还有用的数据，所以一定要有单独的栈。</p>
+</blockquote>
+<h3 id="挑战1"><a href="#挑战1" class="headerlink" title="挑战1"></a>挑战1</h3><p>问:</p>
+<blockquote>
+<p>大内核锁简单便于应用，但是它取消了内核模式的并行。大多数现代操作系统使用不同的锁来保护共享状态的不同部分，这称之为细粒度锁。细粒度锁能有效地提高性能，但是也更困难地去实现和检测错误。所以你可以去掉大内核锁，在JOS中实现内核并发。</p>
+</blockquote>
+<p>解</p>
+<blockquote>
+<p>思路:实验指导中提供了一些JOS内核中的共享结构，具体实现就是在保证在使用这些结构体时保证互斥。
+　　</p>
+<h3 id="循环调度-Round-Robin-Scheduling"><a href="#循环调度-Round-Robin-Scheduling" class="headerlink" title="循环调度(Round-Robin Scheduling)"></a>循环调度(Round-Robin Scheduling)</h3><p>接下来的任务是改变JOS内核，实现<code>round-robin</code>调度算法。<br>主要是在<code>sched_yield</code>函数内实现，从该CPU上一次运行的进程开始，在进程描述符表中寻找下一个可以运行的进程，如果没找到而且上一个进程依然是可以运行的，那么就可以继续运行上一个进程，同时将这个算法实现为了一个系统调用，使得进程可以主动放弃CPU。</p>
+</blockquote>
+<h4 id="练习6"><a href="#练习6" class="headerlink" title="练习6"></a>练习6</h4><p>问:</p>
+<blockquote>
+<p>实现<code>sched_yield</code>函数，并添加系统调用。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>修改代码如下.然后修改<code>kern/syscall.c</code>,添加相关的系统调用机制。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">void</div><div class="line">sched_yield(void)</div><div class="line">&#123;</div><div class="line">        uint32_t i, j, start;</div><div class="line">        struct Env *runenv;</div><div class="line"></div><div class="line">        idle = thiscpu-&gt;cpu_env;</div><div class="line">        start = (idle != NULL) ? ENVX(idle-&gt;env_id) : 0;</div><div class="line">        runenv = NULL;</div><div class="line"></div><div class="line">        for (i = 0; i &lt; NENV; i++) &#123;</div><div class="line">                j = (start + i) % NENV;</div><div class="line">                if (envs[j].env_status == ENV_RUNNABLE) &#123;</div><div class="line">                        if (runenv == NULL || envs[j].env_priority &lt; runenv-&gt;env_priority)</div><div class="line">                                runenv = &amp;envs[j];</div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        if ((idle &amp;&amp; idle-&gt;env_status == ENV_RUNNING) &amp;&amp; (runenv == NULL || idle-&gt;env_priority &lt; runenv-&gt;env_priority))&#123;</div><div class="line">                env_run(idle);</div><div class="line">                return;</div><div class="line">        &#125;</div><div class="line">        if (runenv) &#123;</div><div class="line">                env_run(runenv);</div><div class="line">                return;</div><div class="line">        &#125;</div><div class="line">        // sched_halt never returns</div><div class="line">        sched_halt();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>　　</p>
+<h4 id="问题3"><a href="#问题3" class="headerlink" title="问题3"></a>问题3</h4><p>问:</p>
+<blockquote>
+<p>在<code>lcr3()</code>运行之后，这个CPU对应的页表就立刻被换掉了，但是这个时候的参数e，也就是现在的<code>curenv</code>，为什么还是能正确的解引用？</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>因为当前是运行在系统内核中的，而每个进程的页表中都是存在内核映射的。每个进程页表中虚拟地址高于<code>UTOP</code>之上的地方，只有<code>UVPT</code>不一样，其余的都是一样的，只不过在用户态下是看不到的。所以虽然这个时候的页表换成了下一个要运行的进程的页表，但是<code>curenv</code>的地址没变，映射也没变，还是依然有效的。</p>
+</blockquote>
+<h4 id="问题4"><a href="#问题4" class="headerlink" title="问题4"></a>问题4</h4><p>问:</p>
+<blockquote>
+<p>在用户环境进行切换时，为什么旧进程的寄存器一定要被保存以便之后重新装载？在哪里发生这样的操作？</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>因为如果不进行保存，旧进程运行时的状态就丢失了，运行就不正确了。每次进入到内核态的时候，当前的运行状态都是在一进入的时候就保存了的。如果没有发生调度，那么之前<code>trapframe</code>中的信息还是会恢复回去，如果发生了调度，恢复的就是被调度运行的进程的上下文了。</p>
+</blockquote>
+<h4 id="挑战2"><a href="#挑战2" class="headerlink" title="挑战2"></a>挑战2</h4><p>问:</p>
+<blockquote>
+<p>添加固定优先级的调度策略，确保高优先级的进程总是先于低优先级的进程。</p>
+</blockquote>
+<p>解：</p>
+<blockquote>
+<p>思路:为每个进程的结构体添加1个标志优先级的变量，在<code>sched_yield</code>时遍历链表选取优先级最高的可运行进程作为下一个运行进程。</p>
+<ol>
+<li>在<code>inc/env.h</code>中给<code>Env</code>结构添加1个成员<code>int env_priority</code></li>
+<li><p>在<code>kern/env.c</code>中的<code>env_alloc</code>中给进程赋值为默认优先级<code>ENV_PRIOR_DEFAULT</code>，一共设立了四个基本的优先级，数字越小优先级越高</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//inc/env.h</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ENV_PRIOR_SUPER 0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ENV_PRIOR_HIGH 10</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ENV_PRIOR_NORMAL 100</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ENV_PRIOR_LOW 1000</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>kern/sched.c</code>中<code>sched_yield</code>函数的调度策略</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//kern/sched.c  sched_yield()</span></div><div class="line">        idle = thiscpu-&gt;cpu_env;</div><div class="line">        start = (idle != <span class="literal">NULL</span>) ? ENVX(idle-&gt;env_id) : <span class="number">0</span>;</div><div class="line">        runenv = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NENV; i++) &#123;</div><div class="line">                j = (start + i) % NENV;</div><div class="line">                <span class="keyword">if</span> (envs[j].env_status == ENV_RUNNABLE) &#123;</div><div class="line">                        <span class="keyword">if</span> (runenv == <span class="literal">NULL</span> || envs[j].env_priority &lt; runenv-&gt;env_priority)</div><div class="line">                                runenv = &amp;envs[j];</div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((idle &amp;&amp; idle-&gt;env_status == ENV_RUNNING) &amp;&amp; (runenv == <span class="literal">NULL</span> || idle-&gt;env_priority &lt; runenv-&gt;env_priority))&#123;</div><div class="line">                env_run(idle);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (runenv) &#123;</div><div class="line">                env_run(runenv);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加1个系统调用<code>sys_env_set_priority(envid, priority)</code>，允许进程的父进程或者自己修改自己的优先级。这里的修改与前面添加系统调用类似。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">sys_env_set_priority</span><span class="params">(<span class="keyword">envid_t</span> envid, <span class="keyword">int</span> priority)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> ret;</div><div class="line">        <span class="keyword">struct</span> Env *env;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ((ret = envid2env(envid, &amp;env, <span class="number">1</span>)) &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> ret;</div><div class="line">        env-&gt;env_priority = priority;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<h4 id="挑战3"><a href="#挑战3" class="headerlink" title="挑战3"></a>挑战3</h4><p>问:</p>
+<blockquote>
+<p>现在的JOS内核不支持应用来使用x86处理器的浮点数单元(FPU)，MMX指令和SSE扩展指令。扩展Env结构提供保存处理器浮点数状态的空间，扩展进程上下文交换代码来保存和恢复浮点数状态 。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>给中断加入保存浮点寄存器的功能。</p>
+<ol>
+<li>给<code>inc/trap.h</code>文件中的<code>Trapframe</code>结构新增<code>char tf_fpus[512]``成员，并增加</code>uint32_t tf_padding0[3]``来对齐</li>
+<li><p>修改<code>kern/trapentry.S</code>文件中的<code>_alltraps</code>函数，加入保存<code>fpu</code>寄存器的功能</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">_alltraps:</div><div class="line">        pushl %ds</div><div class="line">        pushl %es</div><div class="line">        pushal</div><div class="line"></div><div class="line">        // save FPU</div><div class="line">        subl $524, %esp</div><div class="line">        fxsave (%esp)</div><div class="line"></div><div class="line">        movl $GD_KD, %eax</div><div class="line">        movl %eax, %ds</div><div class="line">        movl %eax, %es</div><div class="line"></div><div class="line">        push %esp</div><div class="line">        call trap</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>kern/env.c</code>文件中的<code>env_pop_tf</code>函数，加入恢复<code>fpu</code>功能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">__asm __volatile(<span class="string">"movl %0,%%esp\n"</span></div><div class="line">               <span class="string">"\tfxrstor (%%esp)\n"</span></div><div class="line">               <span class="string">"\taddl $524,%%esp\n"</span></div><div class="line">               <span class="string">"\tpopal\n"</span></div><div class="line">               <span class="string">"\tpopl %%es\n"</span></div><div class="line">               <span class="string">"\tpopl %%ds\n"</span></div><div class="line">               <span class="string">"\taddl $0x8,%%esp\n"</span> <span class="comment">/* skip tf_trapno and tf_errcode */</span></div><div class="line">               <span class="string">"\tiret"</span></div><div class="line">               : : <span class="string">"g"</span> (tf) : <span class="string">"memory"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<h3 id="创建环境的系统调用"><a href="#创建环境的系统调用" class="headerlink" title="创建环境的系统调用"></a>创建环境的系统调用</h3><p>虽然当前内核现在有能力运行和切换多用户级进程，但是它仍然只能跑内核初始创建的进程。现在将实现必要的JOS系统调用来运行用户进程来创建和启动其它新的用户进程。<br>Unix提供了<code>fork</code>系统调用来创建进程，它拷贝父进程的整个地址空间到新创建的子进程。两个进程之间唯一的区别是它们的进程ID，在父进程fork返回的是子进程ID，而在子进程fork返回的是0。<br>参照Unix,实现1个不同的更原始的JOS系统调用来创建进程。利用这些系统调用能实现类似Unix的fork函数。<br>用户级fork函数在<code>user/dumbfork.c</code>中的<code>dumbfork()</code>中，该函数将父进程中所有页的内容全部复制过来，唯一不同的地方就是返回值不同。</p>
+<h3 id="练习7"><a href="#练习7" class="headerlink" title="练习7"></a>练习7</h3><p>问:</p>
+<blockquote>
+<p>实现<code>ker/syscall.c</code>中的系统调用。</p>
+</blockquote>
+<p>解:</p>
+<blockquote>
+<p>首先是<code>sys_exofork</code>函数，这个系统调用将创建1个新的空白进程，没有映射的用户空间且无法运行。在调用函数时新进程的寄存器状态与父进程相同，但是在父进程会返回子进程的ID，而子进程会返回0。通过设置子进程的eax为0，来让系统调用的返回值为0。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> envid_t</span></div><div class="line"><span class="title">sys_exofork</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">int</span> ret;</div><div class="line">        <span class="keyword">struct</span> Env *env;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ((ret = env_alloc(&amp;env, sys_getenvid())) &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> ret;</div><div class="line">        env-&gt;env_status = ENV_NOT_RUNNABLE;</div><div class="line">        env-&gt;env_tf = curenv-&gt;env_tf;</div><div class="line">        env-&gt;env_tf.tf_regs.reg_eax = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> env-&gt;env_id;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>接着是<code>sys_env_set_status</code>函数，设置进程的状态为<code>ENV_RUNNABLE</code>或者<code>ENV_NOT_RUNNABLE</code>。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">static int</div><div class="line">sys_env_set_status(envid_t envid, int status)</div><div class="line">&#123;</div><div class="line">implemented");</div><div class="line">        int ret;</div><div class="line">        struct Env *env;</div><div class="line"></div><div class="line">        if (status != ENV_RUNNABLE &amp;&amp; status != ENV_RUNNING)</div><div class="line">                return -E_INVAL;</div><div class="line">        if ((ret = envid2env(envid, &amp;env, 1)) &lt; 0)</div><div class="line">                return ret;</div><div class="line">        env-&gt;env_status = status;</div><div class="line">        return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后是<code>env_page_alloc</code>函数，分配1个物理页并映射到给定进程的进程空间的虚拟地址。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">sys_page_alloc</span><span class="params">(<span class="keyword">envid_t</span> envid, <span class="keyword">void</span> *va, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">struct</span> Env *env;</div><div class="line">        <span class="keyword">struct</span> PageInfo *pp;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (envid2env(envid, &amp;env, <span class="number">1</span>) &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_BAD_ENV;</div><div class="line">        <span class="keyword">if</span> ((<span class="keyword">uintptr_t</span>)va &gt;= UTOP || PGOFF(va))</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> ((perm &amp; PTE_U) == <span class="number">0</span> || (perm &amp; PTE_P) == <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> ((perm &amp; ~(PTE_U | PTE_P | PTE_W | PTE_AVAIL)) != <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> -E_INVAL;</div><div class="line">        <span class="keyword">if</span> ((pp = page_alloc(ALLOC_ZERO)) == <span class="literal">NULL</span>)</div><div class="line">                <span class="keyword">return</span> -E_NO_MEM;</div><div class="line">        <span class="keyword">if</span> (page_insert(env-&gt;env_pgdir, pp, va, perm) &lt; <span class="number">0</span>) &#123;</div><div class="line">                page_free(pp);</div><div class="line">                <span class="keyword">return</span> -E_NO_MEM;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后是s<code>ys_page_unmap</code>函数，解除指定进程中的1个页映射。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">static int</div><div class="line">sys_page_unmap(envid_t envid, void *va)</div><div class="line">&#123;</div><div class="line">        struct Env *env;</div><div class="line"></div><div class="line">        if (envid2env(envid, &amp;env, 1) &lt; 0)</div><div class="line">                return -E_BAD_ENV;</div><div class="line">        if ((uintptr_t)va &gt;= UTOP || PGOFF(va))</div><div class="line">                return -E_INVAL;</div><div class="line"></div><div class="line">        page_remove(env-&gt;env_pgdir, va);</div><div class="line">        return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>至此所有系统调用都完成了，可以运行一下<code>usr/umbfork.c</code>。首先看一下主函数，逻辑是父进程创建1个子进程，然后每次打印1条信息后交出控制权，并且让父进程重复10次而子进程重复20次。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">umain</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">envid_t</span> who;</div><div class="line">        <span class="keyword">int</span> i;</div><div class="line"></div><div class="line">        <span class="comment">// fork a child process</span></div><div class="line">        who = dumbfork();</div><div class="line"></div><div class="line">        <span class="comment">// print a message and yield to the other a few times</span></div><div class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; (who ? <span class="number">10</span> : <span class="number">20</span>); i++) &#123;</div><div class="line">                cprintf(<span class="string">"%d: I am the %s!\n"</span>, i, who ? <span class="string">"parent"</span> : <span class="string">"child"</span>);</div><div class="line">                sys_yield();</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/os/" rel="tag"># os</a>
+          
+            <a href="/tags/xv6/" rel="tag"># xv6</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/02/CLRS-notes4/" rel="next" title="introduction to algorithms note4">
+                <i class="fa fa-chevron-left"></i> introduction to algorithms note4
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/09/CLRS-notes5/" rel="prev" title="introduction to algorithms note5">
+                introduction to algorithms note5 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Lab4-抢占式多进程"><span class="nav-number">1.</span> <span class="nav-text">Lab4 抢占式多进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">1.2.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part1-多处理器支持和多任务协同"><span class="nav-number">1.3.</span> <span class="nav-text">part1 多处理器支持和多任务协同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多处理器支持"><span class="nav-number">1.3.1.</span> <span class="nav-text">多处理器支持</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习1"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">练习1</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引导应用处理器-Application-Processor"><span class="nav-number">1.3.2.</span> <span class="nav-text">引导应用处理器(Application Processor)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习2"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">练习2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题1"><span class="nav-number">1.3.3.</span> <span class="nav-text">问题1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU的状态和初始化"><span class="nav-number">1.3.4.</span> <span class="nav-text">CPU的状态和初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习3"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">练习3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习4"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">练习4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁"><span class="nav-number">1.3.5.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习5"><span class="nav-number">1.3.5.1.</span> <span class="nav-text">练习5</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题2"><span class="nav-number">1.3.6.</span> <span class="nav-text">问题2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挑战1"><span class="nav-number">1.3.7.</span> <span class="nav-text">挑战1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#循环调度-Round-Robin-Scheduling"><span class="nav-number">1.3.8.</span> <span class="nav-text">循环调度(Round-Robin Scheduling)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#练习6"><span class="nav-number">1.3.8.1.</span> <span class="nav-text">练习6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题3"><span class="nav-number">1.3.8.2.</span> <span class="nav-text">问题3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题4"><span class="nav-number">1.3.8.3.</span> <span class="nav-text">问题4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#挑战2"><span class="nav-number">1.3.8.4.</span> <span class="nav-text">挑战2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#挑战3"><span class="nav-number">1.3.8.5.</span> <span class="nav-text">挑战3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建环境的系统调用"><span class="nav-number">1.3.9.</span> <span class="nav-text">创建环境的系统调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#练习7"><span class="nav-number">1.3.10.</span> <span class="nav-text">练习7</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>
