@@ -1,12 +1,11 @@
-﻿# Linux in play
-
-标签（空格分隔）： Linux
+﻿title: Linux in play
+date: 2018/05/05
+tags:
+	-Linux
 
 ---
 
 ## Content
-### 
-### 
 
 ### Across the Great Wall
 1. VPS:
