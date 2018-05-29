@@ -376,12 +376,12 @@
 </ul>
 <p>以斐波那契数列的计算fib(5)为例</p>
 <ul>
-<li>分治法计算如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">fib(n):</div><div class="line">  return fib(n-1) + fib(n-2)</div><div class="line">fib(5) = fib(4) + fib(3)</div><div class="line">       = (fib(3) + fib(2)) + (fib(2) + fib(1))</div><div class="line">       = ((fib(2) + fib(1)) + fib(2)) + (fib(2) + fib(1))</div></pre></td></tr></table></figure>
+<li>分治法计算如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fib(n):</span><br><span class="line">  return fib(n-1) + fib(n-2)</span><br><span class="line">fib(5) = fib(4) + fib(3)</span><br><span class="line">       = (fib(3) + fib(2)) + (fib(2) + fib(1))</span><br><span class="line">       = ((fib(2) + fib(1)) + fib(2)) + (fib(2) + fib(1))</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>可以看到, fib(2)和fib(1)重复计算多次, 导致时间复杂度为$O(2^n)$</p>
 <ul>
-<li>动态规划计算如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">array Fib[];</div><div class="line">Fib[1] = 1, Fib[2] = 1;</div><div class="line">fib(n):</div><div class="line">  if Fib(n) != 0</div><div class="line">    return Fib(n)</div><div class="line">    else return fib(n-1) + fib(n-2)</div></pre></td></tr></table></figure>
+<li>动态规划计算如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">array Fib[];</span><br><span class="line">Fib[1] = 1, Fib[2] = 1;</span><br><span class="line">fib(n):</span><br><span class="line">  if Fib(n) != 0</span><br><span class="line">    return Fib(n)</span><br><span class="line">    else return fib(n-1) + fib(n-2)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>每次计算的结果记录在Fib(n)中, 如果计算过程中需要直接取出记录即可, 减少了很多重复计算, 算法复杂度降为$O(n)$</p>
@@ -396,13 +396,25 @@
 </blockquote>
 <p>以解决<strong>矩阵链式乘法</strong>为例来梳理动态规划的步骤:</p>
 <blockquote>
-<p>1.问题背景:<br>给定n个矩阵构成的序列链 $(A_1, A_2, \ldots, A_n)$, 计算乘积:<br>$$A_1 A_2 \ldots A_n \qquad (15.1)$$<br>要计算式(15.1), 考虑计算两个矩阵相乘的子程序<code>matrix-multiply(A, B)</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">matrix-multiply(A, B)</div><div class="line">if columns[A] != rows[B]</div><div class="line">  then error &quot;imcompatible dimensions&quot;</div><div class="line">  else for i &lt;- 1 to rows[A]</div><div class="line">    do for j &lt;- 1 to columns[B]</div><div class="line">      do C[i, j] &lt;- 0</div><div class="line">        for k &lt;- 1 to columns[A]</div><div class="line">          do C[i, j] &lt;- C[i, j] + A[i, k] * B[k, j]</div></pre></td></tr></table></figure></p>
+<p>1.问题背景:<br>给定n个矩阵构成的序列链 $(A_1, A_2, \ldots, A_n)$, 计算乘积:<br>$$A_1 A_2 \ldots A_n \qquad (15.1)$$<br>要计算式(15.1), 考虑计算两个矩阵相乘的子程序<code>matrix-multiply(A, B)</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">matrix-multiply(A, B)</span><br><span class="line">if columns[A] != rows[B]</span><br><span class="line">  then error &quot;imcompatible dimensions&quot;</span><br><span class="line">  else for i &lt;- 1 to rows[A]</span><br><span class="line">    do for j &lt;- 1 to columns[B]</span><br><span class="line">      do C[i, j] &lt;- 0</span><br><span class="line">        for k &lt;- 1 to columns[A]</span><br><span class="line">          do C[i, j] &lt;- C[i, j] + A[i, k] * B[k, j]</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
 <p>矩阵的乘积是按括号给出的计算顺序来计算的, 以矩阵链 $(A_1, A_2, A_3, A_4)$ 为例, 就有5种计算顺序:<br>\begin{align}<br>(A_1(A_2(A_3A_4))) \\<br>(A_1((A_2A_3)A_4)) \\<br>…<br>\end{align}<br>以标量乘法次数来衡量复杂度, 从<code>matrix-multiply(A, B)</code>得到,<br>A阶数p<em>q, B阶数q</em>r -&gt; 复杂度$O(pqr)$<br>不同的括号顺序导致的矩阵乘积代价不同, 如何求解最小化的代价(即最少的标量乘法次数)的方案?</p>
+</blockquote>
+<blockquote>
 <p>2.问题求解<br>如果穷举可能的全部括号方案,可以得到一个结果, 但显然代价太大.设P(n)为矩阵链的加括号方案数, 有:<br>$$<br>P(N) =<br>\begin{cases}<br>1, \text {if n = 1} \\<br>\sum_{k=1}^{n=1}P(k)P(n-k),\text {if n &gt;= 2}<br>\end{cases}<br>$$<br>其复杂度为 $O(2^n)$,指数复杂度, 显然穷举搜索不是好的策略.<br>a. 最优子结构<br>\begin{align}<br>记A_{i \dots j} 为乘积A_iA_{i+1} \dots A_j \\<br>对 i\leq k &lt; j, 复杂度为 \\<br>O(A_{i \dots j}) = O(A_{i \dots k}) + O(A_{k+1 \dots j}) + O(A_{i \dots k} * A_{k+1 \dots j}) \\<br>\because 如果A_{k+1} \dots A_j的最优加括号方案不是A_iA_{i+1} \dots A_j的最优加括号方案的子链,\\<br>则用A_{k+1} \dots A_j的最优加括号方案得到的O(A_{i \dots j})更小 \\<br>\therefore 最优子结构: \\<br>A_{k+1} \dots A_j的最优加括号方案是A_iA_{i+1} \dots A_j的最优加括号方案的子链<br>\end{align}</p>
+</blockquote>
+<blockquote>
 <p>b. 递归求解<br>根据子问题的最优解递归定量定义最优解的代价<br>\begin{align}<br>记m[i,j]为计算A_{i \dots j}的标量乘法次数的最小值 \\<br>m[i, j] =<br>\begin{cases}<br>0, \text {if i = j} \\<br>min_{i \leq k &lt; j}\{m[i,k] + m[k+1,j] + p_{i-1} p_k p_j \},else<br>\end{cases}<br>记s[i, j] = k 为最优加括号方案的子链分裂点k<br>\end{align}</p>
-<p>c. 计算最优代价<br>这个递归式在递归树的不同分支上会多次遇到同一子问题(即重复的矩阵子链,类似斐波那契数列的递归解法), 即有明显的<strong>公共子问题</strong>的特点.因此如果直接递归的求解递归式,会陷入对相同子链的重复计算,增加算法复杂度, 所以采用自底向上的表格法计算最优代价如下<br>\begin{align}<br>设A_i的阶数p_{i-1}*p_i, i = 1,2,\dots,n \\<br>则矩阵链[A_1, A_2, \ldots, A_n的阶数序列记为 p=[p_0,p_1,\dots,p_n] \\<br>表m[1\dots n, 1\dots n]记录m[i, j]的代价 \\<br>表s[1\dots n, 1\dots n]记录计算m[i,j]取得最优代价的k值 \\<br>\end{align}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">matrix-chain-order(p)</div><div class="line">  n &lt;- length[p] - 1 # 矩阵链长度n</div><div class="line">  for i &lt;- 1 to n</div><div class="line">    do m[i,i] &lt;- 0 #长度为1的链代价为0</div><div class="line">  for l &lt;- 2 to n #计算长度为l的链的代价</div><div class="line">    do for i &lt;- 1 to n - l + 1</div><div class="line">      do j &lt;- i + l - 1</div><div class="line">        m[i,j] &lt;- INT</div><div class="line">        for k &lt;- i to j - 1</div><div class="line">          do q &lt;- m[i,k] + m[k+1,j] + p(i-1)p(k)p(j)</div><div class="line">            if q &lt; m[i,j]</div><div class="line">              then m[i,j] &lt;- q;s[i,j] &lt;- k</div><div class="line">  return m and s</div></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>c. 计算最优代价<br>这个递归式在递归树的不同分支上会多次遇到同一子问题(即重复的矩阵子链,类似斐波那契数列的递归解法), 即有明显的<strong>公共子问题</strong>的特点.因此如果直接递归的求解递归式,会陷入对相同子链的重复计算,增加算法复杂度, 所以采用自底向上的表格法计算最优代价如下<br>\begin{align}<br>设A_i的阶数p_{i-1}*p_i, i = 1,2,\dots,n \\<br>则矩阵链[A_1, A_2, \ldots, A_n的阶数序列记为 p=[p_0,p_1,\dots,p_n] \\<br>表m[1\dots n, 1\dots n]记录m[i, j]的代价 \\<br>表s[1\dots n, 1\dots n]记录计算m[i,j]取得最优代价的k值 \\<br>\end{align}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">matrix-chain-order(p)</span><br><span class="line">  n &lt;- length[p] - 1 # 矩阵链长度n</span><br><span class="line">  for i &lt;- 1 to n</span><br><span class="line">    do m[i,i] &lt;- 0 #长度为1的链代价为0</span><br><span class="line">  for l &lt;- 2 to n #计算长度为l的链的代价</span><br><span class="line">    do for i &lt;- 1 to n - l + 1</span><br><span class="line">      do j &lt;- i + l - 1</span><br><span class="line">        m[i,j] &lt;- INT</span><br><span class="line">        for k &lt;- i to j - 1</span><br><span class="line">          do q &lt;- m[i,k] + m[k+1,j] + p(i-1)p(k)p(j)</span><br><span class="line">            if q &lt; m[i,j]</span><br><span class="line">              then m[i,j] &lt;- q;s[i,j] &lt;- k</span><br><span class="line">  return m and s</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
 <p><code>matrix-chain-order</code>算法从长度为1的链开始循环计算, 每次计算m[i,j]时仅依赖于已经计算出的m[i,k]和m[k+1,j], 这正是核存储公共子问题的解,以减少重复计算的核心方法.</p>
-<p>d. 构造最优解<br>  <code>matirx-chain-order</code>计算了最少的标量乘法次数,但并没有给出如何加括号确定矩阵相乘的方案.此时s[i,j]发挥作用,知按最优方案计算$A_{1 \dots n}$, 最后一步递归的子链相乘次序是$A_{1 \dots s[1,n]}A_{s[1,n]+1 \dots n}$, 之前的则递归的进行.递归输出最优方案的算法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">print-optimal-parens(s, i, j)</div><div class="line">  if i = j</div><div class="line">    then print &quot;A&quot;(i)</div><div class="line">    else print &quot;(&quot;</div><div class="line">      print-optimal-parens(s, i, s[i,j])</div><div class="line">      print-optimal-parens(s, s[i,j]+1, j)</div><div class="line">      print &quot;)&quot;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>d. 构造最优解<br>  <code>matirx-chain-order</code>计算了最少的标量乘法次数,但并没有给出如何加括号确定矩阵相乘的方案.此时s[i,j]发挥作用,知按最优方案计算$A_{1 \dots n}$, 最后一步递归的子链相乘次序是$A_{1 \dots s[1,n]}A_{s[1,n]+1 \dots n}$, 之前的则递归的进行.递归输出最优方案的算法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">print-optimal-parens(s, i, j)</span><br><span class="line">  if i = j</span><br><span class="line">    then print &quot;A&quot;(i)</span><br><span class="line">    else print &quot;(&quot;</span><br><span class="line">      print-optimal-parens(s, i, s[i,j])</span><br><span class="line">      print-optimal-parens(s, s[i,j]+1, j)</span><br><span class="line">      print &quot;)&quot;</span><br></pre></td></tr></table></figure></p>
 </blockquote>
 <p>3.<strong>动态规划基础</strong><br>从矩阵链乘法问题我们可以归纳,采用动态规划方法求解最优化问题的两个要素:</p>
 <ul>
@@ -416,18 +428,22 @@
 <li>已知这个选择后,确定子问题,和如何描述子问题</li>
 <li>使用剪贴技术(cut and paste)用来证明在问题的一个最优解中,使用的子</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>问题的解本身也必须是最优的.即用反证法,”剪除”非最优问题的解再”贴上”最优解,证明可以得到原问题的更好的解,与假设已经得到的最优解相矛盾.<br>最优子结构在问题域中以两种方式变化(在找出这两个问题的解之后,构造出原问题的最优子结构往往就不是难事了):</p>
 <ol>
 <li>有多少个子问题被用在原问题的一个最优解中</li>
 <li>在决定一个最优解中使用哪些子问题有多少个选择</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>非正式地:一个动态规划算法的运行时间依赖于两个因素的乘积:子问题的总个数和每个子问题中有多少种选择.问题解的代价通常是子问题的代价加上选择本身带来的开销.例如,在矩阵链乘法问题中,选择矩阵$A_k$分裂为子链, 再加上选择的代价$p_{i-1}p_kp_j$.<br>动态规划能够消除重复计算子问题是因为它与普通递归相反,它是通过自下而上的方式来进行求解的.动态规划正是一个递归的反向展开的过程:<br>在满足1.最优子结构 2.重叠子问题这2个条件下,通过把递归从下至上的进行展开以避免重复计算子问题从而加速了最终问题的求解的过程.<br><strong>注</strong>: 在不能应用最优子结构的时间,就一定不能假设它能够应用.</p>
 </blockquote>
 <ul>
 <li><strong>重叠子问题 Overlapping subproblems</strong></li>
 </ul>
 <blockquote>
-<p>最优化问题要求解原问题的递归算法可反复解同样的子问题,而不是产生新的子问题.<br>一般的,不同的子问题的数目是输入规模的一个多项式.这样,动态规划算法才能充分利用重叠的子问题,减少计算量.即通过每个子问题只解一次,把解保存在一个需要时就可以查看的表中,而每次查表只需要常数时间.<br>如在矩阵链乘法中,<code>matrix-chain-order</code>解更大问题时,反复取出较小的子问题.比如m[3,4]计算被使用四次:在计算m[2,4],m[1,4],m[3,5]和m[3,6]被使用.相比较的,如果采用低效率的递归程序产生的递归树,反复计算m[i,j],导致复杂度骤升到$O(2^n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">recursive-matirc-chain(p, i, j)</div><div class="line">  if i = j</div><div class="line">    then return 0</div><div class="line">  m[i,j] &lt;- INT</div><div class="line">  for k &lt;- i to j - 1</div><div class="line">    do q &lt;- recursive-matirc-chain(p, i, k) + recursive-matirc-chain(p, k+1, j) + p(i-1)p(k)p(i)</div><div class="line">    if q &lt; m[i, j]</div><div class="line">      then m[i,j] &lt;- q</div><div class="line">  return m[i,j]</div></pre></td></tr></table></figure></p>
+<p>最优化问题要求解原问题的递归算法可反复解同样的子问题,而不是产生新的子问题.<br>一般的,不同的子问题的数目是输入规模的一个多项式.这样,动态规划算法才能充分利用重叠的子问题,减少计算量.即通过每个子问题只解一次,把解保存在一个需要时就可以查看的表中,而每次查表只需要常数时间.<br>如在矩阵链乘法中,<code>matrix-chain-order</code>解更大问题时,反复取出较小的子问题.比如m[3,4]计算被使用四次:在计算m[2,4],m[1,4],m[3,5]和m[3,6]被使用.相比较的,如果采用低效率的递归程序产生的递归树,反复计算m[i,j],导致复杂度骤升到$O(2^n)$<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">recursive-matirc-chain(p, i, j)</span><br><span class="line">  if i = j</span><br><span class="line">    then return 0</span><br><span class="line">  m[i,j] &lt;- INT</span><br><span class="line">  for k &lt;- i to j - 1</span><br><span class="line">    do q &lt;- recursive-matirc-chain(p, i, k) + recursive-matirc-chain(p, k+1, j) + p(i-1)p(k)p(i)</span><br><span class="line">    if q &lt; m[i, j]</span><br><span class="line">      then m[i,j] &lt;- q</span><br><span class="line">  return m[i,j]</span><br></pre></td></tr></table></figure></p>
 </blockquote>
 <p>4.<strong>备忘录方法 memorandum method</strong></p>
 <blockquote>
@@ -436,27 +452,43 @@
 <li>使用普通的递归结构,自上而下的解决问题.</li>
 <li>当在递归算法的执行中每一次遇到一个子问题时,就计算它的解并填入一个表中.以后每次遇到该子问题时,只要查看并返回表中先前填入的值即可.</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>从这段描述可以看出:动态规划与递归时做备忘录的本质是完全相同的,所以说备忘录方法与普通的动态递归本质完全相同,没有孰优孰劣之分,哪个方便用哪个.</p>
-<p>从备忘录方法求解矩阵链问题如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">memoized-matirx-chain(p)</div><div class="line">  n &lt;- length[p] - 1</div><div class="line">  for i &lt;- i to n</div><div class="line">    do for j &lt;- i to n</div><div class="line">      do m[i,j] &lt;- INT</div><div class="line">  return lookup-chain(p, 1, n)</div><div class="line"></div><div class="line">#查表</div><div class="line">lookup-chain(p, i, j)</div><div class="line">  if m[i,j] &lt; INT</div><div class="line">    then return m[i,j]</div><div class="line">  if i = j</div><div class="line">    then m[i,j] &lt;- 0</div><div class="line">    else for k &lt;- i to j - 1</div><div class="line">      do q &lt;- lookup-chain(p,i,k) + lookup-chain(p,k+1,j)+p(i-1)p(k)p(j)</div><div class="line">      if q &lt; m[i,j]</div><div class="line">        then m[i,j] &lt;- q</div><div class="line">  return m[i,j]</div></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>从备忘录方法求解矩阵链问题如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">memoized-matirx-chain(p)</span><br><span class="line">  n &lt;- length[p] - 1</span><br><span class="line">  for i &lt;- i to n</span><br><span class="line">    do for j &lt;- i to n</span><br><span class="line">      do m[i,j] &lt;- INT</span><br><span class="line">  return lookup-chain(p, 1, n)</span><br><span class="line"></span><br><span class="line">#查表</span><br><span class="line">lookup-chain(p, i, j)</span><br><span class="line">  if m[i,j] &lt; INT</span><br><span class="line">    then return m[i,j]</span><br><span class="line">  if i = j</span><br><span class="line">    then m[i,j] &lt;- 0</span><br><span class="line">    else for k &lt;- i to j - 1</span><br><span class="line">      do q &lt;- lookup-chain(p,i,k) + lookup-chain(p,k+1,j)+p(i-1)p(k)p(j)</span><br><span class="line">      if q &lt; m[i,j]</span><br><span class="line">        then m[i,j] &lt;- q</span><br><span class="line">  return m[i,j]</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
 <p>备忘录方法与动态递归方法的比较:</p>
 <ol>
 <li>如果所有的子问题都至少要被计算一次,则一个自底向上的动态规划算法通常比一个自顶向下的做备忘录算法好出一个常数因子.因为动态规划没有使用递归的代价,只用到了循环,所以常数因子肯定比递归要好一些.</li>
 <li>此外,在有些问题中,还可以用动态规划算法中的表存取模式来进一步的减少时间和空间上的需求;或者,如果子问题中<br>的某些子问题根本没有必须求解,做备忘录的方法有着只解那些肯定要求解的子问题的优点.(而且这点是自动获得的,那些不必要计算的子问题在备忘录方法中会被自动的抛弃)</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>备忘录方法总结:由“是否所有的子问题都至少需要被计算一次”来决定使用动态规划还是备忘录.这两种方法没孰优孰劣之分,因为它们的本质思想是完全一样的;消除重复子问题.</p>
 </blockquote>
 <h4 id="Chapter16-局部最优能得到全局最优吗"><a href="#Chapter16-局部最优能得到全局最优吗" class="headerlink" title="Chapter16 局部最优能得到全局最优吗?"></a>Chapter16 局部最优能得到全局最优吗?</h4><p>最优化问题如果采用动态规划可能设计分析过于复杂,这时可以选择贪心算法.<br>贪心算法使所作的选择看起来都是当前最佳的,期望通所做的局部最优选择来产生一个全局最优解.对算法中的每一个决策点,做一个当时看起来是最佳的选择,这种启发式策略并不是总能产生最优解的.</p>
 <p>1.活动选择问题</p>
 <blockquote>
 <p>有一个需要使用每个资源的n个活动组成的集合$S= {a_1,a_2,\dots,a_n}$,资源每次只能由一个活动使用.每个活动$a_i$都有一个开始时间$s_i$和结束时间$f_i$,且 $0 &lt; s_i &lt; f_i &lt; \infty$.一旦被选择后,活动$a_i$就占据半开时间区间 $[s_i,f_i)$ .如果 $[s_i,f_i] [s_j,f_j)$ 互不重叠,则称 $a_i$和 $a_j$两个活动是兼容的.该问题就是要找出一个由互相兼容的活动组成的最大子集.<br>动态规划与贪心求解该问题<br>a. 最优子结构<br>子问题空间:<br>$$S_{ij} = \{a_k \in S: f_i \leq s_k &lt; f_k \leq s_j \}$$<br>定义子问题解空间 $S_{ij}$ 是S的子集,其中的每个获得都是互相兼容的.即每个活动都是在 $a_i$ 结束之后开始,且在 $a_i$ 开始之前结束.为了方便计算,添加两个虚构活动 $a_0$ 和 $a_{n+1}$ ,其中$f_0=0,s_{n+1}= \infty$.<br>按活动结束时间单调递增排序<br>$$f_0 \leq f_1 \leq \dots \leq f_n \leq f_{n+1}$$<br>可以得到：当$i \geq j$时,$S_{i,j}$ 为空集.如果活动按照结束时间单调递增排序,子问题空间被用来从 $S_{i,j}$ 中选择最大兼容活动子集,其中 $0≤i＜j≤n+1$,所以其他的 $S_{i,j}$ 都是空集.<br>最优子结构为:假设 $S_{ij}$ 的最优解 $A_{ij}$ 包含活动 $a_k$,则对 $S_{ik}$ 的解 $A_{ik}$ 和 $S_{kj}$ 的解 $A_{kj}$ 必定是最优的.通过一个活动 $a_k$ 将问题分成两个子问题,下面的公式可以计算出$S_{ij}$的解 $A_{ij}$:<br>$$A_{ij} = A_{ik} \bigcup \{a_k\} \bigcup A_{kj}$$</p>
+</blockquote>
+<blockquote>
 <p>b.一个递归解<br>设c[i, j]为 $S_{ij}$ 中最大兼容子集中的活动数目,当 $S_{ij}$ 为空集时,c[i, j]=0；当$S_{ij}$非空时,若 $a_k$ 在 $S_{ij}$ 的最大兼容子集中被使用,则则问题 $S_{ik}$ 和 $S_{kj}$ 的最大兼容子集也被使用,故可得到$c[i, j] = c[i, k] + c[k, j] + 1$<br>故有<br>$$<br>c[i, j] =<br>\begin{cases}<br>0, if \, S_{ij} = \emptyset \\<br>max_{i&lt;k&lt;j}\{c[i,k]+c[j,k]+1\},else<br>\end{cases}$$</p>
+</blockquote>
+<blockquote>
 <p>c.最优解计算过程<br>采用动态规划可以直接解决,但针对活动选择问题可以有效简化，认真分析可以得出以下定理：对于任意非空子问题 $S_{ij}$ ，设 $a_m$ 是 $S_{ij}$ 中具有最早结束时间的活动,<br>$$f_m = min \{ f_k: a_k \in  S_{ij} \}$$<br>有:</p>
 <ol>
 <li>$a_m$ 在 $S_{ij}$ 中的某最大兼容活动子集中被使用.</li>
 <li>$S_{im}$ 为空，所以选择 $a_m$ 将使子问题 $S_{mj}$ 为唯一可能非空的子问题.</li>
 </ol>
-<p>有这个定理，就简化了问题，使得最优解中只使用一个子问题，在解决子问题 $S_{ij}$ 时，在 $S_{ij}$ 中选择最早结束时间的那个活动.这样的贪心决策,使得剩下的,未调度的时间最大化.<br>贪心算法自顶向下地解决每个问题，解决子问题 $S_{ij}$ ，先找到 $S_{ij}$ 中最早结束的活动 $a_m$ ，然后将 $a_m$ 添加到最优解活动集合中，再来解决子问题 $S_{mj}$ .<br>递归解法如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">recursive-activity-selector(s, f, i, j)</div><div class="line">  m &lt;- i + 1</div><div class="line">  while m &lt; j and s(m) &lt; f(i)</div><div class="line">    do m &lt;- m + 1</div><div class="line">  if m &lt; j</div><div class="line">    then return &#123;a(m)&#125; and recursive-activity-selector(s, f, m, j)</div><div class="line">    else return none</div></pre></td></tr></table></figure></p>
-<p>根据尾递归的形式转化为迭代算法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">greedy-activity-selector(s, f)</div><div class="line">  n &lt;- length[s]</div><div class="line">  A &lt;- &#123;a(i)&#125;</div><div class="line">  i &lt;- 1</div><div class="line">  for m &lt;- 2 to n</div><div class="line">    do if s(m) &gt; f(i)</div><div class="line">      then A &lt;- A and &#123;a(m)&#125;</div><div class="line">        i &lt;- m</div><div class="line">  return A</div></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>有这个定理，就简化了问题，使得最优解中只使用一个子问题，在解决子问题 $S_{ij}$ 时，在 $S_{ij}$ 中选择最早结束时间的那个活动.这样的贪心决策,使得剩下的,未调度的时间最大化.<br>贪心算法自顶向下地解决每个问题，解决子问题 $S_{ij}$ ，先找到 $S_{ij}$ 中最早结束的活动 $a_m$ ，然后将 $a_m$ 添加到最优解活动集合中，再来解决子问题 $S_{mj}$ .<br>递归解法如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">recursive-activity-selector(s, f, i, j)</span><br><span class="line">  m &lt;- i + 1</span><br><span class="line">  while m &lt; j and s(m) &lt; f(i)</span><br><span class="line">    do m &lt;- m + 1</span><br><span class="line">  if m &lt; j</span><br><span class="line">    then return &#123;a(m)&#125; and recursive-activity-selector(s, f, m, j)</span><br><span class="line">    else return none</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>根据尾递归的形式转化为迭代算法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">greedy-activity-selector(s, f)</span><br><span class="line">  n &lt;- length[s]</span><br><span class="line">  A &lt;- &#123;a(i)&#125;</span><br><span class="line">  i &lt;- 1</span><br><span class="line">  for m &lt;- 2 to n</span><br><span class="line">    do if s(m) &gt; f(i)</span><br><span class="line">      then A &lt;- A and &#123;a(m)&#125;</span><br><span class="line">        i &lt;- m</span><br><span class="line">  return A</span><br></pre></td></tr></table></figure></p>
 </blockquote>
 <p>2.动态规划与贪心的关系</p>
 <blockquote>
@@ -469,11 +501,15 @@
 <li>证明原问题总是有一个最优解是做贪心选择得到的,从而说明贪心选择的安全.</li>
 <li>说明在做出贪心选择后,剩余的子问题具有这样的一个性质.即如果将子问题的最优解和我们所做的贪心选择联合起来,就可以得出原问题的一个最优解.</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>正确使用贪心算法的2个关键要素:贪心选择性质 和最优子结构.</p>
 <ol>
 <li><strong>贪心选择性质</strong>:一个全局最优解可以通过局部最优(贪心)选择来达到;即当考虑做何选择时,我们只考虑对当前问题最佳的选择而不考虑子问题的结果.</li>
 <li><strong>最优子结构</strong>:一个问题的最优解包含了其子问题的最优解.</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>对应的,要使用贪心算法就必须先证明以下两个性质:</p>
 <ol>
 <li>每一步所做的贪心选择最终能产生一个全局最优解.在证明中先考察一个全局最优解,然后证明对该解加以修改,使其采用贪心选择,这个选择将原问题变为一个相似的、但更小的问题.</li>
@@ -498,7 +534,9 @@
 </blockquote>
 <p>3.<strong>聚集分析: aggregate analysis</strong></p>
 <blockquote>
-<p>由N个操作所构成的序列的总时间在最坏的情况下为$T(n)$,则每个操作的平均代价(平摊代价)为$T(n)/n$.以前的时间复杂度分析都是以单次操作为对象的分析它的最坏时间复杂度,而聚集分析所分析的是N次操作的总时间的最坏情况.<br>聚集分析:由序列的总最坏时间 -&gt; 单次的平摊时间<br>以<code>stack</code>的操作为例(增加一个操作<code>multipop</code>, 连续出栈)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">push(S, x): O(1)</div><div class="line">pop(S): O(1)</div><div class="line">multipop(S, k): O(n)</div><div class="line">  while not stack-empty(S) and k != 0</div><div class="line">    do pop(s)</div><div class="line">      k &lt;- k - 1</div></pre></td></tr></table></figure></p>
+<p>由N个操作所构成的序列的总时间在最坏的情况下为$T(n)$,则每个操作的平均代价(平摊代价)为$T(n)/n$.以前的时间复杂度分析都是以单次操作为对象的分析它的最坏时间复杂度,而聚集分析所分析的是N次操作的总时间的最坏情况.<br>聚集分析:由序列的总最坏时间 -&gt; 单次的平摊时间<br>以<code>stack</code>的操作为例(增加一个操作<code>multipop</code>, 连续出栈)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">push(S, x): O(1)</span><br><span class="line">pop(S): O(1)</span><br><span class="line">multipop(S, k): O(n)</span><br><span class="line">  while not stack-empty(S) and k != 0</span><br><span class="line">    do pop(s)</span><br><span class="line">      k &lt;- k - 1</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
 <p>则n个包含<code>push</code>和<code>pop</code>的序列总代价为 $O(n)$ , 但加上复杂度为 $O(n)$ 的<code>multipop</code>操作后,应该如何计算?<br>任意stack操作的最坏时间复杂度为$O(n)$, 故N个操作的代价是 $O(2^n)$.但这个界明显过大, 因为不可能出现连续n次<code>multipop</code>的情况.<br>但从<code>pop</code>和<code>push</code>对应的角度考虑,<br>因为一个对象入栈后最多出栈一次, 将<code>multipop</code>视为<code>pop</code>的连续操作<br>所以<code>pop</code>的次数 $\leq$ <code>push</code>的次数<br>n个序列的总时间代价为$O(n)$,平均代价为$O(n)/n=O(1)$</p>
 </blockquote>
 <p>4.<strong>记账法: bookkeeping method</strong></p>
@@ -509,6 +547,8 @@
 <li>如果希望通过对平摊代价的分析来说明每次操作的最坏情况平均代价较小,则操作序列的总平摊代价就必须是该序列的总的实际代价的一个上界.因为平摊代价是最坏时的平均代价,即存款不能为负.</li>
 <li>存款不能为负,因为记账法是不允许欠账的,否则就不能满足平摊代价是操作总时间的最坏情况的平均这个定义.</li>
 </ol>
+</blockquote>
+<blockquote>
 <p>对于前面的stack操作,各操作的实际代价和平摊代价如下:</p>
 </blockquote>
 <table>
@@ -543,6 +583,8 @@
 <p>5.<strong>势能方法: potential method</strong></p>
 <blockquote>
 <p>将已预付的工作作为一种“势能”保存,它在需要时可以释放出来,以支付后面的操作.势能是与整个数据结构而不是其中的个别对象发生联系的.相对比, 记账法中的账与个别对象发生联系,比如栈操作时支付的2元就记在入栈的那个元素上)<br>\begin{align}<br>初始数据结构D_0, 记c_i为第i个操作的实际代价 \\<br>D_i为数据结构D_{i-1}作用第i操作的的结果 \\<br>势函数\Phi: D_i \mapsto \Phi(D_i) \\<br>平摊代价 \hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) \\<br>总平摊代价 \sum_{i=1}^n\hat{c_i} = \sum_{i=1}^n(c_i + \Phi(D_i) - \Phi(D_{i-1})) = \sum_{i=1}^n c_i + \Phi(D_n) - \Phi(D_0)<br>\end{align}</p>
+</blockquote>
+<blockquote>
 <p>仍然以<code>stack</code>操作为例,<br>\begin{align}<br>定义势函数\Phi 为stack中对象个数 \\<br>初始空stack D_0, \Phi(D_0) = 0 \\<br>push操作: \\<br>\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) = 1 + (s+1) - s = 2 \\<br>multipop操作: \\<br>\hat{c_i} = c_i + \Phi(D_i) - \Phi(D_{i-1}) = k + (s -k) - s = 0 \\<br>\therefore 每一操作平摊代价为O(1) \\<br>\therefore n个操作最坏代价为O(n)<br>\end{align}</p>
 </blockquote>
 
@@ -686,7 +728,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -867,7 +909,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->

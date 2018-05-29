@@ -339,20 +339,20 @@
         <h1 id="hw1-boot-xv6"><a href="#hw1-boot-xv6" class="headerlink" title="hw1: boot xv6"></a>hw1: boot xv6</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
 <p>  6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.<br>xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.</p>
 </blockquote>
-<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>
-<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> xv6</div><div class="line">make</div></pre></td></tr></table></figure>
+<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</span><br></pre></td></tr></table></figure>
+<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> xv6</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 <p>生成xv6.img镜像文件, 在qemu上模拟运行.</p>
 <a id="more"></a>
-<h4 id="3-定位-start"><a href="#3-定位-start" class="headerlink" title="3. 定位_start"></a>3. 定位_start</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nm kernel | grep _start</div></pre></td></tr></table></figure>
-<p><img src="./_start.png" alt="_start.png"><br>定位_start的address为0x10000c<br>接着运行xv6, 在_start打断点,确定xv6启动时的系统信息<br>双开终端, 在一个终端<code>make qemu-gdb</code>, 另一个<code>gdb</code>,gdb成功连接上qemu的远程调试后,调试xv6<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">br * 0x10000c</div><div class="line">0x10000c:	mov    %cr4,%eax</div></pre></td></tr></table></figure></p>
+<h4 id="3-定位-start"><a href="#3-定位-start" class="headerlink" title="3. 定位_start"></a>3. 定位_start</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nm kernel | grep _start</span><br></pre></td></tr></table></figure>
+<p><img src="./_start.png" alt="_start.png"><br>定位_start的address为0x10000c<br>接着运行xv6, 在_start打断点,确定xv6启动时的系统信息<br>双开终端, 在一个终端<code>make qemu-gdb</code>, 另一个<code>gdb</code>,gdb成功连接上qemu的远程调试后,调试xv6<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">br * 0x10000c</span><br><span class="line">0x10000c:	mov    %cr4,%eax</span><br></pre></td></tr></table></figure></p>
 <p><img src="./br_start.png" alt="br_start"></p>
 <h4 id="4-启动时堆栈上有什么"><a href="#4-启动时堆栈上有什么" class="headerlink" title="4. 启动时堆栈上有什么?"></a>4. 启动时堆栈上有什么?</h4><p>根据boot.S、boot.c和boot.asm中的代码，并结合四个问题</p>
 <blockquote>
 <p>1.在0x7c00设置断点，单步指令调试，查看堆栈指针$esp在哪里被初始化。<br>2.单步调试，直到调用bootmain函数，观察堆栈内容。<br>3.在bootmain函数中第1条汇编指令做了什么。<br>4.在boot.asm中查找使eip变为0x10000c的指令，观察堆栈的变化。</p>
 </blockquote>
-<p>1.在调用bootmain函数前，esp被初始化为0x7c00，即boot.s的入口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm  mov    $start,  $esp</div><div class="line">0x7c40:   mov    $0x7c00, $esp</div></pre></td></tr></table></figure></p>
-<p>２.在调用bootmain函数时，调用者保存调用地址，即下一条指令，并使$esp-4。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7c45:  call bootmain</div><div class="line">spin:</div><div class="line">0x7c4a:  jmp spin</div></pre></td></tr></table></figure></p>
-<p>3.在bootmain函数中，第1条汇编指令<code>为push     $ebp</code>，将$ebp压入堆栈，即保存调用者的栈帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot.asm</div><div class="line">0x7d0c:  push $ebp</div></pre></td></tr></table></figure></p>
+<p>1.在调用bootmain函数前，esp被初始化为0x7c00，即boot.s的入口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">boot.asm  mov    $start,  $esp</span><br><span class="line">0x7c40:   mov    $0x7c00, $esp</span><br></pre></td></tr></table></figure></p>
+<p>２.在调用bootmain函数时，调用者保存调用地址，即下一条指令，并使$esp-4。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">boot.asm</span><br><span class="line">0x7c45:  call bootmain</span><br><span class="line">spin:</span><br><span class="line">0x7c4a:  jmp spin</span><br></pre></td></tr></table></figure></p>
+<p>3.在bootmain函数中，第1条汇编指令<code>为push     $ebp</code>，将$ebp压入堆栈，即保存调用者的栈帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">boot.asm</span><br><span class="line">0x7d0c:  push $ebp</span><br></pre></td></tr></table></figure></p>
 <p>４.当eip变为0x10000c时，bootmain函数将调用地址压入堆栈。 </p>
 
       
@@ -495,7 +495,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -676,7 +676,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->

@@ -762,7 +762,7 @@
 </ul>
 </blockquote>
 <h2 id="Part1-系统调用追踪"><a href="#Part1-系统调用追踪" class="headerlink" title="Part1: 系统调用追踪"></a>Part1: 系统调用追踪</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
-<p>修改<code>systemcall.c</code>,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">fork -&gt; 2</div><div class="line"><span class="built_in">exec</span> -&gt; 0</div><div class="line">open -&gt; 3</div><div class="line">close -&gt; 0</div><div class="line"><span class="variable">$write</span> -&gt; 1</div><div class="line"> write -&gt; 1</div></pre></td></tr></table></figure></p>
+<p>修改<code>systemcall.c</code>,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">fork -&gt; 2</span><br><span class="line"><span class="built_in">exec</span> -&gt; 0</span><br><span class="line">open -&gt; 3</span><br><span class="line">close -&gt; 0</span><br><span class="line"><span class="variable">$write</span> -&gt; 1</span><br><span class="line"> write -&gt; 1</span><br></pre></td></tr></table></figure></p>
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
@@ -896,6 +896,8 @@
 <li>第一个组件是内核的物理内存分配器，因此内核可以分配内存并稍后释放它。.分配器将以4096个字节为单位进行操作，称为页面。代码要实现维护记录哪些物理页面是空闲的，哪些被分配的数据结构以及共享每个分配的页面的进程数量,另外还将编写例程以分配和释放内存页面。</li>
 <li>第二个组件是虚拟内存，它将内核和用户软件使用的虚拟地址映射到物理内存中的地址。 当指令使用内存，咨询一组页表时，x86硬件的内存管理单元（MMU）执行映射。 lab2根据提供的规范修改JOS以设置MMU的页表。</li>
 </ol>
+</blockquote>
+<blockquote>
 <ul>
 <li>lab1分为三部分</li>
 </ul>
@@ -1006,7 +1008,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1234,7 +1236,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->

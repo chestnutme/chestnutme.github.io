@@ -749,7 +749,7 @@
           <h1 id="Lab1-启动pc"><a href="#Lab1-启动pc" class="headerlink" title="Lab1 启动pc"></a>Lab1 启动pc</h1><h2 id="lab1分为三部分"><a href="#lab1分为三部分" class="headerlink" title="lab1分为三部分"></a>lab1分为三部分</h2><blockquote>
 <p>1.熟悉x86汇编语言，qemu x86模拟器，启动pc<br>2.分学习6.828内核的boot loader部分。<br>3.深入研究6.828内核JOS的初始化部分，该部分代码在kernel目录下</p>
 </blockquote>
-<h2 id="1-实验代码下载"><a href="#1-实验代码下载" class="headerlink" title="1. 实验代码下载"></a>1. 实验代码下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://pdos.csail.mit.edu/6.828/2016/jos.git lab</div><div class="line"><span class="built_in">cd</span> lab</div></pre></td></tr></table></figure>
+<h2 id="1-实验代码下载"><a href="#1-实验代码下载" class="headerlink" title="1. 实验代码下载"></a>1. 实验代码下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://pdos.csail.mit.edu/6.828/2016/jos.git lab</span><br><span class="line"><span class="built_in">cd</span> lab</span><br></pre></td></tr></table></figure>
 <h2 id="2-part1-启动pc"><a href="#2-part1-启动pc" class="headerlink" title="2. part1 启动pc"></a>2. part1 启动pc</h2><h3 id="启动-qemu"><a href="#启动-qemu" class="headerlink" title="启动 qemu"></a>启动 qemu</h3><blockquote>
 <p><code>make qemu</code><br><img src="./boot.png" alt="make qemu"><br>现在JOS内核只有两条命令来监视内核。help和kerninfo<br><img src="./kerninfo.png" alt="kerninfo"></p>
 </blockquote>
@@ -880,8 +880,8 @@
           <h1 id="hw1-boot-xv6"><a href="#hw1-boot-xv6" class="headerlink" title="hw1: boot xv6"></a>hw1: boot xv6</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
 <p>  6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.<br>xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.</p>
 </blockquote>
-<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>
-<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> xv6</div><div class="line">make</div></pre></td></tr></table></figure>
+<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</span><br></pre></td></tr></table></figure>
+<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> xv6</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 <p>生成xv6.img镜像文件, 在qemu上模拟运行.</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -984,7 +984,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1212,7 +1212,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->

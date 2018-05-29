@@ -344,20 +344,28 @@
 </ol>
 </blockquote>
 <h3 id="toolchain-安装"><a href="#toolchain-安装" class="headerlink" title="toolchain 安装"></a>toolchain 安装</h3><blockquote>
-<p>1.linux: 我的环境是linux mint 18.0 serena(基于ubuntu)<br>2.git: linux自带, 配置连接github<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git -h</div><div class="line">git add/commit/push/checkout</div><div class="line">git remote add</div></pre></td></tr></table></figure></p>
-<p>3.gcc, gdb安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install build-essential</div><div class="line">sudo apt-get install gcc-multilib</div><div class="line">gcc -h</div><div class="line">gdb -h</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>在Linux下已经一套适合6.828课程的工具链， 输入如下命令进行测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ objdump -i</div><div class="line">output: line2 elf32-i386</div><div class="line">\</div><div class="line">$ gcc -m32 -print-libgcc-file-name</div><div class="line">output: /usr/lib/gcc/x86_64-linux-gnu/version/32/libgcc.a</div></pre></td></tr></table></figure></p>
+<p>1.linux: 我的环境是linux mint 18.0 serena(基于ubuntu)<br>2.git: linux自带, 配置连接github<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git -h</span><br><span class="line">git add/commit/push/checkout</span><br><span class="line">git remote add</span><br></pre></td></tr></table></figure></p>
 </blockquote>
-<p>4.qemu 安装<br>a. 依赖库安装:<br><code>sudo apt-get install libsdl1.2-dev, libtool-bin, libglib2.0-dev, libz-dev, libpixman-1-dev.</code><br>b.由于qemu编译xv6的问题, mit对qemu进行了修改, 用git下载源码:<br><code>git clone https://github.com/geofft/qemu.git -b 6.828-2.3.0</code><br>c.编译qemu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> qemu</div><div class="line">./configure --disable-kvm --target-list=<span class="string">"i386-softmmu x86_64-softmmu"</span></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>3.gcc, gdb安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install gcc-multilib</span><br><span class="line">gcc -h</span><br><span class="line">gdb -h</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>在Linux下已经一套适合6.828课程的工具链， 输入如下命令进行测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ objdump -i</span><br><span class="line">output: line2 elf32-i386</span><br><span class="line">\</span><br><span class="line">$ gcc -m32 -print-libgcc-file-name</span><br><span class="line">output: /usr/lib/gcc/x86_64-linux-gnu/version/32/libgcc.a</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>4.qemu 安装<br>a. 依赖库安装:<br><code>sudo apt-get install libsdl1.2-dev, libtool-bin, libglib2.0-dev, libz-dev, libpixman-1-dev.</code><br>b.由于qemu编译xv6的问题, mit对qemu进行了修改, 用git下载源码:<br><code>git clone https://github.com/geofft/qemu.git -b 6.828-2.3.0</code><br>c.编译qemu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> qemu</span><br><span class="line">./configure --disable-kvm --target-list=<span class="string">"i386-softmmu x86_64-softmmu"</span></span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
 <p>5.其它问题<br>a. Windows下可采用Cygwin或者virtualbox + ubuntu image, 但更推荐linux</p>
 </blockquote>
 <h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
 <ol>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/tools.html" target="_blank" rel="external">6.828 toolchains</a></li>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/labguide.html" target="_blank" rel="external">lab guide</a></li>
-<li><a href="http://wiki.qemu.org/download/qemu-doc.html#pcsys_005fmonitor" target="_blank" rel="external">qemu manual</a></li>
-<li><a href="http://sourceware.org/gdb/current/onlinedocs/gdb/" target="_blank" rel="external">gdb manual</a></li>
+<li><a href="https://pdos.csail.mit.edu/6.828/2016/tools.html" target="_blank" rel="noopener">6.828 toolchains</a></li>
+<li><a href="https://pdos.csail.mit.edu/6.828/2016/labguide.html" target="_blank" rel="noopener">lab guide</a></li>
+<li><a href="http://wiki.qemu.org/download/qemu-doc.html#pcsys_005fmonitor" target="_blank" rel="noopener">qemu manual</a></li>
+<li><a href="http://sourceware.org/gdb/current/onlinedocs/gdb/" target="_blank" rel="noopener">gdb manual</a></li>
 </ol>
 </blockquote>
 
@@ -501,7 +509,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -682,7 +690,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
