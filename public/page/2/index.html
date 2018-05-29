@@ -1,740 +1,1205 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<!doctype html>
+
+
+
   
 
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="In a Nut-Universe">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chestnut">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="In a Nut-Universe">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chestnut">
+<meta name="twitter:description" content="In a Nut-Universe">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/2/"/>
+
+
+
+
+
+  <title> Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
-<body>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-hw4" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/21/hw4/" class="article-date">
-  <time datetime="2017-04-20T16:00:00.000Z" itemprop="datePublished">2017-04-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/21/hw4/">hw4-lazy-page-allocation</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="hw4-lazy-page-allocation"><a href="#hw4-lazy-page-allocation" class="headerlink" title="hw4 lazy page allocation"></a>hw4 lazy page allocation</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><blockquote>
-<p>OS可以使用页表硬件的技巧之一是 <strong>堆内存的懒惰分配</strong>.当进程需要更多的内存的时候,调用<code>malloc()</code>函数申请更多的堆内存,底层系统调用<code>sbrk</code>实际完成这个工作.<code>sbrk</code>系统调用分配物理内存,并映射到进程的虚拟地址.但是有的进程会一次申请大量的内存,但是又可能根本用不到,比如稀疏数组(sparse array).所以说复杂的内核涉及会将实际的allocation的工作推迟到应用程序尝试使用该页面的时候,即发生了<code>page fault</code>,然后再进行实际的分配.  -</p>
-</blockquote>
-<h2 id="Part1-删除’sbrk’的内存分配"><a href="#Part1-删除’sbrk’的内存分配" class="headerlink" title="Part1 删除’sbrk’的内存分配"></a>Part1 删除’sbrk’的内存分配</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
-<p>从<code>sbrk(n)</code>系统调用实现中删除页分配,实现为<code>sysproc.c</code>中的<code>sys_sbrk()</code>函数.<code>sbrk(n)</code>系统调用将进程的内存大小增加n个字节,然后返回新分配区域的开始地址.</p>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/21/hw4/#more">Read More</a>
-          </p>
-        
+        <p class="site-subtitle"></p>
       
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/21/hw4/" data-id="cj6sslhb0000j3gamxa3120jz" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hw3" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/19/hw3/" class="article-date">
-  <time datetime="2017-04-18T16:00:00.000Z" itemprop="datePublished">2017-04-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/19/hw3/">hw3-system-calls</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="hw3-xv6-system-calls"><a href="#hw3-xv6-system-calls" class="headerlink" title="hw3 xv6 system calls"></a>hw3 xv6 system calls</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在[hw1 boot pc]的基础上,学习xv6的系统调用:</p>
-<blockquote>
-<ul>
-<li>运用xv6的系统调用</li>
-<li>修改xv6 kernel, 添加新系统调用</li>
-</ul>
-</blockquote>
-<h2 id="Part1-系统调用追踪"><a href="#Part1-系统调用追踪" class="headerlink" title="Part1: 系统调用追踪"></a>Part1: 系统调用追踪</h2><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><blockquote>
-<p>修改<code>systemcall.c</code>,在进行系统调用时,打印出系统调用的名字和返回值.实现后,在xv6启动时是打印如下内容:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">fork -&gt; 2</div><div class="line"><span class="built_in">exec</span> -&gt; 0</div><div class="line">open -&gt; 3</div><div class="line">close -&gt; 0</div><div class="line"><span class="variable">$write</span> -&gt; 1</div><div class="line"> write -&gt; 1</div></pre></td></tr></table></figure></p>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/19/hw3/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/19/hw3/" data-id="cj6sslhb2000o3gam42svhnu1" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lab2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/18/lab2/" class="article-date">
-  <time datetime="2017-04-17T16:00:00.000Z" itemprop="datePublished">2017-04-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/18/lab2/">lab2-memeory-management</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Lab2-内存管理"><a href="#Lab2-内存管理" class="headerlink" title="Lab2 内存管理"></a>Lab2 内存管理</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><blockquote>
-<ul>
-<li>内存管理有两个组件:</li>
-</ul>
-<ol>
-<li>第一个组件是内核的物理内存分配器，因此内核可以分配内存并稍后释放它。.分配器将以4096个字节为单位进行操作，称为页面。代码要实现维护记录哪些物理页面是空闲的，哪些被分配的数据结构以及共享每个分配的页面的进程数量,另外还将编写例程以分配和释放内存页面。</li>
-<li>第二个组件是虚拟内存，它将内核和用户软件使用的虚拟地址映射到物理内存中的地址。 当指令使用内存，咨询一组页表时，x86硬件的内存管理单元（MMU）执行映射。 lab2根据提供的规范修改JOS以设置MMU的页表。</li>
-</ol>
-<ul>
-<li>lab1分为三部分</li>
-</ul>
-<ol>
-<li>part1: 物理页面管理 physical page management</li>
-<li>part2: 虚拟内存 virtual memory</li>
-<li>part3: 内核地址空间 kernel address space</li>
-</ol>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/18/lab2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/18/lab2/" data-id="cj6sslhb900103gamxtf877ft" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-CLRS-notes2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/17/CLRS-notes2/" class="article-date">
-  <time datetime="2017-04-16T16:00:00.000Z" itemprop="datePublished">2017-04-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/17/CLRS-notes2/">introduction to algorithms note2</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h3 id="Part3-数据结构"><a href="#Part3-数据结构" class="headerlink" title="Part3: 数据结构"></a>Part3: 数据结构</h3><blockquote>
-<ol>
-<li>动态集合:随着时间改变而变化</li>
-<li>关键字(keyword) -&gt; 全序集(排序)</li>
-<li>基本操作<blockquote>
-<ul>
-<li><code>search(S, k)</code></li>
-<li><code>insert(S, x)</code></li>
-<li><code>delete(S, x)</code></li>
-<li><code>maximum/minimum(S)</code></li>
-<li><code>successor/predecessor(S, x)</code></li>
-</ul>
-</blockquote>
-</li>
-</ol>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/17/CLRS-notes2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/17/CLRS-notes2/" data-id="cj6sslhas00063gamqhyyfepg" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-structure/">data_structure</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hw2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/hw2/" class="article-date">
-  <time datetime="2017-04-15T16:00:00.000Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/hw2/">hw2-shell</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="hw2-shell"><a href="#hw2-shell" class="headerlink" title="hw2 shell"></a>hw2 shell</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>hw2主要是根据xv6,学习linux的系统调用,实现一个简化版的shell.<br>目标可以分解为:</p>
-<blockquote>
-<ul>
-<li>阅读源代码</li>
-<li>添加执行命令的功能</li>
-<li>添加IO重定向</li>
-<li>添加管道功能</li>
-</ul>
-</blockquote>
-<h2 id="part1-command"><a href="#part1-command" class="headerlink" title="part1: command"></a>part1: command</h2><h3 id="命令的种类"><a href="#命令的种类" class="headerlink" title="命令的种类"></a>命令的种类</h3><h4 id="命令参数个数"><a href="#命令参数个数" class="headerlink" title="命令参数个数"></a>命令参数个数</h4><blockquote>
-<p>首先,一个命令的参数总数是限制的,xv6 shell规定一个命令的参数最多只能有10个.<br><code>#define MAXARGS 10</code></p>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/16/hw2/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/hw2/" data-id="cj6sslhaz000g3gam0ukwsdal" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-CLRS-notes" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/11/CLRS-notes/" class="article-date">
-  <time datetime="2017-04-10T16:00:00.000Z" itemprop="datePublished">2017-04-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/11/CLRS-notes/">introduction to algorithms note1</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>　　＜introduction to algorithms＞覆盖全面,包含算法/数据结构/基本的离散数学知识;伪代码清晰简洁,适合有一定编程基础用算法实现;注重算法的推导和证明,以及对应的算法设计与分析能力;同时配套MIT课程,资料丰富.这里记录我CLRS的学习笔记,按主题章节对应分类, 以问题-答案形式总结.</p>
-<h3 id="Part1-基础"><a href="#Part1-基础" class="headerlink" title="Part1 基础"></a>Part1 基础</h3><p>算法定义/基本的算法设计/递归的复杂度/概率与随机算法</p>
-<h4 id="Chapter1-什么是算法"><a href="#Chapter1-什么是算法" class="headerlink" title="Chapter1 什么是算法?"></a>Chapter1 什么是算法?</h4><blockquote>
-<p>  算法:<br>    $\require{AMScd}$<br>    \begin{CD}<br>    input @&gt;\text{computing procedure}&gt;&gt; ouput<br>    \end{CD}</p>
-<ul>
-<li>解决一类问题的计算过程, 一个具体问题-实例</li>
-<li>算法最重要的特性: 效率</li>
-</ul>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/11/CLRS-notes/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/11/CLRS-notes/" data-id="cj6sslhah00013game4f4mgya" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/data-structure/">data_structure</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lab1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/10/lab1/" class="article-date">
-  <time datetime="2017-04-09T16:00:00.000Z" itemprop="datePublished">2017-04-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/10/lab1/">lab1-boot-pc</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Lab1-启动pc"><a href="#Lab1-启动pc" class="headerlink" title="Lab1 启动pc"></a>Lab1 启动pc</h1><h2 id="lab1分为三部分"><a href="#lab1分为三部分" class="headerlink" title="lab1分为三部分"></a>lab1分为三部分</h2><blockquote>
-<p>1.熟悉x86汇编语言，qemu x86模拟器，启动pc<br>2.分学习6.828内核的boot loader部分。<br>3.深入研究6.828内核JOS的初始化部分，该部分代码在kernel目录下</p>
-</blockquote>
-<h2 id="1-实验代码下载"><a href="#1-实验代码下载" class="headerlink" title="1. 实验代码下载"></a>1. 实验代码下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://pdos.csail.mit.edu/6.828/2016/jos.git lab</div><div class="line"><span class="built_in">cd</span> lab</div></pre></td></tr></table></figure>
-<h2 id="2-part1-启动pc"><a href="#2-part1-启动pc" class="headerlink" title="2. part1 启动pc"></a>2. part1 启动pc</h2><h3 id="启动-qemu"><a href="#启动-qemu" class="headerlink" title="启动 qemu"></a>启动 qemu</h3><blockquote>
-<p><code>make qemu</code><br><img src="./boot.png" alt="make qemu"><br>现在JOS内核只有两条命令来监视内核。help和kerninfo<br><img src="./kerninfo.png" alt="kerninfo"></p>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/10/lab1/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/10/lab1/" data-id="cj6sslhb8000y3gamg8oxnej7" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hw1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/09/hw1/" class="article-date">
-  <time datetime="2017-04-08T16:00:00.000Z" itemprop="datePublished">2017-04-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/09/hw1/">hw1-boot-xv6</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="hw1-boot-xv6"><a href="#hw1-boot-xv6" class="headerlink" title="hw1: boot xv6"></a>hw1: boot xv6</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><blockquote>
-<p>  6.828课程包括JOS实验和xv6系统两部分,其中JOS是从xv6中抽取的学习环境,学习xv6(阅读和修改)把握操作系统的全局, 实践JOS(project)则深入os的核心构建,相互辅助.<br>xv6学习主要通过xv6-book以及编译xv6实现, homework1即是启动xv6系统.</p>
-</blockquote>
-<h3 id="answer"><a href="#answer" class="headerlink" title="answer"></a>answer</h3><h4 id="1-xv6源码"><a href="#1-xv6源码" class="headerlink" title="1. xv6源码"></a>1. xv6源码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>
-<h4 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> xv6</div><div class="line">make</div></pre></td></tr></table></figure>
-<p>生成xv6.img镜像文件, 在qemu上模拟运行.</p>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/09/hw1/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/09/hw1/" data-id="cj6sslhay000e3gamvmb9ap3z" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lab0" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/08/lab0/" class="article-date">
-  <time datetime="2017-04-07T16:00:00.000Z" itemprop="datePublished">2017-04-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/08/lab0/">lab0-build-env</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="lab-0-实验环境搭建"><a href="#lab-0-实验环境搭建" class="headerlink" title="lab 0: 实验环境搭建"></a>lab 0: 实验环境搭建</h1><h3 id="toolchain"><a href="#toolchain" class="headerlink" title="toolchain"></a>toolchain</h3><blockquote>
-<p>在进行os实验之前, 要求有前置的基础:</p>
-<ol>
-<li>C: 实现语言, 汇编: 阅读x86_64的汇编代码</li>
-<li>linux: 实验系统环境, 主要是command line下的命令操作</li>
-<li>git: 版本控制与代码提交</li>
-<li>gcc, gdb, id: 编译源代码与调试</li>
-<li>qemu: x86 硬件模拟器, 选择2为Bochs</li>
-</ol>
-</blockquote>
-<h3 id="toolchain-安装"><a href="#toolchain-安装" class="headerlink" title="toolchain 安装"></a>toolchain 安装</h3><blockquote>
-<p>1.linux: 我的环境是linux mint 18.0 serena(基于ubuntu)<br>2.git: linux自带, 配置连接github<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git -h</div><div class="line">git add/commit/push/checkout</div><div class="line">git remote add</div></pre></td></tr></table></figure></p>
-<p>3.gcc, gdb安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install build-essential</div><div class="line">sudo apt-get install gcc-multilib</div><div class="line">gcc -h</div><div class="line">gdb -h</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>在Linux下已经一套适合6.828课程的工具链， 输入如下命令进行测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ objdump -i</div><div class="line">output: line2 elf32-i386</div><div class="line">\</div><div class="line">$ gcc -m32 -print-libgcc-file-name</div><div class="line">output: /usr/lib/gcc/x86_64-linux-gnu/version/32/libgcc.a</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>4.qemu 安装<br>a. 依赖库安装:<br><code>sudo apt-get install libsdl1.2-dev, libtool-bin, libglib2.0-dev, libz-dev, libpixman-1-dev.</code><br>b.由于qemu编译xv6的问题, mit对qemu进行了修改, 用git下载源码:<br><code>git clone https://github.com/geofft/qemu.git -b 6.828-2.3.0</code><br>c.编译qemu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> qemu</div><div class="line">./configure --disable-kvm --target-list=<span class="string">"i386-softmmu x86_64-softmmu"</span></div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
-<p>5.其它问题<br>a. Windows下可采用Cygwin或者virtualbox + ubuntu image, 但更推荐linux</p>
-</blockquote>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
-<ol>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/tools.html" target="_blank" rel="external">6.828 toolchains</a></li>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/labguide.html" target="_blank" rel="external">lab guide</a></li>
-<li><a href="http://wiki.qemu.org/download/qemu-doc.html#pcsys_005fmonitor" target="_blank" rel="external">qemu manual</a></li>
-<li><a href="http://sourceware.org/gdb/current/onlinedocs/gdb/" target="_blank" rel="external">gdb manual</a></li>
-</ol>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/08/lab0/" data-id="cj6sslhb4000q3gamti1tjs5y" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-6.828-notes" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/08/6.828-notes/" class="article-date">
-  <time datetime="2017-04-07T16:00:00.000Z" itemprop="datePublished">2017-04-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/08/6.828-notes/">MIT-6.828-notes</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="MIT-6-828笔记"><a href="#MIT-6-828笔记" class="headerlink" title="MIT 6.828笔记"></a>MIT 6.828笔记</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>　　MIT的课程<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-828-operating-system-engineering-fall-2012/index.htm" target="_blank" rel="external">6.828 Operating System Engineering</a> 是一门os实验课程,是2006年后MIT基于Sixth Edition Unix(简称V6)开发的教学用os,受到广泛的赞誉，国内清华的ucore就有参考xv6实现．在学习<a href="https://book.douban.com/subject/10076960/" target="_blank" rel="external">Operating Systems Concepts</a>的os理论之后，有一个完整的peoject实践是极好的．基于想要深入os的好奇心,这系列博客将记录我的6.828学习笔记.</p>
-<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><blockquote>
-<ol>
-<li>实践os的概念, 重点在kernel</li>
-<li>增强C的代码能力</li>
-<li>大型项目的结构组织,源代码的阅读理解</li>
-</ol>
-</blockquote>
-<h3 id="笔记格式"><a href="#笔记格式" class="headerlink" title="笔记格式"></a>笔记格式</h3><p>6.828课程涵盖两个方面的主题和对应的学习:</p>
-<blockquote>
-<ul>
-<li>xv6 -&gt; 完整的操作系统的理论与设计</li>
-<li>JOS课程 -&gt; 动手实践完成lab</li>
-</ul>
-</blockquote>
-<p>因此,笔记格式主要为</p>
-<blockquote>
-<ul>
-<li>note x: xv6以及理论笔记</li>
-<li>lab x:  project笔记</li>
-<li>hw x:   homework笔记</li>
-</ul>
-</blockquote>
-<h3 id="笔记链接"><a href="#笔记链接" class="headerlink" title="笔记链接:"></a>笔记链接:</h3><h4 id="Lab"><a href="#Lab" class="headerlink" title="Lab:"></a>Lab:</h4><blockquote>
-<ul>
-<li>lab 0: <a href="https://chestnutme.github.io/2017/04/08/lab0/" target="_blank" rel="external">实验环境搭建</a></li>
-<li>lab 1: <a href="https://chestnutme.github.io/2017/04/10/lab1/" target="_blank" rel="external">启动pc</a></li>
-<li>lab 2: <a href="https://chestnutme.github.io/2017/04/18/lab2/" target="_blank" rel="external">内存管理</a></li>
-<li>lab 3: 用户空间<blockquote>
-<ul>
-<li><a href="https://chestnutme.github.io/2017/04/26/lab3-part1" target="_blank" rel="external">Part1</a></li>
-<li><a href="https://chestnutme.github.io/2017/04/29/lab3-part2" target="_blank" rel="external">Part2</a><br>*<h4 id="Homework"><a href="#Homework" class="headerlink" title="Homework:"></a>Homework:</h4></li>
-</ul>
-</blockquote>
-</li>
-<li>hw1: <a href="https://chestnutme.github.io/2017/04/09/hw1/" target="_blank" rel="external">boot xv6</a></li>
-<li>hw2: <a href="https://chestnutme.github.io/2017/04/16/hw2/" target="_blank" rel="external">shell</a></li>
-<li>hw3: <a href="https://chestnutme.github.io/2017/04/19/hw3/" target="_blank" rel="external">system call</a></li>
-<li>hw4: <a href="https://chestnutme.github.io/2017/04/21/hw4/" target="_blank" rel="external">lazy page allocation</a></li>
-<li>hw5: <a href="https://chestnutme.github.io/2017/04/24/hw5/" target="_blank" rel="external">cpu alarm</a><h4 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h4></li>
-<li>note 1: <a href="https://chestnutme.github.io/2017/04/16/note1/" target="_blank" rel="external">chapter0</a><h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3></li>
-</ul>
-<ol>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/schedule.html" target="_blank" rel="external">MIT 6.868</a>, 2016年课程主页, 所有相关资源(没有lecture video).</li>
-<li><a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-828-operating-system-engineering-fall-2012/index.htm" target="_blank" rel="external">OCW课程</a> MIT的开放课程,2012版.</li>
-<li><a href="https://www.youtube.com/watch?v=kDRHsNauoxk&amp;list=PLfciLKR3SgqNJKKIKUliWoNBBH1VHL3AP" target="_blank" rel="external">课程视频 on youtube</a></li>
-</ol>
-</blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/08/6.828-notes/" data-id="cj6sslhan00033gamoc2r9912" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os/">os</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-  <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
-  </nav>
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS/">CS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/data-structure/">data_structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os/">os</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xv6/">xv6</a></li></ul>
-    </div>
   </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/CS/" style="font-size: 10px;">CS</a> <a href="/tags/algorithm/" style="font-size: 15px;">algorithm</a> <a href="/tags/data-structure/" style="font-size: 15px;">data_structure</a> <a href="/tags/os/" style="font-size: 20px;">os</a> <a href="/tags/xv6/" style="font-size: 20px;">xv6</a>
-    </div>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
   </div>
+</div>
+
+<nav class="site-nav">
+  
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
-    </div>
-  </div>
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
 
+      
+    </ul>
+  
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/05/18/CLRS-notes6/">introduction to algorithms notes6</a>
-          </li>
-        
-          <li>
-            <a href="/2017/05/13/lab4_part23/">lab4-Preemptive Multitasking part23</a>
-          </li>
-        
-          <li>
-            <a href="/2017/05/09/CLRS-notes5/">introduction to algorithms note5</a>
-          </li>
-        
-          <li>
-            <a href="/2017/05/04/lab4/">lab4-Preemptive Multitasking</a>
-          </li>
-        
-          <li>
-            <a href="/2017/05/02/CLRS-notes4/">introduction to algorithms note4</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 John Doe<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
   
 </nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/lab4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/04/lab4/" itemprop="url">
+                  lab4-Preemptive Multitasking
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T00:00:00+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab4-抢占式多进程"><a href="#Lab4-抢占式多进程" class="headerlink" title="Lab4 抢占式多进程"></a>Lab4 抢占式多进程</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：</p>
+<ul>
+<li>part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存）</li>
+<li>part2：实现类似Unix的<code>fork</code>机制，允许在用户模式下创建副本</li>
+<li>part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时钟中断和进程抢占的支持。</li>
+</ul>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>下载实验代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git pull</div><div class="line">git chekout -b lab4 origin/lab4</div><div class="line">git merge Lab3</div></pre></td></tr></table></figure></p>
+<p>Lab4 新增的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">kern/cpu.h	多处理器支持的内核私有定义</div><div class="line">kern/mpconfig.c	读取多处理器配置的代码</div><div class="line">kern/lapic.c	驱动处理器中的本地APIC单元的内核代码</div><div class="line">kern/mpentry.S	非启动CPU的汇编代码入口</div><div class="line">kern/spinlock.h	包括大内核锁在内的自旋锁的内和私有定义</div><div class="line">kern/spinlock.c	自旋锁的内核代码实现</div><div class="line">kern/sched.c	调度器的代码框架</div></pre></td></tr></table></figure></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/04/lab4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/CLRS-notes4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/02/CLRS-notes4/" itemprop="url">
+                  introduction to algorithms note4
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T00:00:00+08:00">
+                2017-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
 
 
-<script src="/js/script.js"></script>
+    <div class="post-body" itemprop="articleBody">
 
-  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+      
+      
+
+      
+        
+          <h1 id="＜Introduction-to-algorithms＞笔记"><a href="#＜Introduction-to-algorithms＞笔记" class="headerlink" title="＜Introduction to algorithms＞笔记"></a>＜Introduction to algorithms＞笔记</h1><h2 id="Part5-高级数据结构"><a href="#Part5-高级数据结构" class="headerlink" title="Part5 高级数据结构"></a>Part5 高级数据结构</h2><p>在<a href="https://chestnutme.github.io/2017/04/17/CLRS-notes2/" target="_blank" rel="external">part3数据结构</a>中,学习了基本的支持动态集合的数据结构,包括stack/queue/bst/rbt.接着在<a href="https://chestnutme.github.io/2017/04/22/CLRS-notes3/" target="_blank" rel="external">part4高级设计和分析技术</a>中学习了在分治法/递归等基本算法设计思想上的动态规划和贪心思想,以及如何对复杂的算法进行分析的平摊分析法.在以上学习的基础上,part5学习高级的数据结构如下：</p>
+<ul>
+<li>B树:一种被设计成专门存储在磁盘上的平衡查找树.因为磁盘的速度远远慢于内存,所以 B 树被设计成尽量减少磁盘访问的次数,知道了这一点之后就会很清楚明白B树的变形 B+树了,B+树通过将数据存储在叶子结点从而增大了一个结点所包含的信息进而更加的减少了磁盘的访问次数.</li>
+<li>可合并堆:这种堆支持<code>Insert,Mininum,Extract-Min,union,delete,decrease-key</code>操作.<blockquote>
+<ul>
+<li>二项堆能够在 $O(\log n)$ 的最坏情况时间内支持以上的各种操作.当必须支持 <code>union</code>操作时,二项堆优越于二叉堆,因为后者在最坏情况下,合并两个二叉堆要花 $O(n)$ 的时间.</li>
+<li>斐波那契堆对于以上各种除了<code>extract-min,delete</code>的操作外都只需要 O(1)的实际时间,而<code>extract-min,delete</code>也只需要 $O(\log n)$ 的平摊时间.它的重要优点在于<code>decrease-key</code>也只需要 O(1)的平摊时间.注意斐波那契堆的一些操作都只是平摊时间,并非最坏情况时间.现代的快速图算法(part6,下一部分)中,很多是使用斐波那契堆作为其核心数据结构的.</li>
+</ul>
+</blockquote>
+</li>
+<li>不相交集合(并查集):由n个元素构成的全域集被划分为若干个动态集合.基本操作为<code>union, find-set</code>通过用一棵简单的有根树来表示每个集合,就可以得到惊人的快速操作:一个由m个操作构成的序列的运行时间为 $O(n\alpha (n) )$,而对于宇宙中的原子数总和 n,α(n)也&lt;=4,所以可以认为实际时间是 $O(n)$.</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/02/CLRS-notes4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/30/hw6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/30/hw6/" itemprop="url">
+                  hw6-threads-and-locking
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-30T00:00:00+08:00">
+                2017-04-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="hw6-threads-and-locking"><a href="#hw6-threads-and-locking" class="headerlink" title="hw6 threads and locking"></a>hw6 threads and locking</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>在多线程OS中，通常是在一个进程中包括多个线程，每个线程都是作为利用CPU的基本单位，是花费最小开销的实体.OS中实现进程和线程提高系统的并行性，hw6探索使用线程和锁来并行编程Hash表.</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>hw6在多核硬件的os上即可编译运行，不依赖于课程的xv6.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://pdos.csail.mit.edu/6.828/2016/homework/ph.c</div><div class="line">gcc -g -02 ph.c -pthread</div></pre></td></tr></table></figure></p>
+<p>源程序（<code>ph.c</code>)如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SOL</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NBUCKET 5</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NKEYS 100000</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> entry &#123;</div><div class="line">  <span class="keyword">int</span> key;</div><div class="line">  <span class="keyword">int</span> value;</div><div class="line">  <span class="keyword">struct</span> entry *next;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">struct</span> entry *table[NBUCKET];</div><div class="line"><span class="keyword">int</span> keys[NKEYS];</div><div class="line"><span class="keyword">int</span> nthread = <span class="number">1</span>;</div><div class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> done;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">double</span></span></div><div class="line"><span class="title">now</span><span class="params">()</span></div><div class="line">&#123;</div><div class="line"> <span class="keyword">struct</span> timeval tv;</div><div class="line"> gettimeofday(&amp;tv, <span class="number">0</span>);</div><div class="line"> <span class="keyword">return</span> tv.tv_sec + tv.tv_usec / <span class="number">1000000.0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i;</div><div class="line">  <span class="keyword">struct</span> entry *e;</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NBUCKET; i++) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d: "</span>, i);</div><div class="line">    <span class="keyword">for</span> (e = table[i]; e != <span class="number">0</span>; e = e-&gt;next) &#123;</div><div class="line">      <span class="built_in">printf</span>(<span class="string">"%d "</span>, e-&gt;key);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">insert</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value, <span class="keyword">struct</span> entry **p, <span class="keyword">struct</span> entry *n)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> entry *e = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> entry));</div><div class="line">  e-&gt;key = key;</div><div class="line">  e-&gt;value = value;</div><div class="line">  e-&gt;next = n;</div><div class="line">  *p = e;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span></span></div><div class="line"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i = key % NBUCKET;</div><div class="line">  insert(key, value, &amp;table[i], table[i]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">struct</span> entry*</span></div><div class="line"><span class="title">get</span><span class="params">(<span class="keyword">int</span> key)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">struct</span> entry *e = <span class="number">0</span>;</div><div class="line">  <span class="keyword">for</span> (e = table[key % NBUCKET]; e != <span class="number">0</span>; e = e-&gt;next) &#123;</div><div class="line">    <span class="keyword">if</span> (e-&gt;key == key) <span class="keyword">break</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> e;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> *</span></div><div class="line"><span class="title">thread</span><span class="params">(<span class="keyword">void</span> *xa)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">long</span> n = (<span class="keyword">long</span>) xa;</div><div class="line">  <span class="keyword">int</span> i;</div><div class="line">  <span class="keyword">int</span> b = NKEYS/nthread;</div><div class="line">  <span class="keyword">int</span> k = <span class="number">0</span>;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="comment">//  printf("b = %d\n", b);</span></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; b; i++) &#123;</div><div class="line">    <span class="comment">// printf("%d: put %d\n", n, b*n+i);</span></div><div class="line">    put(keys[b*n + i], n);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: put time = %f\n"</span>, n, t1-t0);</div><div class="line"></div><div class="line">  <span class="comment">// Should use pthread_barrier, but MacOS doesn't support it ...</span></div><div class="line">  __sync_fetch_and_add(&amp;done, <span class="number">1</span>);</div><div class="line">  <span class="keyword">while</span> (done &lt; nthread) ;</div><div class="line"></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    <span class="keyword">struct</span> entry *e = get(keys[i]);</div><div class="line">    <span class="keyword">if</span> (e == <span class="number">0</span>) k++;</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: get time = %f\n"</span>, n, t1-t0);</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"%ld: %d keys missing\n"</span>, n, k);</div><div class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">pthread_t</span> *tha;</div><div class="line">  <span class="keyword">void</span> *value;</div><div class="line">  <span class="keyword">long</span> i;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</div><div class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s: %s nthread\n"</span>, argv[<span class="number">0</span>], argv[<span class="number">0</span>]);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">  &#125;</div><div class="line">  nthread = atoi(argv[<span class="number">1</span>]);</div><div class="line">  tha = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>) * nthread);</div><div class="line">  srandom(<span class="number">0</span>);</div><div class="line">  assert(NKEYS % nthread == <span class="number">0</span>);</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    keys[i] = random();</div><div class="line">  &#125;</div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_create(&amp;tha[i], <span class="literal">NULL</span>, thread, (<span class="keyword">void</span> *) i) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_join(tha[i], &amp;value) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"completion time = %f\n"</span>, t1-t0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><p>在4核机器上双线程运行程序：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./a.out 2</div><div class="line"><span class="comment"># 2：n_threads为在hash表上执行put和get操作的线程数</span></div></pre></td></tr></table></figure></p>
+<p>产生如果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1: put time = 0.007442</div><div class="line">0: put time = 0.007474</div><div class="line">1: get time = 6.559389</div><div class="line">1: 1 keys missing</div><div class="line">0: get time = 6.567974</div><div class="line">0: 1. keys missing</div><div class="line">completion time = 6.575672</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>每个线程分两个阶段运行.在第一阶段<code>put</code>，每个线程将<code>[NKEYS/nthread]</code>key放入hash表.在第二阶段<code>get</code>，每个线程从hash表中获取<code>NKEYS</code>.输入结果为每个线程每个阶段花费多长时间，底部的完成时间为应用程序的总运行时间.在上面的输出中，应用程序的完成时间约为6.5秒.</p>
+</blockquote>
+<p>对比单线程，看双线程是否改进了性能：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">./a.out 1</div><div class="line">0: put time = 0.016793</div><div class="line">0: get time = 5.447454</div><div class="line">0: 0 keys missing</div><div class="line">completion time = 5.464499</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>单线程情况（5.5s）的完成时间略小于双线程情况（6.5s），增加的运行时间应该在消耗线程切换上。但双线程在<code>get</code>阶段的总工作量是单线程的两倍.因此，双线程在两个内核上实现了两倍的并行加速，效果很好.<code>put</code>阶段实现了一些加速; 双线程并行地插入相同数量的key，比单线程多一倍.另外，还有一个问题；<code>1 keys missing</code>说明在双线程运行中，程序在阶段2找不到的阶段1中插入1个键.</p>
+</blockquote>
+<p>在4核机器上运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">23: put time = 0.014067</div><div class="line">1: put time = 0.014450</div><div class="line">2: put time = 0.014245</div><div class="line">0: put time = 0.015714</div><div class="line">3: get time = 6.202647</div><div class="line">3: 45 keys missing</div><div class="line">0: get time = 6.211748</div><div class="line">0: 45 keys missing</div><div class="line">2: get time = 6.287174</div><div class="line">2: 45 keys missing</div><div class="line">1: get time = 6.306257</div><div class="line">1: 45 keys missing</div><div class="line">completion time = 6.322159</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>4线程完成时间与双线程大致相同，但是运行时间是双线程的两倍，实现了良好的并行性.但也发现缺失了更多的key的问题，相比较于单线程不会出现缺少key的问题.</p>
+</blockquote>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><h3 id="key缺失原因"><a href="#key缺失原因" class="headerlink" title="key缺失原因"></a>key缺失原因</h3><p>为什么当两个或多个线程同时运行时，key开始丢失？考虑这样一种情况：假设线程A和B同时运行。如果两个线程同时插入同一个bucket的key，则可能会发生竞争。下面的事件概述将导致这样的结果的操作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">t-A: calls insert() on bucket 1 (key = 6, 6 % NBUCKETS = 1)</div><div class="line"></div><div class="line">t-B: calls insert() on bucket 1 (key = 21, 21 % NBUCKETS = 1)</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">t-A: executes e-&gt;next = n</div><div class="line"></div><div class="line">t-B: executes e-&gt;next = n</div><div class="line"></div><div class="line">t-A: executes *p = e</div><div class="line"></div><div class="line">t-B: executes *p = e</div></pre></td></tr></table></figure></p>
+<p>这样做的结果是执行的最后一个线程B有效地<code>*p = e</code>覆盖了前一个线程A的动作并设置了新的列表的头指针.按照上面的执行顺序，假设插入线程A的键6将会丢失，因为线程B覆盖了它。</p>
+<h3 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a><strong>锁机制</strong></h3><p>为了避免上述事件的发生，即线程同时访问同一个资源，采用<strong>锁机制</strong>，给<code>put</code>和<code>get</code>加锁，实现线程的<strong>互斥</strong>.linux <code>pthread.h</code>提供的锁机制如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pthread_mutex_t</span> lock;     <span class="comment">// declare a lock</span></div><div class="line">pthread_mutex_init(&amp;lock, <span class="literal">NULL</span>);   <span class="comment">// initialize the lock</span></div><div class="line">pthread_mutex_lock(&amp;lock);  <span class="comment">// acquire lock</span></div><div class="line">pthread_mutex_unlock(&amp;lock);  <span class="comment">// release lock</span></div></pre></td></tr></table></figure></p>
+<p>首先想到的是给每一个<code>put</code>和<code>get</code>操作加锁，但发现这种结果导致多线程变成了线性运行，使得并行性降为0.然后发现<code>get</code>实际是读操作，不会对hash表进行写操作，在经典的读者-写着进程互斥问题中学到，读操作无需加锁，允许多个读操作并行执行，这样就在保证不出现key缺失的情况下提高了并行性。最后考虑<code>put</code>操作是对整个hash表加锁，实际上只需要给<code>put</code>操作访问的bucket加锁，而不是全局加锁，这使得其他<code>put</code>操作可以同时执行bucket的插入进一步提高了并行性。运行效果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">0: put time = 0.022744</div><div class="line">1: put time = 0.022521</div><div class="line">1: get time = 6.309178</div><div class="line">1: 0 keys missing</div><div class="line">0: get time = 6.323614</div><div class="line">0: 0 keys missing</div><div class="line">completion time = 6.350177</div></pre></td></tr></table></figure></p>
+<p><code>ph.c</code>修改结果如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">int</span> keys[NKEYS];</div><div class="line"><span class="keyword">pthread_mutex_t</span> bucket_locks[NBUCKET];</div><div class="line">...</div><div class="line"><span class="function"><span class="keyword">static</span></span></div><div class="line"><span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> i = key % NBUCKET;</div><div class="line">  pthread_mutex_lock(&amp;bucket_locks[i]);</div><div class="line">  insert(key, value, &amp;table[i], table[i]);</div><div class="line">  pthread_mutex_unlock(&amp;bucket_locks[i]);</div><div class="line">&#125;</div><div class="line">...</div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">pthread_t</span> *tha;</div><div class="line">  <span class="keyword">void</span> *value;</div><div class="line">  <span class="keyword">long</span> i;</div><div class="line">  <span class="keyword">double</span> t1, t0;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</div><div class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s: %s nthread\n"</span>, argv[<span class="number">0</span>], argv[<span class="number">0</span>]);</div><div class="line">    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">  &#125;</div><div class="line">  nthread = atoi(argv[<span class="number">1</span>]);</div><div class="line">  tha = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">pthread_t</span>) * nthread);</div><div class="line">  srandom(<span class="number">0</span>);</div><div class="line">  assert(NKEYS % nthread == <span class="number">0</span>);</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NKEYS; i++) &#123;</div><div class="line">    keys[i] = random();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">//init lock for every bucket</span></div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NBUCKET; i++) &#123;</div><div class="line">    pthread_mutex_init(&amp;bucket_locks[i], <span class="literal">NULL</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  t0 = now();</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_create(&amp;tha[i], <span class="literal">NULL</span>, thread, (<span class="keyword">void</span> *) i) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; nthread; i++) &#123;</div><div class="line">    assert(pthread_join(tha[i], &amp;value) == <span class="number">0</span>);</div><div class="line">  &#125;</div><div class="line">  t1 = now();</div><div class="line">  <span class="built_in">printf</span>(<span class="string">"completion time = %f\n"</span>, t1-t0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/29/lab3_part2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/29/lab3_part2/" itemprop="url">
+                  lab3-user-environment-part2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-29T00:00:00+08:00">
+                2017-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab3-用户环境-Part2"><a href="#Lab3-用户环境-Part2" class="headerlink" title="Lab3 用户环境 Part2"></a>Lab3 用户环境 Part2</h1><h2 id="Part2-缺页中断-断点异常和系统调用"><a href="#Part2-缺页中断-断点异常和系统调用" class="headerlink" title="Part2 缺页中断, 断点异常和系统调用"></a>Part2 缺页中断, 断点异常和系统调用</h2><p>part1完成后,JOSkernel已经具备一定的异常处理能力了,part2将进一步完善它,使它能够处理不同类型的中断/异常.</p>
+<h3 id="处理缺页中断"><a href="#处理缺页中断" class="headerlink" title="处理缺页中断"></a>处理缺页中断</h3><p>　　缺页中断（中断向量14（<code>T_PGFLT</code>））是一个非常重要的中断,因为后续的实验中,非常依赖kernel能够处理缺页中断的能力.当缺页中断发生时,系统会把引起中断的线性地址存放到控制寄存器<code>CR2</code>中.在<code>trap.c</code>中,已经提供了一个能够处理这种缺页异常的函数<code>page_fault_handler()</code>.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/29/lab3_part2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/26/lab3_part1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/26/lab3_part1/" itemprop="url">
+                  lab3-user-environment-part1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T00:00:00+08:00">
+                2017-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab3-用户环境-Part1"><a href="#Lab3-用户环境-Part1" class="headerlink" title="Lab3 用户环境 Part1"></a>Lab3 用户环境 Part1</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>os运行分为两个基本状态: 内核态(kernel) 和 用户态(user).对应用进程而言, 运行在用户态下, 通过系统调用接口使用kernel提供的服务.<br>Lab3主要实现的功能是在用户环境下的进程的正常运行.包括三个方面:</p>
+<blockquote>
+<ol>
+<li>实现获得受保护的用户模式环境（即“进程”）运行所需的基本内核功能.</li>
+<li>创建数据结构以增强JOS内核,跟踪用户环境,创建单个用户环境,将程序映像加载到其中并运行.</li>
+<li>使JOS内核能够处理用户环境所产生的任何系统调用,并处理其导致的任何其他异常.</li>
+</ol>
+</blockquote>
+<p>Lab3分为两个部分:</p>
+<blockquote>
+<p>part1. 用户环境和异常处理<br>part2. 缺页中断, 断点异常和系统调用</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/26/lab3_part1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -752,5 +1217,10 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+  
+
+
+  
+
 </body>
 </html>
