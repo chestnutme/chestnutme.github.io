@@ -261,7 +261,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/29/Linux in play/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/go internal: memory model/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chestnutme">
@@ -283,8 +283,8 @@
             
               
                 
-                <a class="post-title-link" href="/2018/05/29/Linux in play/" itemprop="url">
-                  未命名
+                <a class="post-title-link" href="/2018/05/31/go internal: memory model/" itemprop="url">
+                  go internal - memory model
                 </a>
               
             
@@ -300,8 +300,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T18:50:33+08:00">
-                2018-05-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:00:00+08:00">
+                2018-05-31
               </time>
             
 
@@ -337,156 +337,24 @@
 
       
         
-          
-            <h1 id="Linux-in-play"><a href="#Linux-in-play" class="headerlink" title="Linux in play"></a>Linux in play</h1><p>标签（空格分隔）： Linux</p>
-<hr>
-<h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>### </p>
-<p>### </p>
-<h3 id="Across-the-Great-Wall"><a href="#Across-the-Great-Wall" class="headerlink" title="Across the Great Wall"></a>Across the Great Wall</h3><ol>
-<li><p>VPS:</p>
+          <h2 id="what-is-memory-model"><a href="#what-is-memory-model" class="headerlink" title="what is memory model"></a>what is memory model</h2><p>From Wiki[3], the memory model is defined as follows:</p>
 <blockquote>
+<p>In computing, a memory model describes the interactions of threads through memory and their shared use of the data.</p>
+</blockquote>
+<p>The context is <strong>multi-thread</strong>, which is sth about concurrency/synchronization.</p>
+<p>At the time when a computer only has one core/cpu, memory is owned by the single thread, in which instructions has a well-defined order. As time goes by, we have multi-cpus/multi-cores-one-cpu allowing us to executing more than one thread at the same time.The problem is that we only have one memory, and the set of threads are always cooperating with each other to cope with a whole task instead of being independent.They need communication(known as <strong>IPC: inter-process communicaiton</strong>), which have two methods:</p>
 <ul>
-<li><a href="www.banwagong.com">banwagong</a></li>
-<li>ShadowSocks</li>
-<li>SpeedUp</li>
+<li>share memory</li>
+<li>message passing</li>
 </ul>
-</blockquote>
-</li>
-<li><p>ss on Ubuntu</p>
-<blockquote>
-<ul>
-<li><a href="https://github.com/librehat/shadowsocks-qt5/wiki/%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C" target="_blank" rel="external">ss-qt5</a></li>
-<li><a href="https://github.com/JinnLynn/GenPAC" target="_blank" rel="external">GenPAC</a></li>
-<li><a href="http://blog.csdn.net/strokess/article/details/52015014" target="_blank" rel="external">Global PAC Proxy</a></li>
-</ul>
-</blockquote>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/07/return/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chestnutme">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chestnut">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/07/return/" itemprop="url">
-                  return myblog
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-07T00:00:00+08:00">
-                2018-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="reture-myblog"><a href="#reture-myblog" class="headerlink" title="reture myblog"></a>reture myblog</h1><h3 id="abstract"><a href="#abstract" class="headerlink" title="abstract"></a>abstract</h3><blockquote>
-<p>This is the second semester when I am learning in ZJU. Something got, something not. Life is more than just studying, but at the best time that you are in your twenties, learning deserves it.</p>
-</blockquote>
-
-          
+<p>The latter is used in the network/distributed system, we will leave it aside.The formmer defines a n-to-1 model, which we need to deal with the logic of the program - the execution order of threads happening at the same time.That’s when we need the memory model:</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/31/go internal: memory model/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -927,6 +795,138 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/lab4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/04/lab4/" itemprop="url">
+                  lab4-Preemptive Multitasking
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T00:00:00+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Lab4-抢占式多进程"><a href="#Lab4-抢占式多进程" class="headerlink" title="Lab4 抢占式多进程"></a>Lab4 抢占式多进程</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Lab4目标是在多用户环境下实现抢占式多进程的支持，分解为三个部分：</p>
+<ul>
+<li>part1: 在JOS中添加对多处理器的支持，实现循环调度算法，并添加基本的环境管理的系统调用（创建/销毁环境，分配/映射内存）</li>
+<li>part2：实现类似Unix的<code>fork</code>机制，允许在用户模式下创建副本</li>
+<li>part3：添加对进程间通信(IPC)的支持，允许不同的用户环境进行进程间的通信和同步。并添加对硬件时钟中断和进程抢占的支持。</li>
+</ul>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>下载实验代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br><span class="line">git chekout -b lab4 origin/lab4</span><br><span class="line">git merge Lab3</span><br></pre></td></tr></table></figure></p>
+<p>Lab4 新增的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kern/cpu.h	多处理器支持的内核私有定义</span><br><span class="line">kern/mpconfig.c	读取多处理器配置的代码</span><br><span class="line">kern/lapic.c	驱动处理器中的本地APIC单元的内核代码</span><br><span class="line">kern/mpentry.S	非启动CPU的汇编代码入口</span><br><span class="line">kern/spinlock.h	包括大内核锁在内的自旋锁的内和私有定义</span><br><span class="line">kern/spinlock.c	自旋锁的内核代码实现</span><br><span class="line">kern/sched.c	调度器的代码框架</span><br></pre></td></tr></table></figure></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/04/lab4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -976,7 +976,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -989,7 +989,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1217,7 +1217,7 @@
   });
 </script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->

@@ -1,0 +1,789 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="what is memory modelFrom Wiki[3], the memory model is defined as follows:  In computing, a memory model describes the interactions of threads through memory and their shared use of the data.  The cont">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go internal - memory model">
+<meta property="og:url" content="http://yoursite.com/2018/05/31/go internal: memory model/index.html">
+<meta property="og:site_name" content="Chestnut">
+<meta property="og:description" content="what is memory modelFrom Wiki[3], the memory model is defined as follows:  In computing, a memory model describes the interactions of threads through memory and their shared use of the data.  The cont">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/imgs/memoryLayoutC.jpg">
+<meta property="og:image" content="http://yoursite.com/images/imgs/javaMemArc.png">
+<meta property="og:updated_time" content="2018-05-31T17:35:04.875Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go internal - memory model">
+<meta name="twitter:description" content="what is memory modelFrom Wiki[3], the memory model is defined as follows:  In computing, a memory model describes the interactions of threads through memory and their shared use of the data.  The cont">
+<meta name="twitter:image" content="http://yoursite.com/images/imgs/memoryLayoutC.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/31/go internal: memory model/"/>
+
+
+
+
+
+  <title> go internal - memory model | Chestnut </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chestnut</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/go internal: memory model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chestnutme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chestnut">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                go internal - memory model
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:00:00+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="what-is-memory-model"><a href="#what-is-memory-model" class="headerlink" title="what is memory model"></a>what is memory model</h2><p>From Wiki[3], the memory model is defined as follows:</p>
+<blockquote>
+<p>In computing, a memory model describes the interactions of threads through memory and their shared use of the data.</p>
+</blockquote>
+<p>The context is <strong>multi-thread</strong>, which is sth about concurrency/synchronization.</p>
+<p>At the time when a computer only has one core/cpu, memory is owned by the single thread, in which instructions has a well-defined order. As time goes by, we have multi-cpus/multi-cores-one-cpu allowing us to executing more than one thread at the same time.The problem is that we only have one memory, and the set of threads are always cooperating with each other to cope with a whole task instead of being independent.They need communication(known as <strong>IPC: inter-process communicaiton</strong>), which have two methods:</p>
+<ul>
+<li>share memory</li>
+<li>message passing</li>
+</ul>
+<p>The latter is used in the network/distributed system, we will leave it aside.The formmer defines a n-to-1 model, which we need to deal with the logic of the program - the execution order of threads happening at the same time.That’s when we need the memory model:</p>
+<a id="more"></a>
+<h2 id="memory-model-vs-memory-layout"><a href="#memory-model-vs-memory-layout" class="headerlink" title="memory model .vs. memory layout"></a>memory model .vs. memory layout</h2><p>Notice that memory model is different from the notion of memory layout.<br>The memory layout defines when a program is running, how the parts of the process is laid in the memory. 2 examples:<br>C memory layout[7]<br><img src="/images/imgs/memoryLayoutC.jpg" alt="C memory layout"></p>
+<p>Java memory architecture[8]<br><img src="/images/imgs/javaMemArc.png" alt="Jave mem arc"></p>
+<h2 id="golang-memory"><a href="#golang-memory" class="headerlink" title="golang memory:"></a>golang memory:</h2><h3 id="atomic-operation"><a href="#atomic-operation" class="headerlink" title="atomic operation"></a>atomic operation</h3><ul>
+<li>a instruction can’t be partitioned in mechine-level, which is the smallest element of a program.</li>
+<li>The atomic operation is low-level concepts, which means most statements we code in high-level language is not atomic.Don’t take is for granted. eg: <code>a += 1</code> will be decomposed as <code>load a;a+1;store a</code></li>
+<li>a atomic operation is not a instantaneous operation, it lasts for a while. As a result, we can regard it as a operation with a start point and a end point, which need some time to complete. </li>
+</ul>
+<h3 id="happens-before"><a href="#happens-before" class="headerlink" title="happens before"></a>happens before</h3><blockquote>
+<p>happens before<br>a partial order on the execution of memory operations in a Go program, to specify the requirements of reads and writes, we define happens before, .<br> If event e1 happens before event e2, then we say that e2 happens after e1.<br>  Also, if e1 does not happen before e2 and does not happen after e2, then we say that e1 and e2 happen concurrently</p>
+</blockquote>
+<ul>
+<li><p>single goroutine<br><em>Within a single goroutine, the happens-before order is the order expressed by the program.</em></p>
+</li>
+<li><p>multi goroutine/concurrency</p>
+<blockquote>
+<p>memory visibility<br>A read r of a variable v is allowed to observe a write w to v if both of the following hold:</p>
+<ul>
+<li>r does not happen before w.</li>
+<li>There is no other write w’ to v that happens after w but before r.<br>To guarantee that a read r of a variable v observes a particular write w to v, ensure that w is the only write r is allowed to observe. That is, r is guaranteed to observe w if both of the following hold:</li>
+<li>w happens before r.</li>
+<li>Any other write to the shared variable v either happens before w or after r.<br>This pair of conditions is stronger than the first pair; it requires that there are no other writes happening concurrently with w or r.</li>
+</ul>
+</blockquote>
+<p><em>When multiple goroutines access a shared variable v, they must use synchronization events to establish happens-before conditions that ensure reads observe the desired writes.</em></p>
+</li>
+</ul>
+<p>2 point need notice:</p>
+<ul>
+<li>The initialization of variable v with the zero value for v’s type behaves as a write in the memory model.</li>
+<li>Reads and writes of values larger than a single machine word behave as multiple machine-word-sized operations in an unspecified order.</li>
+</ul>
+<h3 id="synchronization"><a href="#synchronization" class="headerlink" title="synchronization"></a>synchronization</h3><h4 id="init"><a href="#init" class="headerlink" title="init()"></a><code>init()</code></h4><p><em>If a package p imports package q, the completion of q’s init functions <strong>happens before</strong> the start of any of p’s.</em></p>
+<h4 id="goroutine-creation"><a href="#goroutine-creation" class="headerlink" title="goroutine creation"></a>goroutine creation</h4><p><em>The <code>go</code> statement that starts a new goroutine <strong>happens before</strong> the goroutine’s execution begins.</em></p>
+<h4 id="goroutine-destruction"><a href="#goroutine-destruction" class="headerlink" title="goroutine destruction"></a>goroutine destruction</h4><p><em>The exit of a goroutine is not guaranteed to happen before any event in the program.</em></p>
+<h4 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h4><p>4 rules</p>
+<ul>
+<li><em>A send on a channel <strong>happens before</strong> the corresponding receive from that channel completes.</em></li>
+<li><em>The closing of a channel <strong>happens before</strong> a receive that returns a zero value because the channel is closed.</em></li>
+<li><em>A receive from an unbuffered channel <strong>happens before</strong> the send on that channel completes.</em></li>
+<li><em>The kth receive on a channel with capacity C <strong>happens before</strong> the k+Cth send from that channel completes.</em></li>
+</ul>
+<p>synced goroutine: <code>a = &quot;hello, world&quot;</code> - <code>&lt;-c</code>-<code>print(a)</code><br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> c = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">10</span>)</span><br><span class="line"><span class="keyword">var</span> a <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a = <span class="string">"hello, world"</span></span><br><span class="line">	c &lt;- <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> f()</span><br><span class="line">	&lt;-c</span><br><span class="line">	<span class="built_in">print</span>(a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>bufferd channel implements a semphone:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> limit = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> _, w := <span class="keyword">range</span> work &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(w <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">			limit &lt;- <span class="number">1</span></span><br><span class="line">			w()</span><br><span class="line">			&lt;-limit</span><br><span class="line">		&#125;(w)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">select</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="lock"><a href="#lock" class="headerlink" title="lock"></a>lock</h4><ul>
+<li><p><em>For any sync.Mutex or sync.RWMutex variable l and n &lt; m, call n of l.Unlock() <strong>happens before</strong> call m of l.Lock() returns.</em></p>
+</li>
+<li><p><em>For any call to l.RLock on a sync.RWMutex variable l, there is an n such that the l.RLock happens (returns) after call n to l.Unlock and the matching l.RUnlock <strong>happens before</strong> call n+1 to l.Lock.</em></p>
+</li>
+</ul>
+<h4 id="once"><a href="#once" class="headerlink" title="once"></a>once</h4><p><em>A single call of f() from once.Do(f) <strong>happens (returns) before</strong> any call of once.Do(f) returns.</em></p>
+<h3 id="incorrect-sync"><a href="#incorrect-sync" class="headerlink" title="incorrect sync"></a>incorrect sync</h3><p>All following error can be seen as incorrect implicit sync, don’t take for granted. The solution is: <strong>explict synchronizaion</strong>.</p>
+<h4 id="Error1-2-goroutine-without-sync-has-no-happen-before-relation"><a href="#Error1-2-goroutine-without-sync-has-no-happen-before-relation" class="headerlink" title="Error1: 2 goroutine without sync has no happen-before relation"></a>Error1: 2 goroutine without sync has no happen-before relation</h4><p>the program may print 2 1 or 2 0<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a = <span class="number">1</span></span><br><span class="line">	b = <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">g</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">print</span>(b)</span><br><span class="line">	<span class="built_in">print</span>(a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> f()</span><br><span class="line">	g()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Error2-double-checking-locking-make-no-happens-before-relation"><a href="#Error2-double-checking-locking-make-no-happens-before-relation" class="headerlink" title="Error2: double-checking locking make no happens before relation"></a>Error2: double-checking locking make no happens before relation</h4><p>may print nothing<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="keyword">string</span></span><br><span class="line"><span class="keyword">var</span> done <span class="keyword">bool</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">setup</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a = <span class="string">"hello, world"</span></span><br><span class="line">	done = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">doprint</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> !done &#123;</span><br><span class="line">		once.Do(setup)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">print</span>(a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">twoprint</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> doprint()</span><br><span class="line">	<span class="keyword">go</span> doprint()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Error3-waiting-for-a-value-make-no-happen-before-relation"><a href="#Error3-waiting-for-a-value-make-no-happen-before-relation" class="headerlink" title="Error3: waiting for a value make no happen before relation"></a>Error3: waiting for a value make no happen before relation</h4><p>may print nothing or infinite loop<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="keyword">string</span></span><br><span class="line"><span class="keyword">var</span> done <span class="keyword">bool</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">setup</span><span class="params">()</span></span> &#123;</span><br><span class="line">	a = <span class="string">"hello, world"</span></span><br><span class="line">	done = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> setup()</span><br><span class="line">	<span class="keyword">for</span> !done &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">print</span>(a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Digression"><a href="#Digression" class="headerlink" title="Digression"></a>Digression</h2><p>It’s in 1978 that 2 papers having a enourmous impact on concurrent/distributed system published. One is <strong>&lt; Time, clocks, and the ordering of events in a distributed system &gt;</strong> written by Leslie Lamport - father of Paxos and Latex, laying the foundation for analysis of dissys. Another is <strong>&lt; Communicating sequential processes&gt;</strong> by CAR Hoare - the creator of <code>quicksort</code>, CSP plays a huge role in concurrent system, which also is the theory idea behind goroutine and channel.What a year!</p>
+<h2 id="refer"><a href="#refer" class="headerlink" title="refer"></a>refer</h2><ul>
+<li>1.<a href="https://golang.org/ref/mem" target="_blank" rel="noopener">golang : memory model</a></li>
+<li>2.<a href="https://studygolang.com/articles/01176" target="_blank" rel="noopener">go语言内存模型</a></li>
+<li>3.<a href="https://en.wikipedia.org/wiki/Memory_barrier" target="_blank" rel="noopener">wiki: memory barrier</a></li>
+<li>4.<a href="https://www.quora.com/What-is-a-memory-model-in-C" target="_blank" rel="noopener">wiki: memory model</a></li>
+<li>5.<a href="https://www.quora.com/What-is-a-memory-model-in-C" target="_blank" rel="noopener">quora: what is memory model in C</a></li>
+<li>6.<a href="https://www.cs.princeton.edu/courses/archive/fall10/cos597C/docs/memory-models.pdf" target="_blank" rel="noopener">lec: memory model</a></li>
+<li>7.<a href="https://www.geeksforgeeks.org/memory-layout-of-c-program/" target="_blank" rel="noopener">Memory Layout of C Programs</a></li>
+<li>8.<a href="https://hackthejava.wordpress.com/2015/01/09/memory-architecture-by-jvmruntime-data-areas/" target="_blank" rel="noopener">Memory Architecture Of JVM(Runtime Data Areas)</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/18/CLRS-notes6/" rel="next" title="introduction to algorithms notes6">
+                <i class="fa fa-chevron-left"></i> introduction to algorithms notes6
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Chestnutme" />
+          <p class="site-author-name" itemprop="name">Chestnutme</p>
+           
+              <p class="site-description motion-element" itemprop="description">In a Nut-Universe</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chestnutme" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-memory-model"><span class="nav-number">1.</span> <span class="nav-text">what is memory model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memory-model-vs-memory-layout"><span class="nav-number">2.</span> <span class="nav-text">memory model .vs. memory layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#golang-memory"><span class="nav-number">3.</span> <span class="nav-text">golang memory:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#atomic-operation"><span class="nav-number">3.1.</span> <span class="nav-text">atomic operation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#happens-before"><span class="nav-number">3.2.</span> <span class="nav-text">happens before</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronization"><span class="nav-number">3.3.</span> <span class="nav-text">synchronization</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">3.3.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#goroutine-creation"><span class="nav-number">3.3.2.</span> <span class="nav-text">goroutine creation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#goroutine-destruction"><span class="nav-number">3.3.3.</span> <span class="nav-text">goroutine destruction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#channel"><span class="nav-number">3.3.4.</span> <span class="nav-text">channel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lock"><span class="nav-number">3.3.5.</span> <span class="nav-text">lock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#once"><span class="nav-number">3.3.6.</span> <span class="nav-text">once</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#incorrect-sync"><span class="nav-number">3.4.</span> <span class="nav-text">incorrect sync</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Error1-2-goroutine-without-sync-has-no-happen-before-relation"><span class="nav-number">3.4.1.</span> <span class="nav-text">Error1: 2 goroutine without sync has no happen-before relation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Error2-double-checking-locking-make-no-happens-before-relation"><span class="nav-number">3.4.2.</span> <span class="nav-text">Error2: double-checking locking make no happens before relation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Error3-waiting-for-a-value-make-no-happen-before-relation"><span class="nav-number">3.4.3.</span> <span class="nav-text">Error3: waiting for a value make no happen before relation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Digression"><span class="nav-number">4.</span> <span class="nav-text">Digression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refer"><span class="nav-number">5.</span> <span class="nav-text">refer</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chestnutme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+</body>
+</html>
